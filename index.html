@@ -1,0 +1,4346 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <title>Marcusnator Pro Athlete 2.0 By Dr. Hans</title>
+  <meta name="description" content="Rastreador inteligente de emagrecimento, plano alimentar, evolução e comportamento alimentar por Dr. Hans." />
+  <meta name="theme-color" content="#0F766E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Marcusnator 2.0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+  <style>
+    :root {
+      --bg: #0B1117;
+      --bg-elev: #121A23;
+      --bg-card: #16202B;
+      --bg-soft: #1D2937;
+      --border: #273647;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --primary: #10B981;
+      --primary-dark: #059669;
+      --primary-soft: rgba(16, 185, 129, 0.14);
+      --accent: #F59E0B;
+      --accent-soft: rgba(245, 158, 11, 0.15);
+      --danger: #EF4444;
+      --danger-soft: rgba(239, 68, 68, 0.16);
+      --info: #38BDF8;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    [data-theme="light"] {
+      --bg: #F3F6F9;
+      --bg-elev: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-soft: #E8EEF4;
+      --border: #D5DFE9;
+      --text: #0F172A;
+      --text-muted: #475569;
+      --primary: #0D9488;
+      --primary-dark: #0F766E;
+      --primary-soft: rgba(13, 148, 136, 0.12);
+      --accent: #D97706;
+      --accent-soft: rgba(217, 119, 6, 0.12);
+      --danger: #DC2626;
+      --danger-soft: rgba(220, 38, 38, 0.12);
+      --info: #0284C7;
+      --shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      max-width: 960px;
+      margin: 0 auto;
+      padding-bottom: calc(84px + env(safe-area-inset-bottom));
+    }
+
+    /* Top App Header */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
+      background: var(--bg-elev);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 60;
+    }
+
+    /* Two-line ("2 riscos") menu button in top-left */
+    .two-lines-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .two-lines-btn span {
+      display: block;
+      width: 20px;
+      height: 2.5px;
+      border-radius: 99px;
+      background: var(--text);
+      transition: transform 0.2s ease;
+    }
+    .two-lines-btn:hover { border-color: var(--primary); }
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .brand-title-wrap img {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-pill {
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .icon-pill:hover { border-color: var(--primary); }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+    .sync-dot.ok { background: var(--primary); }
+    .sync-dot.err { background: var(--danger); }
+
+    /* Sticky Scoreboard */
+    .scoreboard-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-elev);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px 10px;
+      box-shadow: var(--shadow);
+      transition: transform 0.28s ease, opacity 0.25s ease;
+    }
+    .scoreboard-wrap.auto-hide.hidden-scroll {
+      transform: translateY(-105%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .scoreboard-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 560px) {
+      .score-grid { grid-template-columns: 1fr; gap: 6px; }
+    }
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+    .score-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+    .score-val {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin: 2px 0;
+    }
+    .score-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background: var(--bg-soft);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 5px 0 3px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 999px;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .progress-fill.over-limit {
+      background: var(--danger) !important;
+    }
+    .progress-fill.protein {
+      background: var(--info);
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      padding: 8px 10px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-tab {
+      border: 1px solid transparent;
+      background: var(--bg-card);
+      color: var(--text-muted);
+      border-radius: 11px;
+      padding: 8px 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.18s ease;
+    }
+    .nav-tab.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .nav-tab span.ico { font-size: 1.05rem; }
+
+    /* Main Container & Cards */
+    .container { padding: 14px; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .section-tag {
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .section-tag.warn {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .section-tag.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    /* Form Controls */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 11px;
+    }
+    @media (min-width: 680px) {
+      .form-grid.two-col { grid-template-columns: 1fr 1fr; }
+      .form-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 0.94rem;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    textarea { min-height: 68px; resize: vertical; }
+
+    .btn {
+      border: none;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-accent { background: var(--accent); color: #0B1117; }
+    .btn-soft {
+      background: var(--bg-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; }
+    .btn-block { width: 100%; }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    /* Meal & Diary Items */
+    .meal-card {
+      border: 1px solid var(--border);
+      background: var(--bg-elev);
+      border-radius: 13px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .meal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .meal-items-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .meal-items-list li {
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.86rem;
+    }
+    .status-pills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+    .status-pill {
+      padding: 6px 4px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+    .status-pill.active[data-st="a comer"] { background: var(--bg-soft); color: var(--text); border-color: var(--text-muted); }
+    .status-pill.active[data-st="feito"] { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+    .status-pill.active[data-st="ajustado"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+    .status-pill.active[data-st="pulado"] { background: var(--danger-soft); color: var(--danger); border-color: var(--danger); }
+
+    /* KPI Mini Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 640px) {
+      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .kpi-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .kpi-box .k-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+    .kpi-box .k-val { font-size: 1.08rem; font-weight: 800; margin-top: 2px; }
+    .kpi-box .k-sub { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    th, td {
+      padding: 8px 9px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    th {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Callout / Warnings */
+    .callout {
+      border-radius: 12px;
+      padding: 11px 13px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      margin: 10px 0;
+    }
+    .callout.renal {
+      background: var(--danger-soft);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: var(--text);
+    }
+    .callout.info {
+      background: var(--primary-soft);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    /* Drawer / Modal */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 12, 0.72);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      overflow-y: auto;
+    }
+    .overlay.open { display: flex; }
+    .drawer-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(320px, 86vw);
+      background: var(--bg-elev);
+      border-right: 1px solid var(--border);
+      padding: calc(16px + env(safe-area-inset-top)) 14px 20px;
+      z-index: 110;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow);
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Charts */
+    .chart-box {
+      width: 100%;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 10px;
+      overflow: hidden;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0F172A;
+      color: #F8FAFC;
+      border: 1px solid var(--primary);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      z-index: 200;
+      box-shadow: var(--shadow);
+      display: none;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    /* Footer */
+    .app-footer {
+      margin: 24px 14px 14px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .disclaimer-box {
+      padding: 11px 13px;
+      border-radius: 11px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Print / PDF Clinical Report */
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .app-shell, .overlay, .toast { display: none !important; }
+      #printReportArea {
+        display: block !important;
+        padding: 12mm;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #111;
+      }
+      #printReportArea h1 { font-size: 18pt; margin: 0 0 4px; color: #064E3B; }
+      #printReportArea h2 { font-size: 12pt; border-bottom: 1px solid #999; padding-bottom: 3px; margin-top: 14px; color: #0F766E; }
+      #printReportArea table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 9.5pt; }
+      #printReportArea th, #printReportArea td { border: 1px solid #CBD5E1; padding: 5px 7px; }
+    }
+    #printReportArea { display: none; }
+  </style>
+</head>
+<body>
+
+<div id="printReportArea"></div>
+
+<div class="app-shell">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button id="menuTwoLinesBtn" class="two-lines-btn" title="Menu do perfil" aria-label="Menu do perfil">
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="brand-title-wrap">
+      <img src="./icons/icon-192.png" alt="Marcusnator Pro Athlete 2.0" />
+      <div style="min-width:0;">
+        <div class="brand-title">Marcusnator Pro Athlete 2.0</div>
+        <div class="brand-sub">By Dr. Hans <span id="headerUserBadge" style="color:var(--text-muted);font-weight:600;"></span></div>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="syncStatusBtn" class="icon-pill" title="Sincronização Google Sheets">
+        <span id="syncDot" class="sync-dot"></span>
+        <span id="syncLabel">Planilha</span>
+      </button>
+      <button id="themeToggleBtn" class="icon-pill" title="Alternar modo claro/escuro">🌙</button>
+    </div>
+  </header>
+
+  <!-- PWA INSTALL BANNER -->
+  <div id="installBanner" class="card hidden" style="margin:10px 14px 0; border-color:var(--primary);">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="./icons/icon-192.png" alt="Ícone" style="width:40px;height:40px;border-radius:10px;" />
+        <div>
+          <strong style="font-size:0.9rem;">Instalar Marcusnator Pro Athlete 2.0</strong>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Adicione à tela inicial do Android ou iPhone como app nativo.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button id="triggerInstallBtn" class="btn btn-primary btn-sm">📲 Instalar App</button>
+        <button id="dismissInstallBtn" class="btn btn-soft btn-sm">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       VIEW 1: AUTH / LOGIN / CRIAR PERFIL / RECUPERAR SENHA
+  ========================================================== -->
+  <main id="authView" class="container">
+    <div class="card" style="text-align:center; padding:22px 16px;">
+      <img src="./icons/icon-192.png" alt="Logo" style="width:74px;height:74px;border-radius:18px;box-shadow:var(--shadow);margin-bottom:10px;" />
+      <h1 style="margin:0;font-size:1.32rem;font-weight:900;">Marcusnator Pro Athlete 2.0</h1>
+      <div style="color:var(--accent);font-weight:800;font-size:0.86rem;margin-top:2px;">By Dr. Hans</div>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:8px auto 0;max-width:480px;">
+        Rastreamento clínico e esportivo de emagrecimento, macros, treino e comportamento alimentar sincronizado com Google Sheets.
+      </p>
+    </div>
+
+    <div class="card">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;">
+        <button class="btn btn-primary btn-sm auth-switch" data-auth-tab="login">Entrar</button>
+        <button class="btn btn-soft btn-sm auth-switch" data-auth-tab="register">Criar Perfil</button>
+        <button class="btn btn-soft btn-sm auth-switch" data-auth-tab="recover">Recuperar Senha</button>
+      </div>
+
+      <!-- TAB LOGIN -->
+      <form id="loginForm" class="form-grid">
+        <div class="field">
+          <label>Perfis salvos neste dispositivo (ou sincronizados)</label>
+          <select id="loginProfileSelect">
+            <option value="">-- Selecione um perfil ou digite o nome abaixo --</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nome completo</label>
+          <input type="text" id="loginNameInput" placeholder="Ex.: Marcus Vinícius Silva" required />
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" id="loginPassInput" placeholder="Digite sua senha" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Entrar no Rastreador</button>
+        <button type="button" id="pullProfilesFromSheetBtn" class="btn btn-soft btn-block btn-sm">
+          ☁️ Buscar perfis salvos na Planilha Google Sheets
+        </button>
+      </form>
+
+      <!-- TAB REGISTER -->
+      <form id="registerForm" class="form-grid hidden">
+        <div class="field">
+          <label>Nome completo *</label>
+          <input type="text" id="regNameInput" placeholder="Seu nome completo" required />
+        </div>
+        <div class="field">
+          <label>Crie uma senha *</label>
+          <input type="password" id="regPassInput" placeholder="Mínimo 4 caracteres" minlength="4" required />
+        </div>
+        <div class="field">
+          <label>Pergunta de segurança para recuperar senha *</label>
+          <select id="regQuestionSelect">
+            <option value="Qual o nome do seu primeiro animal de estimação?">Qual o nome do seu primeiro animal de estimação?</option>
+            <option value="Qual o nome da cidade onde você nasceu?">Qual o nome da cidade onde você nasceu?</option>
+            <option value="Qual é a sua comida favorita?">Qual é a sua comida favorita?</option>
+            <option value="Qual o nome do seu médico ou treinador de referência?">Qual o nome do seu médico ou treinador de referência?</option>
+            <option value="Qual foi o modelo do seu primeiro carro ou bicicleta?">Qual foi o modelo do seu primeiro carro ou bicicleta?</option>
+            <option value="__custom__">✍️ Escrever minha própria pergunta personalizada...</option>
+          </select>
+        </div>
+        <div id="regCustomQuestionWrap" class="field hidden">
+          <label>Digite sua pergunta personalizada *</label>
+          <input type="text" id="regCustomQuestionInput" placeholder="Ex.: Qual o apelido da minha avó?" />
+        </div>
+        <div class="field">
+          <label>Resposta da pergunta de recuperação *</label>
+          <input type="text" id="regAnswerInput" placeholder="Sua resposta (guarde com atenção)" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Criar Perfil & Continuar →</button>
+      </form>
+
+      <!-- TAB RECOVER -->
+      <div id="recoverSection" class="form-grid hidden">
+        <div class="field">
+          <label>Selecione ou digite o Nome Completo do perfil</label>
+          <select id="recProfileSelect">
+            <option value="">-- Selecione o perfil --</option>
+          </select>
+        </div>
+        <div id="recQuestionBox" class="callout info hidden">
+          <div style="font-size:0.76rem;color:var(--text-muted);font-weight:700;">PERGUNTA DE RECUPERAÇÃO:</div>
+          <div id="recQuestionText" style="font-weight:800;margin-top:3px;"></div>
+        </div>
+        <div class="field">
+          <label>Sua resposta</label>
+          <input type="text" id="recAnswerInput" placeholder="Digite a resposta cadastrada" />
+        </div>
+        <div id="recNewPassWrap" class="field hidden">
+          <label>Nova senha (redefinir)</label>
+          <input type="password" id="recNewPassInput" placeholder="Digite a nova senha" minlength="4" />
+        </div>
+        <button type="button" id="recVerifyBtn" class="btn btn-accent btn-block">Verificar Resposta</button>
+        <button type="button" id="recSavePassBtn" class="btn btn-primary btn-block hidden">Salvar Nova Senha & Entrar</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================
+       VIEW 2: ONBOARDING QUESTIONNAIRE (PRIMEIRA VISITA / EDIÇÃO)
+  ========================================================== -->
+  <section id="onboardingView" class="container hidden">
+    <div class="card">
+      <div class="card-title">
+        <span>📋 Configuração Inicial do Perfil</span>
+        <span class="section-tag">Salvo na Planilha</span>
+      </div>
+      <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0;">
+        Preencha seus dados, metas e rotina para que o <strong>Marcusnator Pro Athlete 2.0</strong> calibre suas calorias, proteínas, hidratação e plano semanal.
+      </p>
+
+      <form id="onboardingForm">
+        <h3 style="font-size:0.95rem;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:6px;">
+          1. MEUS DADOS E METAS
+        </h3>
+        <div class="form-grid two-col">
+          <div class="field">
+            <label>Altura (m) *</label>
+            <input type="text" id="obAltura" placeholder="Ex.: 1,78" required />
+          </div>
+          <div class="field">
+            <label>Idade (anos) *</label>
+            <input type="number" id="obIdade" min="12" max="110" placeholder="Ex.: 32" required />
+          </div>
+          <div class="field">
+            <label>Sexo *</label>
+            <select id="obSexo" required>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Peso atual (kg) *</label>
+            <input type="text" id="obPesoAtual" placeholder="Ex.: 88,5" required />
+          </div>
+          <div class="field">
+            <label>Peso meta (kg) *</label>
+            <input type="text" id="obPesoMeta" placeholder="Ex.: 78,0" required />
+          </div>
+          <div class="field">
+            <label>Data-alvo para a meta *</label>
+            <input type="date" id="obDataAlvo" required />
+          </div>
+          <div class="field">
+            <label>Data de início *</label>
+            <input type="date" id="obDataInicio" required />
+          </div>
+        </div>
+
+        <!-- Medidas Corporais Dinâmicas -->
+        <div style="margin-top:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);">Medidas corporais iniciais (cm)</label>
+            <button type="button" id="addMeasureRowBtn" class="btn btn-soft btn-sm">+ Adicionar medida</button>
+          </div>
+          <div id="obMeasuresContainer" class="form-grid"></div>
+        </div>
+
+        <!-- Calorias e Proteína com Calculadora Inteligente -->
+        <div class="form-grid two-col" style="margin-top:12px;">
+          <div class="field">
+            <label>Meta diária de calorias (kcal) *</label>
+            <div style="display:flex;gap:6px;">
+              <input type="number" id="obMetaKcal" placeholder="Ex.: 2100" required />
+              <button type="button" id="calcKcalBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Meta diária de proteína (g) *</label>
+            <div style="display:flex;gap:6px;">
+              <input type="number" id="obMetaProt" placeholder="Ex.: 165" required />
+              <button type="button" id="calcProtBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular</button>
+            </div>
+          </div>
+        </div>
+        <div id="calcExplanationBox" class="callout info hidden"></div>
+
+        <h3 style="font-size:0.95rem;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:6px;margin-top:18px;">
+          2. MINHA ROTINA
+        </h3>
+        <div class="form-grid two-col">
+          <div class="field">
+            <label>Horário que acordo *</label>
+            <input type="time" id="obAcordar" value="06:30" required />
+          </div>
+          <div class="field">
+            <label>Horário que durmo *</label>
+            <input type="time" id="obDormir" value="23:00" required />
+          </div>
+          <div class="field">
+            <label>Horário de trabalho *</label>
+            <input type="text" id="obHorarioTrabalho" placeholder="Ex.: 08:00 às 18:00" required />
+          </div>
+          <div class="field">
+            <label>Modalidade de trabalho *</label>
+            <select id="obModalidadeTrabalho">
+              <option value="Presencial">Presencial</option>
+              <option value="Home office">Home office</option>
+              <option value="Híbrido">Híbrido (Presencial + Home office)</option>
+              <option value="Plantões / Escala">Plantões / Escala variável</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top:11px;">
+          <div class="field">
+            <label>Treinos da semana (tipo, dias, horário, duração) *</label>
+            <textarea id="obTreinosSemana" placeholder="Ex.: Musculação Seg/Qua/Sex às 07:00 (60 min) + Corrida Ter/Qui às 18:30 (40 min)" required></textarea>
+          </div>
+          <div class="field">
+            <label>O que costumo comer hoje *</label>
+            <textarea id="obComeHoje" placeholder="Ex.: Pão com ovo e café de manhã; arroz, feijão, frango e salada no almoço; lanche tarde; jantar parecido" required></textarea>
+          </div>
+          <div class="field">
+            <label>Comidas que gosto e não quero cortar *</label>
+            <input type="text" id="obNaoCortar" placeholder="Ex.: Pizza no sábado, chocolate 70%, pão francês, churrasco" />
+          </div>
+          <div class="field">
+            <label>Comidas que não como (restrições/aversões)</label>
+            <input type="text" id="obNaoCome" placeholder="Ex.: Fígado, peixe cru, jiló, lactose" />
+          </div>
+          <div class="form-grid two-col">
+            <div class="field">
+              <label>Tempo disponível para cozinhar</label>
+              <input type="text" id="obTempoCozinhar" placeholder="Ex.: 2 h no domingo" />
+            </div>
+            <div class="field">
+              <label>Peço delivery com frequência?</label>
+              <select id="obDeliveryFreq">
+                <option value="Raramente (0 a 1x por semana)">Raramente (0 a 1x por semana)</option>
+                <option value="Moderado (2 a 3x por semana)">Moderado (2 a 3x por semana)</option>
+                <option value="Frequente (4 ou mais vezes por semana)">Frequente (4 ou mais vezes por semana)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Suplementos que tomo</label>
+            <input type="text" id="obSuplementos" placeholder="Ex.: Whey Protein, Creatina 5g, Cafeína (ou Nenhum)" />
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:16px;">
+          <button type="submit" class="btn btn-primary btn-block">💾 Salvar Perfil & Abrir Rastreador</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       VIEW 3: MAIN TRACKER APP
+  ========================================================== -->
+  <div id="trackerView" class="hidden">
+    <!-- STICKY SCOREBOARD -->
+    <section id="scoreboardWrap" class="scoreboard-wrap">
+      <div class="scoreboard-head">
+        <span>📊 <strong>Placar Diário</strong> • <span id="sbDateLabel"></span></span>
+        <button id="toggleStickyBtn" class="icon-pill" style="padding:3px 9px;font-size:0.72rem;">
+          📌 Placar fixo
+        </button>
+      </div>
+      <div class="score-grid">
+        <!-- Peso -->
+        <div class="score-card">
+          <div class="score-label"><span>⚖️ Peso</span><span id="sbPesoDelta"></span></div>
+          <div class="score-val" id="sbPesoMedia">-- kg</div>
+          <div class="score-sub" id="sbPesoUltima">Média 7d • Última: -- kg</div>
+        </div>
+        <!-- Kcal -->
+        <div class="score-card">
+          <div class="score-label"><span>🔥 Kcal do dia</span><span id="sbKcalPct">0%</span></div>
+          <div class="score-val" id="sbKcalVal">0 / 0 kcal</div>
+          <div class="progress-track"><div id="sbKcalBar" class="progress-fill" style="width:0%;"></div></div>
+          <div class="score-sub" id="sbKcalResta">Restam 0 kcal</div>
+        </div>
+        <!-- Proteína -->
+        <div class="score-card">
+          <div class="score-label"><span>🥩 Proteína do dia</span><span id="sbProtPct">0%</span></div>
+          <div class="score-val" id="sbProtVal">0,0 / 0,0 g</div>
+          <div class="progress-track"><div id="sbProtBar" class="progress-fill protein" style="width:0%;"></div></div>
+          <div class="score-sub" id="sbProtFalta">Faltam 0,0 g</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 TABS NAVIGATION -->
+    <nav class="nav-tabs" aria-label="Abas principais">
+      <button class="nav-tab active" data-tab="cardapio"><span class="ico">🥗</span><span>Cardápio</span></button>
+      <button class="nav-tab" data-tab="diario"><span class="ico">📝</span><span>Diário</span></button>
+      <button class="nav-tab" data-tab="evolucao"><span class="ico">📈</span><span>Evolução</span></button>
+      <button class="nav-tab" data-tab="semana"><span class="ico">📅</span><span>Semana</span></button>
+      <button class="nav-tab" data-tab="plano"><span class="ico">🎯</span><span>Plano</span></button>
+    </nav>
+
+    <!-- TAB 1: CARDÁPIO -->
+    <main id="tab-cardapio" class="container tab-pane">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
+          <button id="cardPrevDayBtn" class="btn btn-soft btn-sm">← Dia anterior</button>
+          <div style="text-align:center;">
+            <strong id="cardDateTitle" style="font-size:0.96rem;">Hoje</strong>
+            <div id="cardDateSub" style="font-size:0.75rem;color:var(--text-muted);"></div>
+          </div>
+          <button id="cardNextDayBtn" class="btn btn-soft btn-sm">Próximo dia →</button>
+        </div>
+
+        <!-- Resumo do Dia -->
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <div class="k-lbl">Kcal Planejadas</div>
+            <div class="k-val" id="cardKcalPlan">0 kcal</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Meta do Dia</div>
+            <div class="k-val" id="cardKcalMeta">0 kcal</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Quanto Já Comi</div>
+            <div class="k-val" style="color:var(--primary);" id="cardKcalComi">0 kcal</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Proteína Planejada</div>
+            <div class="k-val" style="color:var(--info);" id="cardProtPlan">0,0 g</div>
+          </div>
+        </div>
+
+        <!-- Integração com Gemini -->
+        <div class="callout info">
+          <div style="font-weight:800;margin-bottom:4px;">🤖 Integração com Gemini (Montar & Ajustar Cardápio)</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">
+            Copie o contexto completo do seu perfil e metas para pedir o cardápio no chat do Gemini. Se mudar alguma refeição, peça o ajuste das restantes e cole a resposta aqui!
+          </div>
+          <div class="btn-row">
+            <button type="button" id="copyGeminiMenuPromptBtn" class="btn btn-primary btn-sm">📋 Copiar Prompt: Montar Cardápio</button>
+            <button type="button" id="copyGeminiAdjustPromptBtn" class="btn btn-accent btn-sm">🔄 Copiar Prompt: Ajustar Restantes</button>
+            <button type="button" id="openImportMenuModalBtn" class="btn btn-soft btn-sm">📥 Colar Cardápio do Gemini</button>
+            <button type="button" id="addCustomPlannedMealBtn" class="btn btn-soft btn-sm">+ Nova Refeição</button>
+          </div>
+        </div>
+
+        <div id="plannedMealsList"></div>
+      </div>
+    </main>
+
+    <!-- TAB 2: DIÁRIO -->
+    <main id="tab-diario" class="container tab-pane hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>📝 Diário Alimentar & Registros do Dia</span>
+          <input type="date" id="diaryDateInput" style="width:auto;padding:6px 10px;font-size:0.82rem;" />
+        </div>
+
+        <!-- Assistente Foto/Descrição Chat -->
+        <div class="callout info">
+          <div style="font-weight:800;">📸 Estimar Refeição por Foto ou Descrição no Chat</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin:3px 0 8px;">
+            Regra clínica ativa: alimentos considerados <strong>já prontos/cozidos</strong> e, na dúvida, adotado o <strong>cenário mais calórico</strong> (especialmente comida de restaurante/delivery).
+          </div>
+          <div class="btn-row">
+            <button type="button" id="copyEstimateFoodPromptBtn" class="btn btn-primary btn-sm">📋 Copiar Prompt de Estimativa p/ Chat</button>
+            <button type="button" id="openImportDiaryModalBtn" class="btn btn-accent btn-sm">📥 Colar Estimativa JSON no Diário</button>
+          </div>
+        </div>
+
+        <!-- Formulário Manual de Refeição -->
+        <form id="manualMealForm" class="form-grid two-col" style="margin-top:12px;">
+          <div class="field">
+            <label>Horário</label>
+            <input type="time" id="diaryMealTime" required />
+          </div>
+          <div class="field">
+            <label>Refeição</label>
+            <select id="diaryMealType">
+              <option value="Café da manhã">Café da manhã</option>
+              <option value="Lanche da manhã">Lanche da manhã</option>
+              <option value="Almoço">Almoço</option>
+              <option value="Lanche da tarde">Lanche da tarde</option>
+              <option value="Pré/Pós-treino">Pré/Pós-treino</option>
+              <option value="Jantar">Jantar</option>
+              <option value="Ceia">Ceia</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label>Descrição dos alimentos (prontos/cozidos)</label>
+            <input type="text" id="diaryMealDesc" placeholder="Ex.: 150g arroz branco cozido, 120g peito de frango grelhado, 1 concha feijão" required />
+          </div>
+          <div class="field">
+            <label>Calorias (kcal)</label>
+            <input type="number" id="diaryMealKcal" min="0" step="1" placeholder="Ex.: 520" required />
+          </div>
+          <div class="field">
+            <label>Proteína (g)</label>
+            <input type="text" id="diaryMealProt" placeholder="Ex.: 42,5" required />
+          </div>
+          <div style="grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+            <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;cursor:pointer;">
+              <input type="checkbox" id="diaryIsDelivery" style="width:auto;" /> 🛵 Delivery / Restaurante
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;cursor:pointer;">
+              <input type="checkbox" id="diaryIsClaude" style="width:auto;" /> 🤖 Estimado pelo Claude / IA
+            </label>
+          </div>
+          <div style="grid-column:1/-1;">
+            <button type="submit" class="btn btn-primary btn-block">+ Lançar Refeição no Diário</button>
+          </div>
+        </form>
+
+        <h4 style="margin:16px 0 8px;font-size:0.9rem;">Refeições Lançadas no Dia</h4>
+        <div id="diaryMealsList"></div>
+      </div>
+
+      <!-- Registro de Peso e Cintura -->
+      <div class="card">
+        <div class="card-title">
+          <span>⚖️ Peso & Cintura do Dia</span>
+          <span class="section-tag">Peso 3×/sem • Cintura 15/15d</span>
+        </div>
+        <form id="weightWaistForm" class="form-grid two-col">
+          <div class="field">
+            <label>Peso em jejum (kg)</label>
+            <input type="text" id="diaryWeightInput" placeholder="Ex.: 87,4" />
+          </div>
+          <div class="field">
+            <label>Cintura na altura do umbigo (cm)</label>
+            <input type="text" id="diaryWaistInput" placeholder="Ex.: 94,5" />
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label>Observação (opcional: retenção, sono, pós-evento)</label>
+            <input type="text" id="diaryMeasureNote" placeholder="Ex.: Pesagem em jejum após treino de pernas" />
+          </div>
+          <div style="grid-column:1/-1;">
+            <button type="submit" class="btn btn-primary btn-block">Salvar Peso / Medida</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Registro de Treino do Dia -->
+      <div class="card">
+        <div class="card-title">
+          <span>🏋️ Treino do Dia</span>
+          <span class="section-tag">Atividade & Minutos</span>
+        </div>
+        <form id="workoutForm" class="form-grid two-col">
+          <div class="field">
+            <label>Atividade</label>
+            <select id="diaryWorkoutType">
+              <option value="Musculação">Musculação</option>
+              <option value="Corrida">Corrida</option>
+              <option value="Caminhada rápida">Caminhada rápida</option>
+              <option value="Ciclismo / Bike">Ciclismo / Bike</option>
+              <option value="HIIT / Funcional">HIIT / Funcional</option>
+              <option value="Natação">Natação</option>
+              <option value="Futebol / Esporte coletivo">Futebol / Esporte coletivo</option>
+              <option value="Luta / Artes marciais">Luta / Artes marciais</option>
+              <option value="Outro treino">Outro treino</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Duração (minutos)</label>
+            <input type="number" id="diaryWorkoutMin" min="5" max="480" placeholder="Ex.: 60" required />
+          </div>
+          <div style="grid-column:1/-1;">
+            <button type="submit" class="btn btn-accent btn-block">+ Registrar Treino</button>
+          </div>
+        </form>
+        <div id="diaryWorkoutsList" style="margin-top:10px;"></div>
+      </div>
+    </main>
+
+    <!-- TAB 3: EVOLUÇÃO -->
+    <main id="tab-evolucao" class="container tab-pane hidden">
+      <!-- Revisão de Segunda-feira -->
+      <div id="mondayReviewCard" class="card" style="border-color:var(--accent);">
+        <div class="card-title">
+          <span>📆 Revisão Semanal de Segunda-Feira</span>
+          <span id="plateauBadge" class="section-tag">Monitorando</span>
+        </div>
+        <p id="mondayReviewText" style="font-size:0.84rem;margin:0 0 10px;"></p>
+        <div class="btn-row">
+          <button type="button" id="applyPlateauAdjustBtn" class="btn btn-accent btn-sm">⚡ Ajustar Meta (-100 kcal se estagnado)</button>
+          <button type="button" id="copyMondayReviewPromptBtn" class="btn btn-soft btn-sm">🤖 Revisar Semana com Gemini</button>
+        </div>
+      </div>
+
+      <!-- KPIs Evolução -->
+      <div class="kpi-grid">
+        <div class="kpi-box">
+          <div class="k-lbl">Última Pesagem</div>
+          <div class="k-val" id="evUltima">-- kg</div>
+          <div class="k-sub" id="evUltimaData">--</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Já Perdi (Início)</div>
+          <div class="k-val" style="color:var(--primary);" id="evPerdido">0,0 kg</div>
+          <div class="k-sub" id="evInicioPeso">Início: -- kg</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Ritmo Semanal</div>
+          <div class="k-val" id="evRitmo">0,00 kg/sem</div>
+          <div class="k-sub" id="evFalta">Faltam: -- kg</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Previsão de Meta</div>
+          <div class="k-val" style="color:var(--accent);" id="evPrevisao">--/--/----</div>
+          <div class="k-sub" id="evAlvoRef">Alvo: --/--/----</div>
+        </div>
+      </div>
+
+      <!-- Gráfico 1: Realidade x Projetado -->
+      <div class="card">
+        <div class="card-title">
+          <span>📉 Realidade × Projetado (Dinâmico até Data-Alvo)</span>
+          <span class="section-tag">Recalcula a cada pesagem</span>
+        </div>
+        <p style="font-size:0.79rem;color:var(--text-muted);margin-top:0;">
+          A linha projetada recalcula o ritmo necessário a cada nova pesagem e simula flutuações fisiológicas reais: leve alta pós-fim de semana (glicogênio/sódio), queda progressiva durante a semana, desaceleração em feriados/eventos cadastrados e retenção transitória após festas ou rodízios.
+        </p>
+        <div id="chartRealityVsProjected" class="chart-box"></div>
+        <div class="chart-legend">
+          <span><i class="legend-dot" style="background:#10B981;"></i>Pesagens reais</span>
+          <span><i class="legend-dot" style="background:#F59E0B;"></i>Projetado dinâmico (com ondas semanais e eventos)</span>
+          <span><i class="legend-dot" style="background:#38BDF8;"></i>Peso meta</span>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Projetado Realístico Baseado em Evidências -->
+      <div class="card">
+        <div class="card-title">
+          <span>🧬 Projetado Realístico (Baseado em Evidências)</span>
+          <span class="section-tag warn">Curva Humana Real</span>
+        </div>
+        <p style="font-size:0.79rem;color:var(--text-muted);margin-top:0;">
+          Modelagem baseada na literatura científica de emagrecimento humano (<strong>Hall et al., <em>Lancet</em> 2011</strong> — adaptação metabólica não-linear; <strong>Yanovski et al., <em>NEJM</em> 2000</strong> — oscilações em períodos festivos; <strong>Wing &amp; Phelan, <em>AJCN</em> 2005 / Estudo Look AHEAD</strong> — platôs naturais entre semanas 8–16, episódios transitórios de recaída/falha de adesão e retomada gradual).
+        </p>
+        <div id="chartEvidenceRealistic" class="chart-box"></div>
+        <div class="chart-legend">
+          <span><i class="legend-dot" style="background:#A855F7;"></i>Trajetória realística com recaídas, platôs e retomada</span>
+          <span><i class="legend-dot" style="background:#64748B;"></i>Linha linear teórica (idealizada)</span>
+          <span><i class="legend-dot" style="background:#10B981;"></i>Suas pesagens reais</span>
+        </div>
+      </div>
+
+      <!-- Histórico de Medidas de Cintura -->
+      <div class="card">
+        <div class="card-title">
+          <span>📏 Histórico de Medidas de Cintura (Umbigo)</span>
+          <span class="section-tag">A cada 15 dias</span>
+        </div>
+        <div id="waistSparklineBox" class="chart-box" style="margin-bottom:10px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Cintura (cm)</th>
+                <th>Variação Anterior</th>
+                <th>Desde o Início</th>
+              </tr>
+            </thead>
+            <tbody id="waistHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 4: SEMANA -->
+    <main id="tab-semana" class="container tab-pane hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>📅 Resumo dos Últimos 7 Dias</span>
+          <span class="section-tag">Consistência Semanal</span>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <div class="k-lbl">Média de Kcal</div>
+            <div class="k-val" id="wkAvgKcal">0 kcal</div>
+            <div class="k-sub" id="wkMetaRef">Meta: 0 kcal</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Média de Proteína</div>
+            <div class="k-val" style="color:var(--info);" id="wkAvgProt">0,0 g</div>
+            <div class="k-sub" id="wkProtRef">Meta: 0,0 g</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Deliveries (7d)</div>
+            <div class="k-val" style="color:var(--accent);" id="wkDeliveries">0</div>
+            <div class="k-sub">Refeições fora/delivery</div>
+          </div>
+          <div class="kpi-box">
+            <div class="k-lbl">Treinos (7d)</div>
+            <div class="k-val" style="color:var(--primary);" id="wkWorkouts">0</div>
+            <div class="k-sub" id="wkWorkoutMin">0 min totais</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dia / Data</th>
+                <th>Kcal</th>
+                <th>Proteína</th>
+                <th>Deliveries</th>
+                <th>Treino</th>
+                <th>Peso</th>
+              </tr>
+            </thead>
+            <tbody id="weekTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 5: PLANO -->
+    <main id="tab-plano" class="container tab-pane hidden">
+      <!-- 1. Ingesta de Água -->
+      <div class="card">
+        <div class="card-title">
+          <span>💧 Ingesta Diária de Água Personalizada</span>
+          <span class="section-tag" id="waterTargetBadge">0 ml / dia</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;">
+          <strong>Referência automática por faixa etária:</strong><br/>
+          • Jovens até 17 anos: <strong>40 ml/kg</strong> &nbsp;|&nbsp;
+          • Adultos (18 a 55 anos): <strong>35 ml/kg</strong><br/>
+          • Adultos (55 a 65 anos): <strong>30 ml/kg</strong> &nbsp;|&nbsp;
+          • Idosos (66 anos em diante): <strong>25 ml/kg</strong>
+        </div>
+        <div class="field">
+          <label>Ajuste personalizado: <strong id="waterMlKgLabel">35 ml/kg</strong> (escolha entre 15 ml/kg e 60 ml/kg)</label>
+          <input type="range" id="waterMlKgSlider" min="15" max="60" step="1" value="35" />
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;color:var(--text-muted);">
+            <span>15 ml/kg</span>
+            <button type="button" id="resetWaterAgeBtn" class="btn btn-soft btn-sm">Usar padrão da minha idade</button>
+            <span>60 ml/kg</span>
+          </div>
+        </div>
+        <div class="callout info" style="margin-top:10px;">
+          <strong>Sua meta hídrica:</strong> <span id="waterSummaryText" style="font-size:1rem;font-weight:800;"></span>
+        </div>
+        <div class="callout renal">
+          ⚠️ <strong>Atenção:</strong> Pessoas com Doença Renal podem precisar de uma quantidade diferente de consumo de proteína, água e outros nutrientes, consulte o seu médico!
+        </div>
+      </div>
+
+      <!-- 2. Escala EFCA (Compulsão Alimentar) -->
+      <div class="card" style="border-color:var(--primary);">
+        <div class="card-title">
+          <span>🧠 Comportamento Alimentar (EFCA)</span>
+          <span class="section-tag">Investigação Clínica</span>
+        </div>
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0;">
+          Identifique se sua dificuldade ou compulsão tem origem emocional, hiperfágica, desorganizada ou hedônica através da <strong>Escala de Fenótipos de Comportamento Alimentar (EFCA)</strong>.
+        </p>
+        <div id="efcaSummaryPreview" class="callout hidden"></div>
+        <button type="button" id="openEfcaModalBtn" class="btn btn-primary btn-block">
+          🔍 Descubra a causa da minha compulsão alimentar (Fazer EFCA)
+        </button>
+      </div>
+
+      <!-- 3. Semana de Treinos & Meta Calórica Dinâmica -->
+      <div class="card">
+        <div class="card-title">
+          <span>🏋️ Semana de Treinos & Meta Calórica por Dia</span>
+          <button type="button" id="editPlanWeekBtn" class="btn btn-soft btn-sm">✏️ Editar</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dia</th>
+                <th>Treino</th>
+                <th>Meta Kcal</th>
+                <th>Dica do Dia</th>
+              </tr>
+            </thead>
+            <tbody id="planWeekBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. Próximos Eventos -->
+      <div class="card">
+        <div class="card-title">
+          <span>🎉 Próximos Eventos (Festas, Viagens, Jantares)</span>
+          <button type="button" id="openAddEventModalBtn" class="btn btn-primary btn-sm">+ Adicionar Evento</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0;">
+          Eventos cadastrados ajustam automaticamente a curva de retenção/desaceleração no gráfico <em>Realidade × Projetado</em> e geram protocolo estratégico.
+        </p>
+        <div id="upcomingEventsList"></div>
+      </div>
+
+      <!-- 5. Cardápio Base de um Dia Típico -->
+      <div class="card">
+        <div class="card-title">
+          <span>🍽️ Cardápio Base de um Dia Típico</span>
+          <span class="section-tag" id="baseMenuTotalsTag">0 kcal • 0g prot</span>
+        </div>
+        <div id="baseDayMenuList"></div>
+      </div>
+
+      <!-- 6. Trocas Equivalentes -->
+      <div class="card">
+        <div class="card-title"><span>🔄 Trocas Equivalentes (Proteínas, Carboidratos e Lanches)</span></div>
+        <div id="swapsContainer"></div>
+      </div>
+
+      <!-- 7. Regras para o Fim de Semana & Dia a Dia -->
+      <div class="card">
+        <div class="card-title"><span>🍕 Regras para o Fim de Semana</span></div>
+        <div id="weekendRulesBox" style="font-size:0.86rem;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>⚡ Regras do Dia a Dia (Proteína, Água & Sono)</span></div>
+        <div id="dailyRulesBox" style="font-size:0.86rem;"></div>
+      </div>
+
+      <!-- 8. Marmitas (Lista de Compras & Ordem de Preparo) -->
+      <div class="card">
+        <div class="card-title">
+          <span>🥡 Marmitas: Lista de Compras & Ordem de Preparo</span>
+          <span class="section-tag" id="mealPrepTimeTag">Tempo</span>
+        </div>
+        <div id="mealPrepBox" style="font-size:0.86rem;"></div>
+      </div>
+
+      <!-- 9. Guia do Delivery -->
+      <div class="card">
+        <div class="card-title"><span>🛵 Guia do Delivery: O que Pedir vs. O que Evitar</span></div>
+        <div id="deliveryGuideBox" style="font-size:0.86rem;"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================
+       FOOTER (DISCLAIMER + SEMVER + CHANGELOG)
+  ========================================================== -->
+  <footer class="app-footer">
+    <div class="disclaimer-box">
+      ⚕️ Este aplicativo é apenas uma ferramenta e não substitui profissionais como Nutricionista, Médico, Profissional de Educação Física, Fisioterapeuta e Psicólogos. Faça questão de sempre estar acompanhando de ajuda profissional!
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div>
+        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.0.0</code> (SemVer)
+      </div>
+      <button type="button" id="toggleChangelogBtn" class="btn btn-soft btn-sm">📜 Log de Mudanças (SemVer)</button>
+    </div>
+    <div id="changelogBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
+      <strong>Histórico de Versões — Versionamento Semântico (MAJOR.MINOR.PATCH):</strong>
+      <ul style="margin:6px 0 0;padding-left:18px;">
+        <li><strong>v1.0.0 (17/11/2026):</strong> Lançamento inicial do WebApp PWA para GitHub Pages (instalável em Android e iOS com ícone dedicado); autenticação com pergunta de recuperação de senha; anamnese completa; placar superior fixo/ocultável ao rolar; abas Cardápio, Diário, Evolução (gráficos Realidade × Projetado e Projetado Realístico baseado em evidências), Semana e Plano; integração bidirecional com Google Sheets via Apps Script; Escala EFCA de fenótipos alimentares; exportação de relatório clínico em .PDF para Médico/Nutricionista e sistema de notificações com níveis de incisividade e motivo personalizado.</li>
+      </ul>
+    </div>
+  </footer>
+</div>
+
+<!-- =========================================================
+     TOP-LEFT "2 RISCOS" MENU DRAWER
+========================================================== -->
+<div id="drawerOverlay" class="overlay">
+  <aside class="drawer-panel" aria-label="Menu principal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img src="./icons/icon-192.png" alt="Ícone" style="width:32px;height:32px;border-radius:8px;" />
+        <div>
+          <div style="font-weight:800;font-size:0.9rem;">Menu do Perfil</div>
+          <div id="drawerProfileName" style="font-size:0.75rem;color:var(--primary);font-weight:700;">Não conectado</div>
+        </div>
+      </div>
+      <button id="closeDrawerBtn" class="btn btn-soft btn-sm">✕</button>
+    </div>
+
+    <button id="drawerSwitchProfileBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      🔄 Trocar perfil
+    </button>
+    <button id="drawerLogoutBtn" class="btn btn-danger btn-block" style="justify-content:flex-start;">
+      🚪 Logout
+    </button>
+
+    <hr style="border:0;border-top:1px solid var(--border);width:100%;margin:4px 0;" />
+
+    <button id="drawerEditProfileBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      📋 Editar Meus Dados & Rotina
+    </button>
+    <button id="drawerEfcaBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      🧠 Causa da Compulsão (EFCA)
+    </button>
+    <button id="drawerPdfBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      📄 Gerar Relatório .PDF (Médico/Nutri)
+    </button>
+    <button id="drawerNotifBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      🔔 Configurar Notificações
+    </button>
+    <button id="drawerSheetsBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      ☁️ Configurar Planilha Google Sheets
+    </button>
+    <button id="drawerInstallHelpBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
+      📲 Instalar no Android / iPhone
+    </button>
+  </aside>
+</div>
+
+<!-- =========================================================
+     GENERIC MODAL CONTAINER
+========================================================== -->
+<div id="genericModalOverlay" class="overlay">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;">
+      <h3 id="genericModalTitle" style="margin:0;font-size:1.05rem;">Modal</h3>
+      <button id="closeGenericModalBtn" class="btn btn-soft btn-sm">✕</button>
+    </div>
+    <div id="genericModalBody"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  const SPREADSHEET_ID = '1lM9dHsrdv59n_HkY5Oa75UBzbabNDUfdCvgOMgCWxxc';
+  const STORAGE_KEY = 'marcusnator_pro_athlete_v2_db';
+
+  // Brazilian number formatters
+  const fmtInt = (n) => Math.round(Number(n) || 0).toLocaleString('pt-BR');
+  const fmtDec = (n, d = 1) => (Number(n) || 0).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const parseBrNum = (v) => {
+    if (typeof v === 'number') return isNaN(v) ? 0 : v;
+    if (!v) return 0;
+    const clean = String(v).trim().replace(/\./g, '').replace(',', '.');
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
+  };
+  const todayISO = () => {
+    const d = new Date();
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0, 10);
+  };
+  const formatDateBR = (iso) => {
+    if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '--/--/----';
+    const [y, m, d] = iso.slice(0, 10).split('-');
+    return `${d}/${m}/${y}`;
+  };
+  const addDaysISO = (iso, days) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d + days));
+    return dt.toISOString().slice(0, 10);
+  };
+  const weekdayBR = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    return ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][dt.getUTCDay()];
+  };
+
+  async function sha256(str) {
+    const norm = String(str || '').trim().toLowerCase();
+    if (window.crypto && window.crypto.subtle) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(norm));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    let h = 0;
+    for (let i = 0; i < norm.length; i++) h = ((h << 5) - h) + norm.charCodeAt(i) | 0;
+    return 'h_' + Math.abs(h).toString(16);
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.display = 'block';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.style.display = 'none'; }, 3400);
+  }
+
+  // Database state
+  function loadDB() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return {
+      appsScriptUrl: '',
+      theme: 'dark',
+      stickyAutoHide: false,
+      activeProfileId: null,
+      profiles: {}
+    };
+  }
+
+  let DB = loadDB();
+  function saveDB(triggerSync = false) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+    if (triggerSync && DB.activeProfileId && DB.appsScriptUrl) {
+      syncProfileToSheets(DB.activeProfileId, true);
+    }
+  }
+
+  function getActiveUser() {
+    if (!DB.activeProfileId) return null;
+    return DB.profiles[DB.activeProfileId] || null;
+  }
+
+  // Theme initialization
+  function applyTheme(t) {
+    DB.theme = t;
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeToggleBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  }
+  applyTheme(DB.theme || 'dark');
+
+  // =========================================================
+  // GOOGLE SHEETS SYNC ENGINE
+  // =========================================================
+  function setSyncIndicator(state, label) {
+    const dot = document.getElementById('syncDot');
+    const lbl = document.getElementById('syncLabel');
+    dot.className = 'sync-dot' + (state === 'ok' ? ' ok' : state === 'err' ? ' err' : '');
+    lbl.textContent = label;
+  }
+
+  async function syncProfileToSheets(profileId, silent = false) {
+    const u = DB.profiles[profileId];
+    if (!u) return;
+    if (!DB.appsScriptUrl) {
+      setSyncIndicator('warn', 'Local');
+      if (!silent) showToast('Configure a URL do Apps Script para sincronizar com a planilha.');
+      return;
+    }
+    setSyncIndicator('warn', 'Sinc...');
+    try {
+      const payload = {
+        action: 'sync_profile_bundle',
+        profileId: u.id,
+        perfil: {
+          ID_Perfil: u.id,
+          Nome_Completo: u.nome,
+          Senha_Hash: u.senhaHash,
+          Pergunta_Recuperacao: u.perguntaRecuperacao,
+          Resposta_Recuperacao_Hash: u.respostaHash,
+          Criado_Em: u.criadoEm,
+          Atualizado_Em: new Date().toISOString()
+        },
+        anamnese: u.anamnese ? {
+          ID_Perfil: u.id,
+          Altura_m: u.anamnese.altura,
+          Idade: u.anamnese.idade,
+          Sexo: u.anamnese.sexo,
+          Peso_Atual_kg: u.anamnese.pesoAtual,
+          Peso_Meta_kg: u.anamnese.pesoMeta,
+          Data_Alvo: u.anamnese.dataAlvo,
+          Medidas_Corporais_JSON: u.anamnese.medidas || [],
+          Meta_Kcal: u.anamnese.metaKcal,
+          Meta_Proteina_g: u.anamnese.metaProt,
+          Data_Inicio: u.anamnese.dataInicio,
+          Horario_Acordar: u.anamnese.acordar,
+          Horario_Dormir: u.anamnese.dormir,
+          Treinos_Semana: u.anamnese.treinosSemana,
+          Horario_Trabalho: u.anamnese.horarioTrabalho,
+          Modalidade_Trabalho: u.anamnese.modalidadeTrabalho,
+          O_Que_Come_Hoje: u.anamnese.comeHoje,
+          Comidas_Nao_Cortar: u.anamnese.naoCortar,
+          Comidas_Nao_Come: u.anamnese.naoCome,
+          Tempo_Cozinhar: u.anamnese.tempoCozinhar,
+          Frequencia_Delivery: u.anamnese.deliveryFreq,
+          Suplementos: u.anamnese.suplementos,
+          Agua_ml_kg: u.anamnese.aguaMlKg || 35,
+          Agua_Meta_ml: u.anamnese.aguaMetaMl || 2500,
+          Config_Notificacoes_JSON: u.notifications || [],
+          Atualizado_Em: new Date().toISOString()
+        } : null,
+        cardapio: (u.cardapio || []).map(c => ({
+          ID_Registro: c.id,
+          ID_Perfil: u.id,
+          Data_ISO: c.date,
+          Refeicao_Nome: c.nome,
+          Horario: c.horario,
+          Itens_JSON: c.itens,
+          Kcal_Total: c.kcal,
+          Proteina_Total: c.prot,
+          Status: c.status,
+          Atualizado_Em: new Date().toISOString()
+        })),
+        diario: (u.diario || []).map(d => ({
+          ID_Registro: d.id,
+          ID_Perfil: u.id,
+          Data_ISO: d.date,
+          Horario: d.horario,
+          Refeicao: d.refeicao,
+          Descricao: d.descricao,
+          Kcal: d.kcal,
+          Proteina_g: d.prot,
+          Delivery: d.delivery ? 'Sim' : 'Não',
+          Estimado_IA: d.estimadoIA ? 'Sim' : 'Não',
+          Criado_Em: d.criadoEm || new Date().toISOString()
+        })),
+        pesagens: (u.pesagens || []).map(p => ({
+          ID_Registro: p.id,
+          ID_Perfil: u.id,
+          Data_ISO: p.date,
+          Peso_kg: p.peso || '',
+          Cintura_cm: p.cintura || '',
+          Outras_Medidas_JSON: p.outras || [],
+          Observacao: p.obs || '',
+          Criado_Em: p.criadoEm || new Date().toISOString()
+        })),
+        treinos: (u.treinos || []).map(t => ({
+          ID_Registro: t.id,
+          ID_Perfil: u.id,
+          Data_ISO: t.date,
+          Atividade: t.atividade,
+          Minutos: t.minutos,
+          Intensidade: t.intensidade || 'Moderada',
+          Criado_Em: t.criadoEm || new Date().toISOString()
+        })),
+        plano: u.plano ? {
+          ID_Perfil: u.id,
+          Semana_Treinos_JSON: u.plano.semanaTreinos,
+          Proximos_Eventos_JSON: u.plano.eventos,
+          Cardapio_Base_JSON: u.plano.cardapioBase,
+          Trocas_JSON: u.plano.trocas,
+          Regras_FDS_JSON: u.plano.regrasFds,
+          Regras_Dia_JSON: u.plano.regrasDia,
+          Marmitas_JSON: u.plano.marmitas,
+          Guia_Delivery_JSON: u.plano.guiaDelivery,
+          Atualizado_Em: new Date().toISOString()
+        } : null,
+        efca: (u.efcaHistory || []).map(e => ({
+          ID_Registro: e.id,
+          ID_Perfil: u.id,
+          Data_ISO: e.date,
+          Pontuacao_Total: e.total,
+          Fenotipos_JSON: e.scores,
+          Fenotipo_Dominante: e.dominante,
+          Respostas_JSON: e.answers
+        }))
+      };
+
+      const res = await fetch(DB.appsScriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (json && json.ok) {
+        setSyncIndicator('ok', 'Sincronizado');
+        if (!silent) showToast('✅ Dados sincronizados com a planilha Google Sheets!');
+      } else {
+        throw new Error((json && json.error) || 'Erro na resposta');
+      }
+    } catch (err) {
+      setSyncIndicator('err', 'Erro Sync');
+      if (!silent) showToast('⚠️ Falha na sincronização: ' + err.message);
+    }
+  }
+
+  async function pullProfilesFromSheets() {
+    if (!DB.appsScriptUrl) {
+      openSheetsConfigModal();
+      return;
+    }
+    setSyncIndicator('warn', 'Buscando...');
+    try {
+      const res = await fetch(`${DB.appsScriptUrl}?action=list_profiles`);
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || 'Erro ao buscar perfis');
+      (json.profiles || []).forEach(p => {
+        if (!p.ID_Perfil) return;
+        if (!DB.profiles[p.ID_Perfil]) {
+          DB.profiles[p.ID_Perfil] = {
+            id: p.ID_Perfil,
+            nome: p.Nome_Completo,
+            senhaHash: p.Senha_Hash,
+            perguntaRecuperacao: p.Pergunta_Recuperacao,
+            respostaHash: p.Resposta_Recuperacao_Hash,
+            criadoEm: p.Criado_Em || new Date().toISOString(),
+            anamnese: null,
+            cardapio: [],
+            diario: [],
+            pesagens: [],
+            treinos: [],
+            plano: null,
+            efcaHistory: [],
+            notifications: defaultNotifications()
+          };
+        } else {
+          DB.profiles[p.ID_Perfil].nome = p.Nome_Completo;
+          DB.profiles[p.ID_Perfil].senhaHash = p.Senha_Hash;
+          DB.profiles[p.ID_Perfil].perguntaRecuperacao = p.Pergunta_Recuperacao;
+          DB.profiles[p.ID_Perfil].respostaHash = p.Resposta_Recuperacao_Hash;
+        }
+      });
+      saveDB(false);
+      populateAuthProfileDropdowns();
+      setSyncIndicator('ok', 'Sincronizado');
+      showToast(`✅ ${(json.profiles || []).length} perfil(is) carregado(s) da planilha!`);
+    } catch (err) {
+      setSyncIndicator('err', 'Erro');
+      showToast('Erro ao buscar perfis: ' + err.message);
+    }
+  }
+
+  async function pullFullBundleForProfile(profileId) {
+    if (!DB.appsScriptUrl) return;
+    try {
+      const res = await fetch(`${DB.appsScriptUrl}?action=load_profile_bundle&profileId=${encodeURIComponent(profileId)}`);
+      const json = await res.json();
+      if (!json.ok) return;
+      const u = DB.profiles[profileId];
+      if (!u) return;
+      if (json.anamnese) {
+        const a = json.anamnese;
+        u.anamnese = {
+          altura: parseBrNum(a.Altura_m),
+          idade: Number(a.Idade) || 30,
+          sexo: a.Sexo || 'Masculino',
+          pesoAtual: parseBrNum(a.Peso_Atual_kg),
+          pesoMeta: parseBrNum(a.Peso_Meta_kg),
+          dataAlvo: String(a.Data_Alvo || '').slice(0, 10),
+          medidas: safeParseJSON(a.Medidas_Corporais_JSON, []),
+          metaKcal: Number(a.Meta_Kcal) || 2000,
+          metaProt: parseBrNum(a.Meta_Proteina_g) || 150,
+          dataInicio: String(a.Data_Inicio || todayISO()).slice(0, 10),
+          acordar: a.Horario_Acordar || '06:30',
+          dormir: a.Horario_Dormir || '23:00',
+          treinosSemana: a.Treinos_Semana || '',
+          horarioTrabalho: a.Horario_Trabalho || '',
+          modalidadeTrabalho: a.Modalidade_Trabalho || 'Presencial',
+          comeHoje: a.O_Que_Come_Hoje || '',
+          naoCortar: a.Comidas_Nao_Cortar || '',
+          naoCome: a.Comidas_Nao_Come || '',
+          tempoCozinhar: a.Tempo_Cozinhar || '',
+          deliveryFreq: a.Frequencia_Delivery || '',
+          suplementos: a.Suplementos || '',
+          aguaMlKg: Number(a.Agua_ml_kg) || 35,
+          aguaMetaMl: Number(a.Agua_Meta_ml) || 2500
+        };
+        const notifs = safeParseJSON(a.Config_Notificacoes_JSON, null);
+        if (Array.isArray(notifs) && notifs.length) u.notifications = notifs;
+      }
+      if (Array.isArray(json.cardapio) && json.cardapio.length) {
+        u.cardapio = json.cardapio.map(c => ({
+          id: c.ID_Registro,
+          date: String(c.Data_ISO).slice(0, 10),
+          nome: c.Refeicao_Nome,
+          horario: c.Horario,
+          itens: safeParseJSON(c.Itens_JSON, []),
+          kcal: Number(c.Kcal_Total) || 0,
+          prot: parseBrNum(c.Proteina_Total),
+          status: c.Status || 'a comer'
+        }));
+      }
+      if (Array.isArray(json.diario) && json.diario.length) {
+        u.diario = json.diario.map(d => ({
+          id: d.ID_Registro,
+          date: String(d.Data_ISO).slice(0, 10),
+          horario: d.Horario,
+          refeicao: d.Refeicao,
+          descricao: d.Descricao,
+          kcal: Number(d.Kcal) || 0,
+          prot: parseBrNum(d.Proteina_g),
+          delivery: d.Delivery === 'Sim' || d.Delivery === true,
+          estimadoIA: d.Estimado_IA === 'Sim' || d.Estimado_IA === true,
+          criadoEm: d.Criado_Em
+        }));
+      }
+      if (Array.isArray(json.pesagens) && json.pesagens.length) {
+        u.pesagens = json.pesagens.map(p => ({
+          id: p.ID_Registro,
+          date: String(p.Data_ISO).slice(0, 10),
+          peso: p.Peso_kg ? parseBrNum(p.Peso_kg) : null,
+          cintura: p.Cintura_cm ? parseBrNum(p.Cintura_cm) : null,
+          outras: safeParseJSON(p.Outras_Medidas_JSON, []),
+          obs: p.Observacao || '',
+          criadoEm: p.Criado_Em
+        }));
+      }
+      if (Array.isArray(json.treinos) && json.treinos.length) {
+        u.treinos = json.treinos.map(t => ({
+          id: t.ID_Registro,
+          date: String(t.Data_ISO).slice(0, 10),
+          atividade: t.Atividade,
+          minutos: Number(t.Minutos) || 0,
+          intensidade: t.Intensidade || 'Moderada',
+          criadoEm: t.Criado_Em
+        }));
+      }
+      if (json.plano) {
+        u.plano = {
+          semanaTreinos: safeParseJSON(json.plano.Semana_Treinos_JSON, []),
+          eventos: safeParseJSON(json.plano.Proximos_Eventos_JSON, []),
+          cardapioBase: safeParseJSON(json.plano.Cardapio_Base_JSON, []),
+          trocas: safeParseJSON(json.plano.Trocas_JSON, {}),
+          regrasFds: safeParseJSON(json.plano.Regras_FDS_JSON, []),
+          regrasDia: safeParseJSON(json.plano.Regras_Dia_JSON, []),
+          marmitas: safeParseJSON(json.plano.Marmitas_JSON, {}),
+          guiaDelivery: safeParseJSON(json.plano.Guia_Delivery_JSON, [])
+        };
+      }
+      if (Array.isArray(json.efca) && json.efca.length) {
+        u.efcaHistory = json.efca.map(e => ({
+          id: e.ID_Registro,
+          date: String(e.Data_ISO).slice(0, 10),
+          total: Number(e.Pontuacao_Total) || 0,
+          scores: safeParseJSON(e.Fenotipos_JSON, {}),
+          dominante: e.Fenotipo_Dominante,
+          answers: safeParseJSON(e.Respostas_JSON, [])
+        }));
+      }
+      saveDB(false);
+    } catch (e) {}
+  }
+
+  function safeParseJSON(val, fallback) {
+    if (!val) return fallback;
+    if (typeof val === 'object') return val;
+    try { return JSON.parse(val); } catch (e) { return fallback; }
+  }
+
+  // =========================================================
+  // NAVIGATION & AUTH FLOW
+  // =========================================================
+  let selectedMenuDate = todayISO();
+  let selectedDiaryDate = todayISO();
+
+  function populateAuthProfileDropdowns() {
+    const selLogin = document.getElementById('loginProfileSelect');
+    const selRec = document.getElementById('recProfileSelect');
+    const profiles = Object.values(DB.profiles);
+    selLogin.innerHTML = '<option value="">-- Selecione um perfil ou digite o nome abaixo --</option>';
+    selRec.innerHTML = '<option value="">-- Selecione o perfil --</option>';
+    profiles.forEach(p => {
+      const opt1 = document.createElement('option');
+      opt1.value = p.id;
+      opt1.textContent = p.nome;
+      selLogin.appendChild(opt1);
+
+      const opt2 = document.createElement('option');
+      opt2.value = p.id;
+      opt2.textContent = p.nome;
+      selRec.appendChild(opt2);
+    });
+  }
+
+  function switchAuthTab(tabName) {
+    document.querySelectorAll('.auth-switch').forEach(b => {
+      b.className = 'btn btn-sm auth-switch ' + (b.dataset.authTab === tabName ? 'btn-primary' : 'btn-soft');
+    });
+    document.getElementById('loginForm').classList.toggle('hidden', tabName !== 'login');
+    document.getElementById('registerForm').classList.toggle('hidden', tabName !== 'register');
+    document.getElementById('recoverSection').classList.toggle('hidden', tabName !== 'recover');
+  }
+
+  document.querySelectorAll('.auth-switch').forEach(btn => {
+    btn.addEventListener('click', () => switchAuthTab(btn.dataset.authTab));
+  });
+
+  document.getElementById('loginProfileSelect').addEventListener('change', (e) => {
+    const p = DB.profiles[e.target.value];
+    if (p) document.getElementById('loginNameInput').value = p.nome;
+  });
+
+  document.getElementById('regQuestionSelect').addEventListener('change', (e) => {
+    document.getElementById('regCustomQuestionWrap').classList.toggle('hidden', e.target.value !== '__custom__');
+  });
+
+  document.getElementById('recProfileSelect').addEventListener('change', (e) => {
+    const p = DB.profiles[e.target.value];
+    const box = document.getElementById('recQuestionBox');
+    document.getElementById('recNewPassWrap').classList.add('hidden');
+    document.getElementById('recSavePassBtn').classList.add('hidden');
+    if (p) {
+      box.classList.remove('hidden');
+      document.getElementById('recQuestionText').textContent = p.perguntaRecuperacao;
+    } else {
+      box.classList.add('hidden');
+    }
+  });
+
+  // Register Profile
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('regNameInput').value.trim();
+    const senha = document.getElementById('regPassInput').value;
+    const qSel = document.getElementById('regQuestionSelect').value;
+    const pergunta = qSel === '__custom__'
+      ? document.getElementById('regCustomQuestionInput').value.trim()
+      : qSel;
+    const resposta = document.getElementById('regAnswerInput').value.trim();
+
+    if (!nome || !senha || !pergunta || !resposta) {
+      showToast('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const id = 'PRF_' + Date.now();
+    const senhaHash = await sha256(senha);
+    const respostaHash = await sha256(resposta);
+
+    DB.profiles[id] = {
+      id,
+      nome,
+      senhaHash,
+      perguntaRecuperacao: pergunta,
+      respostaHash,
+      criadoEm: new Date().toISOString(),
+      anamnese: null,
+      cardapio: [],
+      diario: [],
+      pesagens: [],
+      treinos: [],
+      plano: null,
+      efcaHistory: [],
+      notifications: defaultNotifications()
+    };
+    DB.activeProfileId = id;
+    saveDB(true);
+    showToast('✅ Perfil criado! Complete agora seus dados iniciais.');
+    routeApp();
+  });
+
+  // Login Profile
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const selId = document.getElementById('loginProfileSelect').value;
+    const nome = document.getElementById('loginNameInput').value.trim().toLowerCase();
+    const senha = document.getElementById('loginPassInput').value;
+    const hash = await sha256(senha);
+
+    let found = selId ? DB.profiles[selId] : null;
+    if (!found) {
+      found = Object.values(DB.profiles).find(p => p.nome.trim().toLowerCase() === nome);
+    }
+    if (!found) {
+      showToast('❌ Perfil não encontrado. Crie um perfil ou busque na planilha.');
+      return;
+    }
+    if (found.senhaHash !== hash) {
+      showToast('❌ Senha incorreta. Use "Recuperar Senha" se precisar.');
+      return;
+    }
+
+    DB.activeProfileId = found.id;
+    saveDB(false);
+    if (DB.appsScriptUrl) {
+      await pullFullBundleForProfile(found.id);
+    }
+    showToast(`Bem-vindo(a), ${found.nome.split(' ')[0]}!`);
+    routeApp();
+  });
+
+  // Password Recovery
+  document.getElementById('recVerifyBtn').addEventListener('click', async () => {
+    const pid = document.getElementById('recProfileSelect').value;
+    const p = DB.profiles[pid];
+    if (!p) { showToast('Selecione um perfil primeiro.'); return; }
+    const ans = document.getElementById('recAnswerInput').value.trim();
+    const ansHash = await sha256(ans);
+    if (ansHash === p.respostaHash) {
+      showToast('✅ Resposta correta! Defina sua nova senha abaixo.');
+      document.getElementById('recNewPassWrap').classList.remove('hidden');
+      document.getElementById('recSavePassBtn').classList.remove('hidden');
+    } else {
+      showToast('❌ Resposta incorreta. Tente novamente.');
+    }
+  });
+
+  document.getElementById('recSavePassBtn').addEventListener('click', async () => {
+    const pid = document.getElementById('recProfileSelect').value;
+    const p = DB.profiles[pid];
+    const newPass = document.getElementById('recNewPassInput').value;
+    if (!p || newPass.length < 4) {
+      showToast('A nova senha deve ter pelo menos 4 caracteres.');
+      return;
+    }
+    p.senhaHash = await sha256(newPass);
+    DB.activeProfileId = p.id;
+    saveDB(true);
+    showToast('✅ Senha redefinida e salva na planilha!');
+    routeApp();
+  });
+
+  document.getElementById('pullProfilesFromSheetBtn').addEventListener('click', pullProfilesFromSheets);
+
+  // =========================================================
+  // ONBOARDING (PAGE 2)
+  // =========================================================
+  const MEASURE_TYPES = [
+    'Cintura (altura do umbigo)',
+    'Abdômen',
+    'Quadril',
+    'Tórax / Peitoral',
+    'Braço direito',
+    'Braço esquerdo',
+    'Coxa direita',
+    'Coxa esquerda',
+    'Panturrilha',
+    'Pescoço',
+    'Outra medida personalizada'
+  ];
+
+  function addMeasureRow(tipo = 'Cintura (altura do umbigo)', valor = '') {
+    const cont = document.getElementById('obMeasuresContainer');
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:1.4fr 0.8fr auto;gap:6px;align-items:center;';
+    const optionsHtml = MEASURE_TYPES.map(t => `<option value="${t}" ${t === tipo ? 'selected' : ''}>${t}</option>`).join('');
+    row.innerHTML = `
+      <select class="m-type">${optionsHtml}</select>
+      <input type="text" class="m-val" placeholder="cm" value="${valor}" />
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">✕</button>
+    `;
+    cont.appendChild(row);
+  }
+
+  document.getElementById('addMeasureRowBtn').addEventListener('click', () => addMeasureRow('Quadril', ''));
+
+  function calculateRecommendedMacros() {
+    const altura = parseBrNum(document.getElementById('obAltura').value);
+    const idade = parseInt(document.getElementById('obIdade').value, 10);
+    const sexo = document.getElementById('obSexo').value;
+    const pesoAtual = parseBrNum(document.getElementById('obPesoAtual').value);
+    const pesoMeta = parseBrNum(document.getElementById('obPesoMeta').value);
+    const dataAlvo = document.getElementById('obDataAlvo').value;
+    const dataInicio = document.getElementById('obDataInicio').value || todayISO();
+    const treinosTxt = document.getElementById('obTreinosSemana').value.toLowerCase();
+
+    if (!altura || !idade || !pesoAtual) {
+      showToast('Preencha Altura, Idade e Peso atual para calcular.');
+      return null;
+    }
+
+    const altCm = altura < 3 ? altura * 100 : altura;
+    // Mifflin-St Jeor
+    const tmb = sexo === 'Feminino'
+      ? (10 * pesoAtual) + (6.25 * altCm) - (5 * idade) - 161
+      : (10 * pesoAtual) + (6.25 * altCm) - (5 * idade) + 5;
+
+    let fator = 1.375;
+    if (treinosTxt.includes('6') || treinosTxt.includes('todos') || treinosTxt.includes('diário')) fator = 1.65;
+    else if (treinosTxt.includes('4') || treinosTxt.includes('5')) fator = 1.55;
+    else if (treinosTxt.includes('0') || treinosTxt.includes('nenhum') || treinosTxt.includes('sedent')) fator = 1.2;
+
+    const get = tmb * fator;
+    let deficitDiario = 500;
+    let diasMeta = 90;
+    if (pesoMeta && dataAlvo && dataAlvo > dataInicio) {
+      const diffDays = Math.max(14, Math.round((new Date(dataAlvo) - new Date(dataInicio)) / 86400000));
+      diasMeta = diffDays;
+      const kgPerder = Math.max(0, pesoAtual - pesoMeta);
+      const calcDef = (kgPerder * 7700) / diffDays;
+      deficitDiario = Math.min(850, Math.max(300, calcDef));
+    }
+
+    const piso = sexo === 'Feminino' ? 1250 : 1500;
+    const metaKcal = Math.max(piso, Math.round((get - deficitDiario) / 10) * 10);
+    const refPesoProt = pesoMeta && pesoMeta < pesoAtual ? (pesoAtual * 0.4 + pesoMeta * 0.6) : pesoAtual;
+    const metaProt = Math.round(refPesoProt * 2.0);
+
+    return { tmb: Math.round(tmb), get: Math.round(get), metaKcal, metaProt, deficitDiario: Math.round(deficitDiario), diasMeta };
+  }
+
+  document.getElementById('calcKcalBtn').addEventListener('click', () => {
+    const r = calculateRecommendedMacros();
+    if (!r) return;
+    document.getElementById('obMetaKcal').value = r.metaKcal;
+    const box = document.getElementById('calcExplanationBox');
+    box.classList.remove('hidden');
+    box.innerHTML = `⚡ <strong>Cálculo Clínico (Mifflin-St Jeor):</strong> TMB estimada em <strong>${fmtInt(r.tmb)} kcal</strong> e Gasto Energético Total (GET) em <strong>${fmtInt(r.get)} kcal/dia</strong>. Aplicado déficit seguro de ~${fmtInt(r.deficitDiario)} kcal/dia → Meta sugerida: <strong>${fmtInt(r.metaKcal)} kcal/dia</strong>.`;
+  });
+
+  document.getElementById('calcProtBtn').addEventListener('click', () => {
+    const r = calculateRecommendedMacros();
+    if (!r) return;
+    document.getElementById('obMetaProt').value = r.metaProt;
+    const box = document.getElementById('calcExplanationBox');
+    box.classList.remove('hidden');
+    box.innerHTML = `🥩 <strong>Meta Proteica (~2,0 g/kg ajustado):</strong> Sugerimos <strong>${fmtInt(r.metaProt)} g/dia</strong> para preservação máxima de massa magra e saciedade durante o déficit calórico.`;
+  });
+
+  function recommendedWaterMlKg(age) {
+    if (age <= 17) return 40;
+    if (age <= 55) return 35;
+    if (age <= 65) return 30;
+    return 25;
+  }
+
+  function buildInitialPlanFromAnamnese(a) {
+    const kcal = a.metaKcal || 2000;
+    const prot = a.metaProt || 150;
+    const naoCortar = a.naoCortar || 'pizza, chocolate ou lanche favorito';
+    const tempoCoz = a.tempoCozinhar || '2 horas no domingo';
+
+    const semanaTreinos = [
+      { dia: 'Segunda-feira', treino: 'Musculação (Superiores / Full Body)', kcal: Math.round(kcal * 1.04), dica: 'Dia de maior gasto: concentre carboidratos no pré e pós-treino.' },
+      { dia: 'Terça-feira', treino: 'Cardio Moderado / Corrida 40 min', kcal: kcal, dica: 'Mantenha hidratação reforçada (+500 ml durante o cardio).' },
+      { dia: 'Quarta-feira', treino: 'Musculação (Inferiores)', kcal: Math.round(kcal * 1.06), dica: 'Treino intenso: garanta pelo menos 35g de proteína na refeição seguinte.' },
+      { dia: 'Quinta-feira', treino: 'Descanso Ativo / Caminhada', kcal: Math.round(kcal * 0.93), dica: 'Dia mais leve: priorize vegetais volumosos e proteínas magras.' },
+      { dia: 'Sexta-feira', treino: 'Musculação (Geral / Metabólico)', kcal: Math.round(kcal * 1.03), dica: 'Prepare o terreno para o fim de semana sem pular refeições proteicas.' },
+      { dia: 'Sábado', treino: 'Treino Livre / Esporte', kcal: Math.round(kcal * 1.05), dica: 'Refeição livre planejada à noite: economize gorduras no almoço.' },
+      { dia: 'Domingo', treino: 'Descanso & Preparo de Marmitas', kcal: Math.round(kcal * 0.90), dica: `Use seu bloco (${tempoCoz}) para deixar proteínas e bases prontas.` }
+    ];
+
+    const cardapioBase = [
+      {
+        horario: a.acordar || '07:00',
+        nome: 'Café da manhã',
+        itens: [
+          { item: 'Ovos mexidos ou cozidos', qtd: '3 unidades (150g)', kcal: 225, prot: 19 },
+          { item: 'Pão francês ou integral', qtd: '1 unidade (50g)', kcal: 140, prot: 4 },
+          { item: 'Fruta (mamão ou banana)', qtd: '1 porção (100g)', kcal: 80, prot: 1 }
+        ]
+      },
+      {
+        horario: '12:30',
+        nome: 'Almoço',
+        itens: [
+          { item: 'Peito de frango grelhado / patinho', qtd: '160g pronto', kcal: 265, prot: 49 },
+          { item: 'Arroz branco ou integral cozido', qtd: '150g', kcal: 192, prot: 4 },
+          { item: 'Feijão carioca cozido', qtd: '1 concha (100g)', kcal: 76, prot: 5 },
+          { item: 'Salada verde + legumes + 1 col. azeite', qtd: 'À vontade + 8ml', kcal: 95, prot: 2 }
+        ]
+      },
+      {
+        horario: '16:30',
+        nome: 'Lanche da tarde / Pré-treino',
+        itens: [
+          { item: 'Iogurte natural desnatado ou Whey Protein', qtd: '170g ou 1 scoop (30g)', kcal: 120, prot: 24 },
+          { item: 'Aveia em flocos + fruta', qtd: '20g + 100g', kcal: 155, prot: 4 }
+        ]
+      },
+      {
+        horario: '20:00',
+        nome: 'Jantar',
+        itens: [
+          { item: 'Filé de tilápia, frango ou carne magra', qtd: '160g pronto', kcal: 250, prot: 46 },
+          { item: 'Batata inglesa/doce cozida ou arroz', qtd: '140g', kcal: 140, prot: 3 },
+          { item: 'Legumes refogados no vapor/airfryer', qtd: '150g', kcal: 55, prot: 2 }
+        ]
+      }
+    ];
+
+    return {
+      semanaTreinos,
+      eventos: [],
+      cardapioBase,
+      trocas: {
+        proteinas: [
+          '100g peito de frango grelhado (165 kcal | 31g prot) ↔ 100g patinho moído magro (215 kcal | 32g prot)',
+          '100g peito de frango ↔ 130g filé de tilápia grelhada (165 kcal | 33g prot)',
+          '1 scoop Whey Protein (30g | 120 kcal | 24g prot) ↔ 3 ovos inteiros + 2 claras (245 kcal | 25g prot)'
+        ],
+        carboidratos: [
+          '100g arroz branco cozido (128 kcal) ↔ 100g arroz integral cozido (124 kcal)',
+          '100g arroz branco cozido (128 kcal) ↔ 150g batata inglesa cozida (115 kcal)',
+          '100g arroz branco cozido (128 kcal) ↔ 125g batata-doce cozida (112 kcal)',
+          '1 pão francês (50g | 140 kcal) ↔ 2 fatias pão de forma integral (130 kcal) ou 70g tapioca hidratada (165 kcal)'
+        ],
+        lanches: [
+          '170g iogurte natural + 1 scoop whey (210 kcal | 30g prot)',
+          '2 fatias pão integral + 80g frango desfiado + requeijão light (260 kcal | 26g prot)',
+          '1 banana + 20g pasta de amendoim + 150ml leite desnatado (280 kcal | 11g prot)'
+        ]
+      },
+      regrasFds: [
+        `Seus favoritos preservados (${naoCortar}): encaixe 1 a 2 refeições livres planejadas sem culpa, mantendo as outras refeições do dia ricas em proteína e vegetais.`,
+        'Pizza: limite a 2–3 fatias finas (preferir sabores com proteína como frango, lombo ou atum) e evite borda recheada.',
+        'Bebidas alcoólicas: intercale 1 copo de água com gás/limão para cada dose; prefira drinks sem açúcar ou cerveja puro malte/long neck contada no diário.',
+        'Doces: coma sempre após uma refeição completa (nunca em jejum) em porção definida (ex.: 25–30g de chocolate).'
+      ],
+      regrasDia: [
+        `Bata sua meta diária de ${fmtInt(prot)}g de proteína distribuída em 3 a 4 refeições (mínimo 25–35g por refeição).`,
+        `Hidratação: mantenha sua meta diária de água fracionada ao longo do dia.`,
+        `Sono: respeite sua janela (${a.dormir || '23:00'} às ${a.acordar || '06:30'}) — dormir menos de 6h aumenta grelina e retenção hídrica.`,
+        'Registre peso em jejum 3× por semana e cintura a cada 15 dias na altura do umbigo.'
+      ],
+      marmitas: {
+        tempo: tempoCoz,
+        compras: [
+          '1,5 kg a 2,0 kg de peito de frango ou patinho moído',
+          '1 dúzia de ovos + iogurte natural desnatado',
+          '1 kg de arroz + 500g de feijão + 1 kg de batata inglesa/doce',
+          'Brócolis, abobrinha, cenoura, tomate e folhas verdes',
+          'Temperos naturais (alho, cebola, páprica, limão, azeite extra virgem)'
+        ],
+        ordemPreparo: [
+          `Bloco 1 (0–25 min): Coloque o arroz e o feijão/batatas para cozinhar simultaneamente e tempere todas as proteínas.`,
+          `Bloco 2 (25–65 min): Asse/grelhe o frango na AirFryer ou forno em duas bandejas enquanto refoga legumes.`,
+          `Bloco 3 (65–90 min): Porcione em potes pesados (ex.: 150g proteína + 140g carboidrato + legumes), deixe esfriar e leve à geladeira/freezer.`
+        ]
+      },
+      guiaDelivery: [
+        { cat: 'PF / Executivo', pedir: 'Arroz, feijão, filé de frango/carne grelhada, salada extra (molho à parte)', evitar: 'Milanesa, parmegiana, batata frita, farofa excessiva' },
+        { cat: 'Japonês', pedir: 'Sashimi, niguiri simples, temaki sem cream cheese/maionese, sunomono', evitar: 'Hot roll frito, excesso de cream cheese, molho tarê em excesso' },
+        { cat: 'Hambúrguer', pedir: '1 hambúrguer artesanal (150–180g), queijo, salada, pão tradicional', evitar: 'Combo com batata frita grande, bacon duplo, maionese temperada em excesso' },
+        { cat: 'Pizza', pedir: 'Massa fina, frango com catupiry light, atum, margherita ou rúcula', evitar: '4 queijos, calabresa com cheddar, borda recheada' }
+      ]
+    };
+  }
+
+  document.getElementById('onboardingForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = getActiveUser();
+    if (!u) return;
+
+    const medidas = [];
+    document.querySelectorAll('#obMeasuresContainer > div').forEach(row => {
+      const tipo = row.querySelector('.m-type').value;
+      const val = parseBrNum(row.querySelector('.m-val').value);
+      if (val > 0) medidas.push({ tipo, valor: val });
+    });
+
+    const idade = parseInt(document.getElementById('obIdade').value, 10) || 30;
+    const pesoAtual = parseBrNum(document.getElementById('obPesoAtual').value);
+    const defaultMlKg = (u.anamnese && u.anamnese.aguaMlKg) ? u.anamnese.aguaMlKg : recommendedWaterMlKg(idade);
+
+    const anamnese = {
+      altura: parseBrNum(document.getElementById('obAltura').value),
+      idade,
+      sexo: document.getElementById('obSexo').value,
+      pesoAtual,
+      pesoMeta: parseBrNum(document.getElementById('obPesoMeta').value),
+      dataAlvo: document.getElementById('obDataAlvo').value,
+      dataInicio: document.getElementById('obDataInicio').value || todayISO(),
+      medidas,
+      metaKcal: parseInt(document.getElementById('obMetaKcal').value, 10) || 2000,
+      metaProt: parseBrNum(document.getElementById('obMetaProt').value) || 150,
+      acordar: document.getElementById('obAcordar').value,
+      dormir: document.getElementById('obDormir').value,
+      treinosSemana: document.getElementById('obTreinosSemana').value.trim(),
+      horarioTrabalho: document.getElementById('obHorarioTrabalho').value.trim(),
+      modalidadeTrabalho: document.getElementById('obModalidadeTrabalho').value,
+      comeHoje: document.getElementById('obComeHoje').value.trim(),
+      naoCortar: document.getElementById('obNaoCortar').value.trim(),
+      naoCome: document.getElementById('obNaoCome').value.trim(),
+      tempoCozinhar: document.getElementById('obTempoCozinhar').value.trim(),
+      deliveryFreq: document.getElementById('obDeliveryFreq').value,
+      suplementos: document.getElementById('obSuplementos').value.trim(),
+      aguaMlKg: defaultMlKg,
+      aguaMetaMl: Math.round(pesoAtual * defaultMlKg)
+    };
+
+    u.anamnese = anamnese;
+
+    // Seed initial weigh-in if empty
+    if (!u.pesagens || u.pesagens.length === 0) {
+      const waistEntry = medidas.find(m => m.tipo.toLowerCase().includes('cintura'));
+      u.pesagens = [{
+        id: 'PES_' + Date.now(),
+        date: anamnese.dataInicio,
+        peso: pesoAtual,
+        cintura: waistEntry ? waistEntry.valor : null,
+        outras: medidas,
+        obs: 'Registro inicial (Anamnese)',
+        criadoEm: new Date().toISOString()
+      }];
+    }
+
+    // Generate starter plan if none
+    if (!u.plano) {
+      u.plano = buildInitialPlanFromAnamnese(anamnese);
+    }
+
+    // Seed today's Cardápio from cardapioBase if empty
+    const tIso = todayISO();
+    if (!u.cardapio || u.cardapio.filter(c => c.date === tIso).length === 0) {
+      u.cardapio = u.cardapio || [];
+      (u.plano.cardapioBase || []).forEach((m, idx) => {
+        const kcal = m.itens.reduce((s, it) => s + (Number(it.kcal) || 0), 0);
+        const prot = m.itens.reduce((s, it) => s + (Number(it.prot) || 0), 0);
+        u.cardapio.push({
+          id: 'CRD_' + Date.now() + '_' + idx,
+          date: tIso,
+          nome: m.nome,
+          horario: m.horario,
+          itens: JSON.parse(JSON.stringify(m.itens)),
+          kcal,
+          prot,
+          status: 'a comer'
+        });
+      });
+    }
+
+    saveDB(true);
+    showToast('✅ Dados salvos e sincronizados com a planilha!');
+    routeApp();
+  });
+
+  function openOnboardingForEdit() {
+    const u = getActiveUser();
+    if (!u) return;
+    document.getElementById('authView').classList.add('hidden');
+    document.getElementById('trackerView').classList.add('hidden');
+    document.getElementById('onboardingView').classList.remove('hidden');
+
+    const a = u.anamnese;
+    document.getElementById('obMeasuresContainer').innerHTML = '';
+    if (a) {
+      document.getElementById('obAltura').value = fmtDec(a.altura, 2);
+      document.getElementById('obIdade').value = a.idade;
+      document.getElementById('obSexo').value = a.sexo;
+      document.getElementById('obPesoAtual').value = fmtDec(a.pesoAtual, 1);
+      document.getElementById('obPesoMeta').value = fmtDec(a.pesoMeta, 1);
+      document.getElementById('obDataAlvo').value = a.dataAlvo || addDaysISO(todayISO(), 90);
+      document.getElementById('obDataInicio').value = a.dataInicio || todayISO();
+      document.getElementById('obMetaKcal').value = a.metaKcal;
+      document.getElementById('obMetaProt').value = a.metaProt;
+      document.getElementById('obAcordar').value = a.acordar || '06:30';
+      document.getElementById('obDormir').value = a.dormir || '23:00';
+      document.getElementById('obTreinosSemana').value = a.treinosSemana || '';
+      document.getElementById('obHorarioTrabalho').value = a.horarioTrabalho || '';
+      document.getElementById('obModalidadeTrabalho').value = a.modalidadeTrabalho || 'Presencial';
+      document.getElementById('obComeHoje').value = a.comeHoje || '';
+      document.getElementById('obNaoCortar').value = a.naoCortar || '';
+      document.getElementById('obNaoCome').value = a.naoCome || '';
+      document.getElementById('obTempoCozinhar').value = a.tempoCozinhar || '';
+      document.getElementById('obDeliveryFreq').value = a.deliveryFreq || 'Raramente (0 a 1x por semana)';
+      document.getElementById('obSuplementos').value = a.suplementos || '';
+      if (a.medidas && a.medidas.length) {
+        a.medidas.forEach(m => addMeasureRow(m.tipo, fmtDec(m.valor, 1)));
+      } else {
+        addMeasureRow('Cintura (altura do umbigo)', '');
+      }
+    } else {
+      document.getElementById('obDataInicio').value = todayISO();
+      document.getElementById('obDataAlvo').value = addDaysISO(todayISO(), 90);
+      addMeasureRow('Cintura (altura do umbigo)', '');
+    }
+  }
+
+  // =========================================================
+  // TOP SCOREBOARD & CALORIE / PROTEIN COMPUTATIONS
+  // =========================================================
+  function getDailyCalorieTarget(u, dateIso) {
+    const base = (u.anamnese && u.anamnese.metaKcal) || 2000;
+    if (u.plano && Array.isArray(u.plano.semanaTreinos)) {
+      const wd = weekdayBR(dateIso);
+      const found = u.plano.semanaTreinos.find(w => w.dia.toLowerCase().startsWith(wd.toLowerCase()));
+      if (found && found.kcal) return Number(found.kcal);
+    }
+    return base;
+  }
+
+  function getConsumedForDate(u, dateIso) {
+    // Sum from Diário entries + Cardápio meals marked 'feito' or 'ajustado' that aren't already mirrored
+    const diaryEntries = (u.diario || []).filter(d => d.date === dateIso);
+    let kcal = diaryEntries.reduce((s, d) => s + (Number(d.kcal) || 0), 0);
+    let prot = diaryEntries.reduce((s, d) => s + (parseBrNum(d.prot) || 0), 0);
+
+    const plannedDone = (u.cardapio || []).filter(c => c.date === dateIso && (c.status === 'feito' || c.status === 'ajustado'));
+    plannedDone.forEach(c => {
+      const alreadyMirrored = diaryEntries.some(d => d.sourceCardapioId === c.id);
+      if (!alreadyMirrored) {
+        kcal += Number(c.kcal) || 0;
+        prot += parseBrNum(c.prot) || 0;
+      }
+    });
+    return { kcal, prot };
+  }
+
+  function getWeightStats(u) {
+    const valid = (u.pesagens || [])
+      .filter(p => p.peso && Number(p.peso) > 0)
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    const startWeight = (u.anamnese && u.anamnese.pesoAtual) || (valid[0] ? valid[0].peso : 0);
+    const latest = valid.length ? valid[valid.length - 1] : null;
+    const latestWeight = latest ? latest.peso : startWeight;
+
+    // Last 7 days average
+    const cutoff7 = addDaysISO(todayISO(), -6);
+    const last7 = valid.filter(p => p.date >= cutoff7);
+    const avg7 = last7.length
+      ? last7.reduce((s, p) => s + p.peso, 0) / last7.length
+      : latestWeight;
+
+    return { valid, startWeight, latest, latestWeight, avg7 };
+  }
+
+  function renderScoreboard() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const tIso = todayISO();
+    document.getElementById('sbDateLabel').textContent = `${weekdayBR(tIso)}, ${formatDateBR(tIso)}`;
+
+    const wStats = getWeightStats(u);
+    const diffStart = wStats.latestWeight - wStats.startWeight;
+    document.getElementById('sbPesoMedia').textContent = `${fmtDec(wStats.avg7, 1)} kg`;
+    document.getElementById('sbPesoUltima').textContent = `Média 7d • Última: ${fmtDec(wStats.latestWeight, 1)} kg`;
+    document.getElementById('sbPesoDelta').textContent = diffStart === 0 ? '0,0 kg' : `${diffStart > 0 ? '+' : ''}${fmtDec(diffStart, 1)} kg`;
+
+    const metaKcal = getDailyCalorieTarget(u, tIso);
+    const metaProt = u.anamnese.metaProt || 150;
+    const cons = getConsumedForDate(u, tIso);
+
+    const kcalPct = metaKcal > 0 ? (cons.kcal / metaKcal) * 100 : 0;
+    const over5Pct = cons.kcal > metaKcal * 1.05;
+    document.getElementById('sbKcalPct').textContent = `${fmtInt(kcalPct)}%`;
+    document.getElementById('sbKcalVal').textContent = `${fmtInt(cons.kcal)} / ${fmtInt(metaKcal)} kcal`;
+    const kcalBar = document.getElementById('sbKcalBar');
+    kcalBar.style.width = `${Math.min(100, kcalPct)}%`;
+    kcalBar.classList.toggle('over-limit', over5Pct);
+
+    const restaKcal = metaKcal - cons.kcal;
+    const restaEl = document.getElementById('sbKcalResta');
+    if (restaKcal >= 0) {
+      restaEl.textContent = `Restam ${fmtInt(restaKcal)} kcal`;
+      restaEl.style.color = 'var(--text-muted)';
+    } else {
+      restaEl.textContent = `Excedeu ${fmtInt(Math.abs(restaKcal))} kcal${over5Pct ? ' (>5% ⚠️)' : ''}`;
+      restaEl.style.color = over5Pct ? 'var(--danger)' : 'var(--accent)';
+    }
+
+    const protPct = metaProt > 0 ? (cons.prot / metaProt) * 100 : 0;
+    document.getElementById('sbProtPct').textContent = `${fmtInt(protPct)}%`;
+    document.getElementById('sbProtVal').textContent = `${fmtDec(cons.prot, 1)} / ${fmtDec(metaProt, 1)} g`;
+    document.getElementById('sbProtBar').style.width = `${Math.min(100, protPct)}%`;
+    const faltaProt = metaProt - cons.prot;
+    document.getElementById('sbProtFalta').textContent = faltaProt > 0
+      ? `Faltam ${fmtDec(faltaProt, 1)} g`
+      : 'Meta proteica atingida! ✅';
+  }
+
+  // Sticky auto-hide toggle & scroll listener
+  const sbWrap = document.getElementById('scoreboardWrap');
+  const toggleStickyBtn = document.getElementById('toggleStickyBtn');
+  function updateStickyModeUI() {
+    sbWrap.classList.toggle('auto-hide', !!DB.stickyAutoHide);
+    sbWrap.classList.remove('hidden-scroll');
+    toggleStickyBtn.textContent = DB.stickyAutoHide ? '↕️ Esconde ao rolar' : '📌 Placar fixo';
+  }
+  toggleStickyBtn.addEventListener('click', () => {
+    DB.stickyAutoHide = !DB.stickyAutoHide;
+    saveDB(false);
+    updateStickyModeUI();
+  });
+
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    if (!DB.stickyAutoHide) return;
+    const cur = window.scrollY;
+    if (cur > lastScrollY && cur > 110) {
+      sbWrap.classList.add('hidden-scroll');
+    } else {
+      sbWrap.classList.remove('hidden-scroll');
+    }
+    lastScrollY = cur;
+  }, { passive: true });
+
+  // =========================================================
+  // TAB 1: CARDÁPIO
+  // =========================================================
+  function ensureMealsForDate(u, dateIso) {
+    u.cardapio = u.cardapio || [];
+    const existing = u.cardapio.filter(c => c.date === dateIso);
+    if (existing.length === 0 && u.plano && Array.isArray(u.plano.cardapioBase)) {
+      u.plano.cardapioBase.forEach((m, idx) => {
+        const kcal = m.itens.reduce((s, it) => s + (Number(it.kcal) || 0), 0);
+        const prot = m.itens.reduce((s, it) => s + (parseBrNum(it.prot) || 0), 0);
+        u.cardapio.push({
+          id: 'CRD_' + dateIso + '_' + idx + '_' + Math.floor(Math.random() * 999),
+          date: dateIso,
+          nome: m.nome,
+          horario: m.horario,
+          itens: JSON.parse(JSON.stringify(m.itens)),
+          kcal,
+          prot,
+          status: 'a comer'
+        });
+      });
+    }
+  }
+
+  function renderCardapioTab() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    ensureMealsForDate(u, selectedMenuDate);
+
+    const tIso = todayISO();
+    const label = selectedMenuDate === tIso ? 'Hoje' : selectedMenuDate === addDaysISO(tIso, -1) ? 'Ontem' : selectedMenuDate === addDaysISO(tIso, 1) ? 'Amanhã' : weekdayBR(selectedMenuDate);
+    document.getElementById('cardDateTitle').textContent = label;
+    document.getElementById('cardDateSub').textContent = `${weekdayBR(selectedMenuDate)}, ${formatDateBR(selectedMenuDate)}`;
+
+    const meals = (u.cardapio || []).filter(c => c.date === selectedMenuDate).sort((a, b) => (a.horario || '').localeCompare(b.horario || ''));
+    const kcalPlan = meals.filter(m => m.status !== 'pulado').reduce((s, m) => s + (Number(m.kcal) || 0), 0);
+    const protPlan = meals.filter(m => m.status !== 'pulado').reduce((s, m) => s + (parseBrNum(m.prot) || 0), 0);
+    const metaDia = getDailyCalorieTarget(u, selectedMenuDate);
+    const consDia = getConsumedForDate(u, selectedMenuDate);
+
+    document.getElementById('cardKcalPlan').textContent = `${fmtInt(kcalPlan)} kcal`;
+    document.getElementById('cardKcalMeta').textContent = `${fmtInt(metaDia)} kcal`;
+    document.getElementById('cardKcalComi').textContent = `${fmtInt(consDia.kcal)} kcal`;
+    document.getElementById('cardProtPlan').textContent = `${fmtDec(protPlan, 1)} g`;
+
+    const list = document.getElementById('plannedMealsList');
+    list.innerHTML = '';
+    meals.forEach(meal => {
+      const card = document.createElement('div');
+      card.className = 'meal-card';
+      const itemsHtml = (meal.itens || []).map(it => `
+        <li>
+          <span><strong>${escapeHtml(it.item)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(it.qtd || '')})</span></span>
+          <span style="white-space:nowrap;font-weight:700;">${fmtInt(it.kcal)} kcal • ${fmtDec(it.prot, 1)}g P</span>
+        </li>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="meal-head">
+          <div>
+            <span class="section-tag">${escapeHtml(meal.horario || '--:--')}</span>
+            <strong style="margin-left:6px;font-size:0.95rem;">${escapeHtml(meal.nome)}</strong>
+          </div>
+          <div style="font-size:0.82rem;font-weight:800;">
+            ${fmtInt(meal.kcal)} kcal • <span style="color:var(--info);">${fmtDec(meal.prot, 1)}g prot</span>
+          </div>
+        </div>
+        <ul class="meal-items-list">${itemsHtml}</ul>
+        <div class="status-pills">
+          ${['a comer', 'feito', 'ajustado', 'pulado'].map(st => `
+            <button type="button" class="status-pill ${meal.status === st ? 'active' : ''}" data-st="${st}" data-meal-id="${meal.id}">
+              ${st === 'a comer' ? '⏳ A comer' : st === 'feito' ? '✅ Feito' : st === 'ajustado' ? '✏️ Ajustado' : '⏭️ Pulado'}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    list.querySelectorAll('.status-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mealId = btn.dataset.mealId;
+        const newSt = btn.dataset.st;
+        const meal = u.cardapio.find(m => m.id === mealId);
+        if (!meal) return;
+
+        if (newSt === 'ajustado') {
+          openAdjustMealModal(meal);
+          return;
+        }
+        meal.status = newSt;
+        syncCardapioStatusWithDiary(u, meal);
+        saveDB(true);
+        renderScoreboard();
+        renderCardapioTab();
+        renderDiaryTab();
+      });
+    });
+  }
+
+  function syncCardapioStatusWithDiary(u, meal) {
+    u.diario = u.diario || [];
+    const idx = u.diario.findIndex(d => d.sourceCardapioId === meal.id);
+    if (meal.status === 'feito' || meal.status === 'ajustado') {
+      const desc = (meal.itens || []).map(i => `${i.item} (${i.qtd})`).join(', ');
+      const entry = {
+        id: idx >= 0 ? u.diario[idx].id : 'DIA_' + Date.now() + '_' + Math.floor(Math.random() * 999),
+        sourceCardapioId: meal.id,
+        date: meal.date,
+        horario: meal.horario || '12:00',
+        refeicao: meal.nome,
+        descricao: desc || meal.nome,
+        kcal: Number(meal.kcal) || 0,
+        prot: parseBrNum(meal.prot) || 0,
+        delivery: false,
+        estimadoIA: false,
+        criadoEm: new Date().toISOString()
+      };
+      if (idx >= 0) u.diario[idx] = entry;
+      else u.diario.push(entry);
+    } else if (idx >= 0) {
+      u.diario.splice(idx, 1);
+    }
+  }
+
+  function openAdjustMealModal(meal) {
+    const u = getActiveUser();
+    openGenericModal(`Ajustar Refeição: ${meal.nome}`, `
+      <div class="form-grid">
+        <div class="field">
+          <label>Descrição dos alimentos realmente consumidos</label>
+          <textarea id="adjMealDesc">${escapeHtml((meal.itens || []).map(i => `${i.item} (${i.qtd})`).join(', '))}</textarea>
+        </div>
+        <div class="form-grid two-col">
+          <div class="field">
+            <label>Calorias reais consumidas (kcal)</label>
+            <input type="number" id="adjMealKcal" value="${Math.round(meal.kcal)}" />
+          </div>
+          <div class="field">
+            <label>Proteína real consumida (g)</label>
+            <input type="text" id="adjMealProt" value="${fmtDec(meal.prot, 1)}" />
+          </div>
+        </div>
+        <button type="button" id="saveAdjMealBtn" class="btn btn-primary btn-block">Salvar Ajuste</button>
+      </div>
+    `);
+    document.getElementById('saveAdjMealBtn').addEventListener('click', () => {
+      const desc = document.getElementById('adjMealDesc').value.trim();
+      const kcal = Number(document.getElementById('adjMealKcal').value) || 0;
+      const prot = parseBrNum(document.getElementById('adjMealProt').value);
+      meal.status = 'ajustado';
+      meal.kcal = kcal;
+      meal.prot = prot;
+      meal.itens = [{ item: desc || meal.nome, qtd: 'Ajustado', kcal, prot }];
+      syncCardapioStatusWithDiary(u, meal);
+      saveDB(true);
+      closeGenericModal();
+      renderScoreboard();
+      renderCardapioTab();
+      renderDiaryTab();
+      showToast('✅ Refeição ajustada! Use "Ajustar Restantes" para recalibrar o resto do dia.');
+    });
+  }
+
+  document.getElementById('cardPrevDayBtn').addEventListener('click', () => {
+    selectedMenuDate = addDaysISO(selectedMenuDate, -1);
+    renderCardapioTab();
+  });
+  document.getElementById('cardNextDayBtn').addEventListener('click', () => {
+    selectedMenuDate = addDaysISO(selectedMenuDate, 1);
+    renderCardapioTab();
+  });
+
+  // Gemini Prompts for Cardápio
+  function copyTextToClipboard(txt, toastMsg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(() => showToast(toastMsg)).catch(() => fallbackCopy(txt, toastMsg));
+    } else {
+      fallbackCopy(txt, toastMsg);
+    }
+  }
+  function fallbackCopy(txt, toastMsg) {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast(toastMsg);
+  }
+
+  document.getElementById('copyGeminiMenuPromptBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const a = u.anamnese;
+    const metaKcal = getDailyCalorieTarget(u, selectedMenuDate);
+    const prompt = `Atue como nutricionista esportivo e clínico do app Marcusnator Pro Athlete 2.0 By Dr. Hans.
+Monte o cardápio completo para o dia ${formatDateBR(selectedMenuDate)} (${weekdayBR(selectedMenuDate)}) para:
+- Atleta: ${u.nome} (${a.sexo}, ${a.idade} anos, ${fmtDec(a.altura, 2)}m, peso atual ${fmtDec(a.pesoAtual, 1)} kg, meta ${fmtDec(a.pesoMeta, 1)} kg)
+- Meta do dia: ${metaKcal} kcal e ${a.metaProt}g de proteína
+- Horários: Acorda ${a.acordar}, Dorme ${a.dormir}, Trabalho ${a.horarioTrabalho} (${a.modalidadeTrabalho})
+- Treinos: ${a.treinosSemana}
+- Costuma comer: ${a.comeHoje}
+- Comidas que gosta e não quer cortar: ${a.naoCortar || 'Nenhuma específica'}
+- Não come: ${a.naoCome || 'Nenhuma restrição'}
+- Suplementos: ${a.suplementos || 'Nenhum'}
+
+Responda primeiro com o cardápio legível e ao final inclua OBRIGATORIAMENTE um bloco JSON exato neste formato para eu importar no app:
+\`\`\`json
+{
+  "data": "${selectedMenuDate}",
+  "refeicoes": [
+    {
+      "horario": "07:30",
+      "nome": "Café da manhã",
+      "itens": [
+        {"item": "Ovos mexidos", "qtd": "3 unidades (150g)", "kcal": 225, "prot": 19}
+      ]
+    }
+  ]
+}
+\`\`\``;
+    copyTextToClipboard(prompt, '📋 Prompt copiado! Cole no chat do Gemini para gerar seu cardápio.');
+  });
+
+  document.getElementById('copyGeminiAdjustPromptBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const metaKcal = getDailyCalorieTarget(u, selectedMenuDate);
+    const cons = getConsumedForDate(u, selectedMenuDate);
+    const meals = (u.cardapio || []).filter(c => c.date === selectedMenuDate);
+    const resumoRef = meals.map(m => `- [${m.status.toUpperCase()}] ${m.horario} ${m.nome}: ${Math.round(m.kcal)} kcal, ${fmtDec(m.prot, 1)}g P`).join('\n');
+
+    const prompt = `Ajuste as refeições restantes de hoje (${formatDateBR(selectedMenuDate)}) no meu app Marcusnator Pro Athlete 2.0 By Dr. Hans:
+- Meta do dia: ${metaKcal} kcal | ${u.anamnese.metaProt}g proteína
+- Já consumido até agora: ${Math.round(cons.kcal)} kcal | ${fmtDec(cons.prot, 1)}g proteína
+- Restante disponível para o dia: ${Math.max(0, Math.round(metaKcal - cons.kcal))} kcal | ${Math.max(0, Math.round(u.anamnese.metaProt - cons.prot))}g proteína
+- Situação atual das refeições:
+${resumoRef}
+
+Mantenha intactas as refeições já marcadas como FEITO/AJUSTADO e recalibre apenas as refeições "A COMER" para bater a meta do dia. Retorne ao final o JSON completo no formato:
+\`\`\`json
+{
+  "data": "${selectedMenuDate}",
+  "refeicoes": [
+    {
+      "horario": "20:00",
+      "nome": "Jantar",
+      "status": "a comer",
+      "itens": [
+        {"item": "Peito de frango grelhado", "qtd": "180g pronto", "kcal": 297, "prot": 55}
+      ]
+    }
+  ]
+}
+\`\`\``;
+    copyTextToClipboard(prompt, '🔄 Prompt de ajuste copiado! Cole no chat do Gemini.');
+  });
+
+  document.getElementById('openImportMenuModalBtn').addEventListener('click', () => {
+    openGenericModal('Importar Cardápio do Gemini', `
+      <div class="form-grid">
+        <div class="field">
+          <label>Cole a resposta completa do Gemini (o sistema extrai o JSON automaticamente)</label>
+          <textarea id="importMenuJsonInput" style="min-height:150px;" placeholder='Cole aqui o texto ou bloco {"refeicoes": [...]}'></textarea>
+        </div>
+        <button type="button" id="confirmImportMenuBtn" class="btn btn-primary btn-block">📥 Importar para ${formatDateBR(selectedMenuDate)}</button>
+      </div>
+    `);
+    document.getElementById('confirmImportMenuBtn').addEventListener('click', () => {
+      const raw = document.getElementById('importMenuJsonInput').value;
+      const parsed = extractJsonFromText(raw);
+      if (!parsed || !Array.isArray(parsed.refeicoes)) {
+        showToast('❌ Não encontrei um bloco JSON válido com "refeicoes".');
+        return;
+      }
+      const u = getActiveUser();
+      const targetDate = parsed.data || selectedMenuDate;
+      // Keep done/adjusted meals if updating only remaining meals, or replace all if full day
+      const hasDoneOnly = parsed.refeicoes.every(r => (r.status || 'a comer') === 'a comer');
+      if (hasDoneOnly && u.cardapio.some(c => c.date === targetDate && (c.status === 'feito' || c.status === 'ajustado'))) {
+        u.cardapio = u.cardapio.filter(c => !(c.date === targetDate && c.status === 'a comer'));
+      } else {
+        u.cardapio = u.cardapio.filter(c => c.date !== targetDate);
+      }
+
+      parsed.refeicoes.forEach((r, idx) => {
+        const itens = (r.itens || []).map(it => ({
+          item: it.item || 'Alimento',
+          qtd: it.qtd || '',
+          kcal: Number(it.kcal) || 0,
+          prot: parseBrNum(it.prot) || 0
+        }));
+        const kcal = itens.reduce((s, i) => s + i.kcal, 0);
+        const prot = itens.reduce((s, i) => s + i.prot, 0);
+        u.cardapio.push({
+          id: 'CRD_' + Date.now() + '_' + idx,
+          date: targetDate,
+          nome: r.nome || `Refeição ${idx + 1}`,
+          horario: r.horario || '12:00',
+          itens,
+          kcal,
+          prot,
+          status: r.status || 'a comer'
+        });
+      });
+
+      selectedMenuDate = targetDate;
+      saveDB(true);
+      closeGenericModal();
+      renderScoreboard();
+      renderCardapioTab();
+      showToast('✅ Cardápio importado e salvo na planilha!');
+    });
+  });
+
+  document.getElementById('addCustomPlannedMealBtn').addEventListener('click', () => {
+    openGenericModal('Adicionar Refeição Planejada', `
+      <div class="form-grid">
+        <div class="form-grid two-col">
+          <div class="field"><label>Horário</label><input type="time" id="newPmTime" value="15:30" /></div>
+          <div class="field"><label>Nome da refeição</label><input type="text" id="newPmName" placeholder="Ex.: Lanche da tarde" /></div>
+        </div>
+        <div class="field"><label>Item principal</label><input type="text" id="newPmItem" placeholder="Ex.: Whey Protein + Banana" /></div>
+        <div class="form-grid three-col">
+          <div class="field"><label>Quantidade</label><input type="text" id="newPmQtd" placeholder="1 scoop + 1 un" /></div>
+          <div class="field"><label>Kcal</label><input type="number" id="newPmKcal" placeholder="210" /></div>
+          <div class="field"><label>Proteína (g)</label><input type="text" id="newPmProt" placeholder="25" /></div>
+        </div>
+        <button type="button" id="saveNewPmBtn" class="btn btn-primary btn-block">Adicionar ao Cardápio</button>
+      </div>
+    `);
+    document.getElementById('saveNewPmBtn').addEventListener('click', () => {
+      const u = getActiveUser();
+      const kcal = Number(document.getElementById('newPmKcal').value) || 0;
+      const prot = parseBrNum(document.getElementById('newPmProt').value);
+      u.cardapio.push({
+        id: 'CRD_' + Date.now(),
+        date: selectedMenuDate,
+        nome: document.getElementById('newPmName').value.trim() || 'Refeição Extra',
+        horario: document.getElementById('newPmTime').value || '15:30',
+        itens: [{
+          item: document.getElementById('newPmItem').value.trim() || 'Alimento',
+          qtd: document.getElementById('newPmQtd').value.trim(),
+          kcal,
+          prot
+        }],
+        kcal,
+        prot,
+        status: 'a comer'
+      });
+      saveDB(true);
+      closeGenericModal();
+      renderCardapioTab();
+      showToast('✅ Refeição adicionada!');
+    });
+  });
+
+  function extractJsonFromText(text) {
+    if (!text) return null;
+    const fenced = text.match(/```json\s*([\s\S]*?)```/i) || text.match(/```\s*([\s\S]*?)```/i);
+    const candidate = fenced ? fenced[1] : text;
+    const firstBrace = candidate.indexOf('{');
+    const lastBrace = candidate.lastIndexOf('}');
+    if (firstBrace === -1 || lastBrace === -1) return null;
+    try {
+      return JSON.parse(candidate.slice(firstBrace, lastBrace + 1));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // =========================================================
+  // TAB 2: DIÁRIO
+  // =========================================================
+  function renderDiaryTab() {
+    const u = getActiveUser();
+    if (!u) return;
+    document.getElementById('diaryDateInput').value = selectedDiaryDate;
+    const nowTime = new Date().toTimeString().slice(0, 5);
+    if (!document.getElementById('diaryMealTime').value) {
+      document.getElementById('diaryMealTime').value = nowTime;
+    }
+
+    const entries = (u.diario || [])
+      .filter(d => d.date === selectedDiaryDate)
+      .sort((a, b) => (a.horario || '').localeCompare(b.horario || ''));
+
+    const listEl = document.getElementById('diaryMealsList');
+    if (entries.length === 0) {
+      listEl.innerHTML = '<div class="callout" style="text-align:center;color:var(--text-muted);">Nenhuma refeição lançada nesta data.</div>';
+    } else {
+      listEl.innerHTML = entries.map(item => `
+        <div class="meal-card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div style="min-width:0;flex:1;">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px;">
+              <span class="section-tag">${escapeHtml(item.horario)}</span>
+              <strong>${escapeHtml(item.refeicao)}</strong>
+              ${item.delivery ? '<span class="section-tag warn">🛵 Delivery</span>' : ''}
+              ${item.estimadoIA ? '<span class="section-tag" style="background:rgba(168,85,247,0.16);color:#C084FC;">🤖 Estimado pelo Claude / IA</span>' : ''}
+            </div>
+            <div style="font-size:0.85rem;color:var(--text-muted);">${escapeHtml(item.descricao)}</div>
+            <div style="font-size:0.84rem;font-weight:800;margin-top:4px;">
+              ${fmtInt(item.kcal)} kcal • <span style="color:var(--info);">${fmtDec(item.prot, 1)}g proteína</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm del-diary-btn" data-id="${item.id}">🗑️ Remover</button>
+        </div>
+      `).join('');
+
+      listEl.querySelectorAll('.del-diary-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          openGenericModal('Confirmar Remoção', `
+            <p>Tem certeza que deseja remover este lançamento do seu Diário Alimentar?</p>
+            <div class="btn-row">
+              <button type="button" id="confirmDelDiaryBtn" class="btn btn-danger">Sim, remover</button>
+              <button type="button" onclick="document.getElementById('closeGenericModalBtn').click()" class="btn btn-soft">Cancelar</button>
+            </div>
+          `);
+          document.getElementById('confirmDelDiaryBtn').addEventListener('click', () => {
+            u.diario = u.diario.filter(d => d.id !== id);
+            saveDB(true);
+            closeGenericModal();
+            renderScoreboard();
+            renderDiaryTab();
+            renderCardapioTab();
+            renderSemanaTab();
+            showToast('🗑️ Refeição removida.');
+          });
+        });
+      });
+    }
+
+    // Render workouts of selected date
+    const wList = (u.treinos || []).filter(t => t.date === selectedDiaryDate);
+    const wEl = document.getElementById('diaryWorkoutsList');
+    wEl.innerHTML = wList.map(w => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border:1px solid var(--border);border-radius:10px;margin-top:6px;font-size:0.84rem;">
+        <span>🏃 <strong>${escapeHtml(w.atividade)}</strong> • ${fmtInt(w.minutos)} min</span>
+        <button type="button" class="btn btn-danger btn-sm del-wk-btn" data-id="${w.id}">✕</button>
+      </div>
+    `).join('');
+    wEl.querySelectorAll('.del-wk-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        u.treinos = u.treinos.filter(t => t.id !== btn.dataset.id);
+        saveDB(true);
+        renderDiaryTab();
+        renderSemanaTab();
+        showToast('Treino removido.');
+      });
+    });
+  }
+
+  document.getElementById('diaryDateInput').addEventListener('change', (e) => {
+    selectedDiaryDate = e.target.value || todayISO();
+    renderDiaryTab();
+  });
+
+  document.getElementById('manualMealForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = getActiveUser();
+    if (!u) return;
+    u.diario = u.diario || [];
+    u.diario.push({
+      id: 'DIA_' + Date.now(),
+      date: selectedDiaryDate,
+      horario: document.getElementById('diaryMealTime').value || '12:00',
+      refeicao: document.getElementById('diaryMealType').value,
+      descricao: document.getElementById('diaryMealDesc').value.trim(),
+      kcal: parseInt(document.getElementById('diaryMealKcal').value, 10) || 0,
+      prot: parseBrNum(document.getElementById('diaryMealProt').value),
+      delivery: document.getElementById('diaryIsDelivery').checked,
+      estimadoIA: document.getElementById('diaryIsClaude').checked,
+      criadoEm: new Date().toISOString()
+    });
+    document.getElementById('diaryMealDesc').value = '';
+    document.getElementById('diaryMealKcal').value = '';
+    document.getElementById('diaryMealProt').value = '';
+    document.getElementById('diaryIsDelivery').checked = false;
+    document.getElementById('diaryIsClaude').checked = false;
+
+    saveDB(true);
+    renderScoreboard();
+    renderDiaryTab();
+    renderSemanaTab();
+    showToast('✅ Refeição lançada no Diário!');
+  });
+
+  document.getElementById('copyEstimateFoodPromptBtn').addEventListener('click', () => {
+    const prompt = `Vou te enviar uma foto ou descrição da minha refeição para lançar no app Marcusnator Pro Athlete 2.0 By Dr. Hans.
+Regras obrigatórias de estimativa:
+1. Considere sempre o alimento JÁ PRONTO / COZIDO (peso preparado).
+2. Na dúvida sobre porção, óleo de preparo ou ingredientes ocultos (especialmente comida de restaurante ou delivery), adote o CENÁRIO MAIS CALÓRICO por segurança clínica.
+3. Ao final da resposta, forneça obrigatoriamente este bloco JSON para eu importar direto no meu Diário:
+\`\`\`json
+{
+  "horario": "${new Date().toTimeString().slice(0, 5)}",
+  "refeicao": "Almoço",
+  "descricao": "Descrição detalhada dos alimentos estimados",
+  "kcal": 650,
+  "prot": 42,
+  "delivery": true,
+  "estimadoIA": true
+}
+\`\`\``;
+    copyTextToClipboard(prompt, '📋 Prompt de estimativa copiado! Envie junto com a foto ou descrição no chat.');
+  });
+
+  document.getElementById('openImportDiaryModalBtn').addEventListener('click', () => {
+    openGenericModal('Importar Estimativa de Refeição (JSON)', `
+      <div class="form-grid">
+        <div class="field">
+          <label>Cole a resposta do chat contendo o JSON estimado</label>
+          <textarea id="importDiaryJsonInput" style="min-height:130px;" placeholder='Cole aqui o JSON da refeição estimada...'></textarea>
+        </div>
+        <button type="button" id="confirmImportDiaryBtn" class="btn btn-primary btn-block">📥 Lançar no Diário (${formatDateBR(selectedDiaryDate)})</button>
+      </div>
+    `);
+    document.getElementById('confirmImportDiaryBtn').addEventListener('click', () => {
+      const parsed = extractJsonFromText(document.getElementById('importDiaryJsonInput').value);
+      if (!parsed || parsed.kcal === undefined) {
+        showToast('❌ JSON inválido. Verifique se há "kcal" e "descricao".');
+        return;
+      }
+      const u = getActiveUser();
+      u.diario.push({
+        id: 'DIA_' + Date.now(),
+        date: parsed.data || selectedDiaryDate,
+        horario: parsed.horario || new Date().toTimeString().slice(0, 5),
+        refeicao: parsed.refeicao || 'Refeição Estimada',
+        descricao: parsed.descricao || 'Refeição estimada via chat',
+        kcal: Number(parsed.kcal) || 0,
+        prot: parseBrNum(parsed.prot) || 0,
+        delivery: !!parsed.delivery,
+        estimadoIA: true,
+        criadoEm: new Date().toISOString()
+      });
+      saveDB(true);
+      closeGenericModal();
+      renderScoreboard();
+      renderDiaryTab();
+      renderSemanaTab();
+      showToast('✅ Refeição estimada lançada no Diário!');
+    });
+  });
+
+  document.getElementById('weightWaistForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = getActiveUser();
+    if (!u) return;
+    const peso = parseBrNum(document.getElementById('diaryWeightInput').value);
+    const cintura = parseBrNum(document.getElementById('diaryWaistInput').value);
+    const obs = document.getElementById('diaryMeasureNote').value.trim();
+
+    if (!peso && !cintura) {
+      showToast('Informe pelo menos o peso ou a medida de cintura.');
+      return;
+    }
+
+    u.pesagens = u.pesagens || [];
+    const existingIdx = u.pesagens.findIndex(p => p.date === selectedDiaryDate);
+    if (existingIdx >= 0) {
+      if (peso) u.pesagens[existingIdx].peso = peso;
+      if (cintura) u.pesagens[existingIdx].cintura = cintura;
+      if (obs) u.pesagens[existingIdx].obs = obs;
+    } else {
+      u.pesagens.push({
+        id: 'PES_' + Date.now(),
+        date: selectedDiaryDate,
+        peso: peso || null,
+        cintura: cintura || null,
+        outras: [],
+        obs,
+        criadoEm: new Date().toISOString()
+      });
+    }
+
+    document.getElementById('diaryWeightInput').value = '';
+    document.getElementById('diaryWaistInput').value = '';
+    document.getElementById('diaryMeasureNote').value = '';
+    saveDB(true);
+    renderScoreboard();
+    renderEvolucaoTab();
+    renderSemanaTab();
+    showToast('✅ Pesagem / medida salva e sincronizada!');
+  });
+
+  document.getElementById('workoutForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = getActiveUser();
+    if (!u) return;
+    u.treinos = u.treinos || [];
+    u.treinos.push({
+      id: 'TRN_' + Date.now(),
+      date: selectedDiaryDate,
+      atividade: document.getElementById('diaryWorkoutType').value,
+      minutos: parseInt(document.getElementById('diaryWorkoutMin').value, 10) || 45,
+      intensidade: 'Moderada',
+      criadoEm: new Date().toISOString()
+    });
+    document.getElementById('diaryWorkoutMin').value = '';
+    saveDB(true);
+    renderDiaryTab();
+    renderSemanaTab();
+    showToast('✅ Treino registrado!');
+  });
+
+  // =========================================================
+  // TAB 3: EVOLUÇÃO + GRÁFICOS (SVG ENGINE)
+  // =========================================================
+  function renderEvolucaoTab() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const a = u.anamnese;
+    const wStats = getWeightStats(u);
+
+    document.getElementById('evUltima').textContent = `${fmtDec(wStats.latestWeight, 1)} kg`;
+    document.getElementById('evUltimaData').textContent = wStats.latest ? formatDateBR(wStats.latest.date) : 'Inicial';
+
+    const lost = wStats.startWeight - wStats.latestWeight;
+    document.getElementById('evPerdido').textContent = `${lost >= 0 ? '-' : '+'}${fmtDec(Math.abs(lost), 1)} kg`;
+    document.getElementById('evInicioPeso').textContent = `Início: ${fmtDec(wStats.startWeight, 1)} kg (${formatDateBR(a.dataInicio)})`;
+
+    // Weekly pace
+    const daysElapsed = Math.max(7, Math.round((new Date(todayISO()) - new Date(a.dataInicio || todayISO())) / 86400000));
+    const weeksElapsed = Math.max(1, daysElapsed / 7);
+    const weeklyPace = lost / weeksElapsed; // positive means losing weight
+    document.getElementById('evRitmo').textContent = `${weeklyPace >= 0 ? '-' : '+'}${fmtDec(Math.abs(weeklyPace), 2)} kg/sem`;
+
+    const remainingKg = Math.max(0, wStats.latestWeight - a.pesoMeta);
+    document.getElementById('evFalta').textContent = `Faltam: ${fmtDec(remainingKg, 1)} kg (Meta: ${fmtDec(a.pesoMeta, 1)} kg)`;
+
+    if (remainingKg <= 0) {
+      document.getElementById('evPrevisao').textContent = 'Meta Atingida! 🏆';
+    } else if (weeklyPace > 0.05) {
+      const weeksNeeded = remainingKg / weeklyPace;
+      const etaDate = addDaysISO(todayISO(), Math.round(weeksNeeded * 7));
+      document.getElementById('evPrevisao').textContent = formatDateBR(etaDate);
+    } else {
+      document.getElementById('evPrevisao').textContent = 'Ajustar ritmo';
+    }
+    document.getElementById('evAlvoRef').textContent = `Data-alvo: ${formatDateBR(a.dataAlvo)}`;
+
+    // Monday Weekly Review & Plateau Detector
+    const tIso = todayISO();
+    const avgLast7 = wStats.avg7;
+    const prev7List = wStats.valid.filter(p => p.date >= addDaysISO(tIso, -13) && p.date <= addDaysISO(tIso, -7));
+    const avgPrev7 = prev7List.length ? prev7List.reduce((s, p) => s + p.peso, 0) / prev7List.length : wStats.startWeight;
+    const delta7 = avgLast7 - avgPrev7;
+    const isStagnant = wStats.valid.length >= 3 && Math.abs(delta7) < 0.15 && wStats.latestWeight > a.pesoMeta;
+
+    const badge = document.getElementById('plateauBadge');
+    const revTxt = document.getElementById('mondayReviewText');
+    if (isStagnant) {
+      badge.textContent = '⚠️ Platô Detectado';
+      badge.className = 'section-tag danger';
+      revTxt.innerHTML = `Média atual (7d): <strong>${fmtDec(avgLast7, 1)} kg</strong> vs. semana anterior: <strong>${fmtDec(avgPrev7, 1)} kg</strong> (variação de ${fmtDec(delta7, 2)} kg). Como o peso estabilizou, recomendamos revisar adesão ou reduzir 100 kcal/dia.`;
+    } else {
+      badge.textContent = '✅ Evolução Ativa';
+      badge.className = 'section-tag';
+      revTxt.innerHTML = `Toda segunda-feira revise sua média semanal: Média atual (7d) = <strong>${fmtDec(avgLast7, 1)} kg</strong> | Semana anterior = <strong>${fmtDec(avgPrev7, 1)} kg</strong> (diferença: <strong>${delta7 <= 0 ? '' : '+'}${fmtDec(delta7, 2)} kg</strong>).`;
+    }
+
+    renderRealityVsProjectedChart(u, wStats);
+    renderEvidenceRealisticChart(u, wStats);
+    renderWaistHistory(u);
+  }
+
+  document.getElementById('applyPlateauAdjustBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const floor = u.anamnese.sexo === 'Feminino' ? 1200 : 1450;
+    const next = Math.max(floor, (u.anamnese.metaKcal || 2000) - 100);
+    u.anamnese.metaKcal = next;
+    saveDB(true);
+    renderScoreboard();
+    renderEvolucaoTab();
+    showToast(`⚡ Meta diária ajustada para ${fmtInt(next)} kcal/dia!`);
+  });
+
+  document.getElementById('copyMondayReviewPromptBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    const wStats = getWeightStats(u);
+    const prompt = `Hoje é dia de Revisão Semanal de Segunda-feira no Marcusnator Pro Athlete 2.0 By Dr. Hans:
+- Peso inicial: ${fmtDec(wStats.startWeight, 1)} kg | Última pesagem: ${fmtDec(wStats.latestWeight, 1)} kg | Média últimos 7 dias: ${fmtDec(wStats.avg7, 1)} kg
+- Meta de peso: ${fmtDec(u.anamnese.pesoMeta, 1)} kg até ${formatDateBR(u.anamnese.dataAlvo)}
+- Meta calórica atual: ${u.anamnese.metaKcal} kcal | Proteína: ${u.anamnese.metaProt}g
+Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou ajustar para esta nova semana.`;
+    copyTextToClipboard(prompt, '📋 Prompt de Revisão de Segunda-feira copiado!');
+  });
+
+  function renderRealityVsProjectedChart(u, wStats) {
+    const box = document.getElementById('chartRealityVsProjected');
+    const a = u.anamnese;
+    const startIso = a.dataInicio || todayISO();
+    const endIso = a.dataAlvo && a.dataAlvo > todayISO() ? a.dataAlvo : addDaysISO(todayISO(), 60);
+    const totalDays = Math.max(14, Math.round((new Date(endIso) - new Date(startIso)) / 86400000));
+
+    // Anchor projection on latest real weigh-in -> target weight on target date
+    const anchorDate = wStats.latest ? wStats.latest.date : startIso;
+    const anchorWeight = wStats.latestWeight;
+    const remDays = Math.max(7, Math.round((new Date(endIso) - new Date(anchorDate)) / 86400000));
+    const events = (u.plano && u.plano.eventos) || [];
+
+    const projPoints = [];
+    for (let d = 0; d <= remDays; d += Math.max(1, Math.floor(remDays / 90))) {
+      const iso = addDaysISO(anchorDate, d);
+      const frac = d / remDays;
+      const baseTrend = anchorWeight + (a.pesoMeta - anchorWeight) * frac;
+
+      // Weekly physiological oscillation: rises slightly Mon(1)/Tue(2) post-weekend, drops Wed(3)-Sat(6)
+      const dow = new Date(iso + 'T12:00:00Z').getUTCDay();
+      const weeklyWave = [0.22, 0.35, 0.18, -0.05, -0.18, -0.26, -0.15][dow];
+
+      // Event / holiday deceleration and post-event fluid retention (48-72h)
+      let eventOffset = 0;
+      events.forEach(ev => {
+        if (!ev.date) return;
+        const diffEv = Math.round((new Date(iso) - new Date(ev.date)) / 86400000);
+        if (diffEv === 0) eventOffset += 0.35;
+        else if (diffEv === 1) eventOffset += 0.65; // fluid retention day after party/rodízio
+        else if (diffEv === 2) eventOffset += 0.30;
+        else if (diffEv > 2 && diffEv <= 5) eventOffset += 0.10;
+      });
+
+      const damp = 1 - Math.pow(frac, 3); // converges cleanly to target at end
+      projPoints.push({ date: iso, val: baseTrend + (weeklyWave + eventOffset) * damp });
+    }
+
+    const realPoints = wStats.valid.map(p => ({ date: p.date, val: p.peso }));
+    const allVals = [
+      ...projPoints.map(p => p.val),
+      ...realPoints.map(p => p.val),
+      a.pesoMeta,
+      wStats.startWeight
+    ];
+    const minY = Math.floor(Math.min(...allVals) - 1);
+    const maxY = Math.ceil(Math.max(...allVals) + 1);
+
+    const W = 680, H = 250, padL = 46, padR = 18, padT = 18, padB = 32;
+    const minT = new Date(startIso).getTime();
+    const maxT = Math.max(minT + 86400000, new Date(endIso).getTime());
+
+    const xOf = (iso) => padL + ((new Date(iso).getTime() - minT) / (maxT - minT)) * (W - padL - padR);
+    const yOf = (v) => padT + ((maxY - v) / Math.max(1, maxY - minY)) * (H - padT - padB);
+
+    const projPath = projPoints.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(p.date).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(' ');
+    const realPath = realPoints.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(p.date).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(' ');
+    const metaY = yOf(a.pesoMeta).toFixed(1);
+
+    let yGrid = '';
+    for (let i = 0; i <= 4; i++) {
+      const val = minY + ((maxY - minY) * i) / 4;
+      const y = yOf(val).toFixed(1);
+      yGrid += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(148,163,184,0.18)" stroke-dasharray="3,3" />
+                <text x="${padL - 6}" y="${Number(y) + 4}" text-anchor="end" fill="#94A3B8" font-size="10">${fmtDec(val, 1)}</text>`;
+    }
+
+    const dots = realPoints.map(p => `<circle cx="${xOf(p.date).toFixed(1)}" cy="${yOf(p.val).toFixed(1)}" r="4" fill="#10B981" stroke="#0B1117" stroke-width="1.5" />`).join('');
+
+    box.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+        ${yGrid}
+        <line x1="${padL}" y1="${metaY}" x2="${W - padR}" y2="${metaY}" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="6,4" />
+        <text x="${W - padR}" y="${Number(metaY) - 4}" text-anchor="end" fill="#38BDF8" font-size="10" font-weight="bold">Meta: ${fmtDec(a.pesoMeta, 1)} kg</text>
+        <path d="${projPath}" fill="none" stroke="#F59E0B" stroke-width="2.2" />
+        ${realPoints.length > 1 ? `<path d="${realPath}" fill="none" stroke="#10B981" stroke-width="2.8" />` : ''}
+        ${dots}
+        <text x="${padL}" y="${H - 8}" fill="#94A3B8" font-size="10">${formatDateBR(startIso)}</text>
+        <text x="${W - padR}" y="${H - 8}" text-anchor="end" fill="#94A3B8" font-size="10">${formatDateBR(endIso)}</text>
+      </svg>
+    `;
+  }
+
+  function renderEvidenceRealisticChart(u, wStats) {
+    const box = document.getElementById('chartEvidenceRealistic');
+    const a = u.anamnese;
+    const startIso = a.dataInicio || todayISO();
+    const startW = wStats.startWeight;
+    const targetW = a.pesoMeta;
+    const totalLoss = Math.max(2, startW - targetW);
+    const weeks = 24; // 6-month evidence-based trajectory (Look AHEAD / Hall et al.)
+
+    const linearPts = [];
+    const realisticPts = [];
+    for (let w = 0; w <= weeks; w++) {
+      const iso = addDaysISO(startIso, w * 7);
+      const t = w / weeks;
+      linearPts.push({ w, iso, val: startW - totalLoss * t });
+
+      // Evidence-based curve:
+      // 1. Faster initial loss (weeks 1-4: glycogen + water + high motivation)
+      // 2. Natural plateau & metabolic adaptation around weeks 8-11 (Hall et al. 2011)
+      // 3. Temporary relapse/slip bump around weeks 13-15 (+1.2% to +1.8%, Wing & Phelan / Yanovski)
+      // 4. Behavioral recovery & steady consolidation weeks 16-24
+      let curve = startW - totalLoss * (1 - Math.exp(-2.1 * t)) / (1 - Math.exp(-2.1));
+      if (w >= 8 && w <= 11) curve += 0.45 * Math.sin(((w - 8) / 3) * Math.PI); // plateau
+      if (w >= 13 && w <= 16) curve += 1.15 * Math.sin(((w - 13) / 3) * Math.PI); // natural relapse/slip + recovery
+      if (w >= 19 && w <= 21) curve += 0.35 * Math.sin(((w - 19) / 2) * Math.PI); // minor social slip
+      realisticPts.push({ w, iso, val: curve });
+    }
+
+    const allVals = [...linearPts.map(p => p.val), ...realisticPts.map(p => p.val), ...wStats.valid.map(p => p.peso)];
+    const minY = Math.floor(Math.min(...allVals) - 1);
+    const maxY = Math.ceil(Math.max(...allVals) + 1);
+
+    const W = 680, H = 230, padL = 46, padR = 18, padT = 18, padB = 32;
+    const xOf = (w) => padL + (w / weeks) * (W - padL - padR);
+    const yOf = (v) => padT + ((maxY - v) / Math.max(1, maxY - minY)) * (H - padT - padB);
+
+    const linPath = linearPts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(p.w).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(' ');
+    const realisPath = realisticPts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(p.w).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(' ');
+
+    // Plot user's actual weigh-ins mapped by week offset
+    const userMapped = wStats.valid.map(p => {
+      const wk = Math.max(0, Math.min(weeks, (new Date(p.date) - new Date(startIso)) / (7 * 86400000)));
+      return { wk, val: p.peso };
+    });
+    const userDots = userMapped.map(p => `<circle cx="${xOf(p.wk).toFixed(1)}" cy="${yOf(p.val).toFixed(1)}" r="4" fill="#10B981" />`).join('');
+
+    let yGrid = '';
+    for (let i = 0; i <= 4; i++) {
+      const val = minY + ((maxY - minY) * i) / 4;
+      const y = yOf(val).toFixed(1);
+      yGrid += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(148,163,184,0.18)" stroke-dasharray="3,3" />
+                <text x="${padL - 6}" y="${Number(y) + 4}" text-anchor="end" fill="#94A3B8" font-size="10">${fmtDec(val, 1)}</text>`;
+    }
+
+    // Callout annotations on chart
+    const pPlatX = xOf(9.5).toFixed(1), pPlatY = (yOf(realisticPts[9].val) - 10).toFixed(1);
+    const pSlipX = xOf(14.5).toFixed(1), pSlipY = (yOf(realisticPts[14].val) - 10).toFixed(1);
+
+    box.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+        ${yGrid}
+        <path d="${linPath}" fill="none" stroke="#64748B" stroke-width="1.6" stroke-dasharray="5,5" />
+        <path d="${realisPath}" fill="none" stroke="#A855F7" stroke-width="2.8" />
+        <text x="${pPlatX}" y="${pPlatY}" text-anchor="middle" fill="#C084FC" font-size="9.5" font-weight="bold">Platô adaptativo</text>
+        <text x="${pSlipX}" y="${pSlipY}" text-anchor="middle" fill="#F59E0B" font-size="9.5" font-weight="bold">Recaída natural + Retomada</text>
+        ${userDots}
+        <text x="${padL}" y="${H - 8}" fill="#94A3B8" font-size="10">Semana 0</text>
+        <text x="${W / 2}" y="${H - 8}" text-anchor="middle" fill="#94A3B8" font-size="10">Semana 12</text>
+        <text x="${W - padR}" y="${H - 8}" text-anchor="end" fill="#94A3B8" font-size="10">Semana 24</text>
+      </svg>
+    `;
+  }
+
+  function renderWaistHistory(u) {
+    const list = (u.pesagens || [])
+      .filter(p => p.cintura && Number(p.cintura) > 0)
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    const tbody = document.getElementById('waistHistoryBody');
+    const spark = document.getElementById('waistSparklineBox');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);">Nenhuma medida de cintura registrada ainda.</td></tr>';
+      spark.innerHTML = '<div style="text-align:center;font-size:0.8rem;color:var(--text-muted);">Registre sua cintura na aba Diário (recomendado a cada 15 dias).</div>';
+      return;
+    }
+
+    const firstVal = list[0].cintura;
+    tbody.innerHTML = list.map((item, i) => {
+      const prev = i > 0 ? list[i - 1].cintura : item.cintura;
+      const diffPrev = item.cintura - prev;
+      const diffStart = item.cintura - firstVal;
+      return `
+        <tr>
+          <td>${formatDateBR(item.date)}</td>
+          <td><strong>${fmtDec(item.cintura, 1)} cm</strong></td>
+          <td style="color:${diffPrev <= 0 ? 'var(--primary)' : 'var(--danger)'};">${i === 0 ? 'Base' : `${diffPrev > 0 ? '+' : ''}${fmtDec(diffPrev, 1)} cm`}</td>
+          <td style="color:${diffStart <= 0 ? 'var(--primary)' : 'var(--danger)'};">${diffStart > 0 ? '+' : ''}${fmtDec(diffStart, 1)} cm</td>
+        </tr>
+      `;
+    }).join('');
+
+    if (list.length >= 2) {
+      const W = 600, H = 90, pad = 24;
+      const minV = Math.min(...list.map(x => x.cintura)) - 1;
+      const maxV = Math.max(...list.map(x => x.cintura)) + 1;
+      const pts = list.map((x, idx) => {
+        const px = pad + (idx / (list.length - 1)) * (W - pad * 2);
+        const py = 14 + ((maxV - x.cintura) / Math.max(1, maxV - minV)) * (H - 28);
+        return `${px.toFixed(1)},${py.toFixed(1)}`;
+      });
+      spark.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+        <polyline fill="none" stroke="#10B981" stroke-width="2.5" points="${pts.join(' ')}" />
+        ${list.map((x, idx) => {
+          const [px, py] = pts[idx].split(',');
+          return `<circle cx="${px}" cy="${py}" r="4" fill="#F59E0B" /><text x="${px}" y="${Number(py) - 7}" text-anchor="middle" fill="#94A3B8" font-size="10">${fmtDec(x.cintura, 1)}</text>`;
+        }).join('')}
+      </svg>`;
+    } else {
+      spark.innerHTML = `<div style="text-align:center;font-size:0.82rem;">Medida inicial de cintura: <strong>${fmtDec(firstVal, 1)} cm</strong> (${formatDateBR(list[0].date)})</div>`;
+    }
+  }
+
+  // =========================================================
+  // TAB 4: SEMANA
+  // =========================================================
+  function renderSemanaTab() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const tIso = todayISO();
+
+    let sumKcal = 0, sumProt = 0, sumDeliv = 0, sumWk = 0, sumWkMin = 0;
+    const rowsHtml = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const dIso = addDaysISO(tIso, -i);
+      const cons = getConsumedForDate(u, dIso);
+      const metaDia = getDailyCalorieTarget(u, dIso);
+      const delivs = (u.diario || []).filter(d => d.date === dIso && d.delivery).length;
+      const wks = (u.treinos || []).filter(t => t.date === dIso);
+      const pes = (u.pesagens || []).find(p => p.date === dIso && p.peso);
+
+      sumKcal += cons.kcal;
+      sumProt += cons.prot;
+      sumDeliv += delivs;
+      sumWk += wks.length;
+      sumWkMin += wks.reduce((s, w) => s + (Number(w.minutos) || 0), 0);
+
+      const wkStr = wks.length ? wks.map(w => `${w.atividade} (${w.minutos}m)`).join(', ') : '—';
+      const over = cons.kcal > metaDia * 1.05;
+
+      rowsHtml.push(`
+        <tr>
+          <td><strong>${weekdayBR(dIso).slice(0, 3)}</strong> ${formatDateBR(dIso).slice(0, 5)}</td>
+          <td style="color:${over ? 'var(--danger)' : 'inherit'};font-weight:700;">${fmtInt(cons.kcal)} / ${fmtInt(metaDia)}</td>
+          <td>${fmtDec(cons.prot, 1)} g</td>
+          <td>${delivs > 0 ? `🛵 ${delivs}` : '0'}</td>
+          <td>${escapeHtml(wkStr)}</td>
+          <td>${pes ? `${fmtDec(pes.peso, 1)} kg` : '—'}</td>
+        </tr>
+      `);
+    }
+
+    document.getElementById('wkAvgKcal').textContent = `${fmtInt(sumKcal / 7)} kcal`;
+    document.getElementById('wkMetaRef').textContent = `Meta base: ${fmtInt(u.anamnese.metaKcal)} kcal`;
+    document.getElementById('wkAvgProt').textContent = `${fmtDec(sumProt / 7, 1)} g`;
+    document.getElementById('wkProtRef').textContent = `Meta: ${fmtDec(u.anamnese.metaProt, 1)} g`;
+    document.getElementById('wkDeliveries').textContent = fmtInt(sumDeliv);
+    document.getElementById('wkWorkouts').textContent = fmtInt(sumWk);
+    document.getElementById('wkWorkoutMin').textContent = `${fmtInt(sumWkMin)} min totais`;
+    document.getElementById('weekTableBody').innerHTML = rowsHtml.join('');
+  }
+
+  // =========================================================
+  // TAB 5: PLANO + ÁGUA + EFCA
+  // =========================================================
+  function renderPlanoTab() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const a = u.anamnese;
+    if (!u.plano) u.plano = buildInitialPlanFromAnamnese(a);
+
+    // Water Calculator
+    const wStats = getWeightStats(u);
+    const curWeight = wStats.latestWeight || a.pesoAtual || 75;
+    const mlKg = a.aguaMlKg || recommendedWaterMlKg(a.idade);
+    const totalMl = Math.round(curWeight * mlKg);
+    a.aguaMetaMl = totalMl;
+
+    document.getElementById('waterMlKgSlider').value = mlKg;
+    document.getElementById('waterMlKgLabel').textContent = `${mlKg} ml/kg`;
+    document.getElementById('waterTargetBadge').textContent = `${fmtInt(totalMl)} ml / dia`;
+    document.getElementById('waterSummaryText').textContent = `${fmtInt(totalMl)} ml (${fmtDec(totalMl / 1000, 2)} litros/dia) para ${fmtDec(curWeight, 1)} kg`;
+
+    // EFCA Preview
+    const efcaPrev = document.getElementById('efcaSummaryPreview');
+    if (u.efcaHistory && u.efcaHistory.length > 0) {
+      const lastEfca = u.efcaHistory[u.efcaHistory.length - 1];
+      efcaPrev.classList.remove('hidden');
+      efcaPrev.innerHTML = `<strong>Último resultado EFCA (${formatDateBR(lastEfca.date)}):</strong> Fenótipo dominante: <span style="color:var(--primary);font-weight:800;">${escapeHtml(lastEfca.dominante)}</span> (Pontuação total: ${lastEfca.total}/80).`;
+    } else {
+      efcaPrev.classList.add('hidden');
+    }
+
+    // Semana de Treinos
+    document.getElementById('planWeekBody').innerHTML = (u.plano.semanaTreinos || []).map(w => `
+      <tr>
+        <td><strong>${escapeHtml(w.dia)}</strong></td>
+        <td>${escapeHtml(w.treino)}</td>
+        <td><strong>${fmtInt(w.kcal)} kcal</strong></td>
+        <td style="font-size:0.79rem;color:var(--text-muted);">${escapeHtml(w.dica)}</td>
+      </tr>
+    `).join('');
+
+    // Próximos Eventos
+    const evList = document.getElementById('upcomingEventsList');
+    const evs = u.plano.eventos || [];
+    if (evs.length === 0) {
+      evList.innerHTML = '<div style="font-size:0.82rem;color:var(--text-muted);">Nenhum evento cadastrado. Clique em "+ Adicionar Evento" para planejar festas, viagens ou jantares.</div>';
+    } else {
+      evList.innerHTML = evs.map(ev => `
+        <div class="meal-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div><span class="section-tag warn">${formatDateBR(ev.date)}</span> <strong>${escapeHtml(ev.nome)}</strong></div>
+            <button type="button" class="btn btn-danger btn-sm del-ev-btn" data-id="${ev.id}">✕</button>
+          </div>
+          <div style="font-size:0.81rem;">
+            <div><strong>Antes:</strong> ${escapeHtml(ev.antes)}</div>
+            <div><strong>No dia:</strong> ${escapeHtml(ev.noDia)}</div>
+            <div><strong>Depois:</strong> ${escapeHtml(ev.depois)}</div>
+          </div>
+        </div>
+      `).join('');
+      evList.querySelectorAll('.del-ev-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          u.plano.eventos = u.plano.eventos.filter(x => x.id !== btn.dataset.id);
+          saveDB(true);
+          renderPlanoTab();
+          renderEvolucaoTab();
+        });
+      });
+    }
+
+    // Cardápio Base
+    let baseKcal = 0, baseProt = 0;
+    document.getElementById('baseDayMenuList').innerHTML = (u.plano.cardapioBase || []).map(m => {
+      const mk = m.itens.reduce((s, i) => s + (Number(i.kcal) || 0), 0);
+      const mp = m.itens.reduce((s, i) => s + (parseBrNum(i.prot) || 0), 0);
+      baseKcal += mk;
+      baseProt += mp;
+      return `
+        <div class="meal-card">
+          <div class="meal-head">
+            <strong>${escapeHtml(m.horario)} • ${escapeHtml(m.nome)}</strong>
+            <span><strong>${fmtInt(mk)} kcal</strong> • ${fmtDec(mp, 1)}g P</span>
+          </div>
+          <ul class="meal-items-list" style="margin-bottom:0;">
+            ${m.itens.map(it => `<li><span>${escapeHtml(it.item)} (${escapeHtml(it.qtd)})</span><span>${fmtInt(it.kcal)} kcal | ${fmtDec(it.prot, 1)}g P</span></li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('baseMenuTotalsTag').textContent = `${fmtInt(baseKcal)} kcal • ${fmtDec(baseProt, 1)}g prot`;
+
+    // Trocas Equivalentes
+    const tr = u.plano.trocas || {};
+    document.getElementById('swapsContainer').innerHTML = `
+      <div style="font-size:0.84rem;">
+        <strong>🥩 Proteínas:</strong><ul>${(tr.proteinas || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
+        <strong>🍚 Carboidratos:</strong><ul>${(tr.carboidratos || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
+        <strong>🥪 Lanches:</strong><ul>${(tr.lanches || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
+      </div>
+    `;
+
+    // Regras FDS & Dia a Dia
+    document.getElementById('weekendRulesBox').innerHTML = `<ul style="margin:0;padding-left:18px;">${(u.plano.regrasFds || []).map(x => `<li style="margin-bottom:5px;">${escapeHtml(x)}</li>`).join('')}</ul>`;
+    document.getElementById('dailyRulesBox').innerHTML = `<ul style="margin:0;padding-left:18px;">${(u.plano.regrasDia || []).map(x => `<li style="margin-bottom:5px;">${escapeHtml(x)}</li>`).join('')}</ul>`;
+
+    // Marmitas
+    const mp = u.plano.marmitas || {};
+    document.getElementById('mealPrepTimeTag').textContent = mp.tempo || 'Semanal';
+    document.getElementById('mealPrepBox').innerHTML = `
+      <strong>🛒 Lista de Compras:</strong>
+      <ul>${(mp.compras || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
+      <strong>⏱️ Ordem de Preparo:</strong>
+      <ol>${(mp.ordemPreparo || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ol>
+    `;
+
+    // Guia Delivery
+    document.getElementById('deliveryGuideBox').innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Categoria</th><th>✅ O que pedir</th><th>❌ O que evitar</th></tr></thead>
+          <tbody>
+            ${(u.plano.guiaDelivery || []).map(g => `
+              <tr>
+                <td><strong>${escapeHtml(g.cat)}</strong></td>
+                <td style="color:var(--primary);">${escapeHtml(g.pedir)}</td>
+                <td style="color:var(--danger);">${escapeHtml(g.evitar)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  document.getElementById('waterMlKgSlider').addEventListener('input', (e) => {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    u.anamnese.aguaMlKg = parseInt(e.target.value, 10);
+    saveDB(true);
+    renderPlanoTab();
+  });
+
+  document.getElementById('resetWaterAgeBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    u.anamnese.aguaMlKg = recommendedWaterMlKg(u.anamnese.idade);
+    saveDB(true);
+    renderPlanoTab();
+    showToast(`💧 Ajustado para ${u.anamnese.aguaMlKg} ml/kg conforme sua faixa etária.`);
+  });
+
+  document.getElementById('openAddEventModalBtn').addEventListener('click', () => {
+    openGenericModal('Adicionar Próximo Evento', `
+      <div class="form-grid">
+        <div class="form-grid two-col">
+          <div class="field"><label>Data do evento</label><input type="date" id="evDateIn" value="${addDaysISO(todayISO(), 7)}" /></div>
+          <div class="field"><label>Nome do evento</label><input type="text" id="evNameIn" placeholder="Ex.: Casamento / Churrasco / Viagem" /></div>
+        </div>
+        <div class="field"><label>Estratégia ANTES do evento</label><input type="text" id="evAntesIn" value="Garantir 100% da meta de proteína e água no café e almoço; fazer treino de força/cardio." /></div>
+        <div class="field"><label>Estratégia NO DIA</label><input type="text" id="evNoDiaIn" value="Montar 1 prato principal equilibrado, saborear sem culpa e evitar beliscar o tempo todo." /></div>
+        <div class="field"><label>Estratégia DEPOIS do evento</label><input type="text" id="evDepoisIn" value="Voltar imediatamente ao cardápio normal no dia seguinte (sem jejum punitivo) e beber +500ml de água." /></div>
+        <button type="button" id="saveEventBtn" class="btn btn-primary btn-block">Salvar Evento</button>
+      </div>
+    `);
+    document.getElementById('saveEventBtn').addEventListener('click', () => {
+      const u = getActiveUser();
+      u.plano.eventos = u.plano.eventos || [];
+      u.plano.eventos.push({
+        id: 'EVT_' + Date.now(),
+        date: document.getElementById('evDateIn').value,
+        nome: document.getElementById('evNameIn').value.trim() || 'Evento Social',
+        antes: document.getElementById('evAntesIn').value.trim(),
+        noDia: document.getElementById('evNoDiaIn').value.trim(),
+        depois: document.getElementById('evDepoisIn').value.trim()
+      });
+      saveDB(true);
+      closeGenericModal();
+      renderPlanoTab();
+      renderEvolucaoTab();
+      showToast('🎉 Evento adicionado e integrado ao gráfico de projeção!');
+    });
+  });
+
+  document.getElementById('editPlanWeekBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    const rows = (u.plano.semanaTreinos || []).map((w, idx) => `
+      <div class="meal-card">
+        <strong>${escapeHtml(w.dia)}</strong>
+        <div class="form-grid two-col" style="margin-top:6px;">
+          <input type="text" class="pw-treino" data-idx="${idx}" value="${escapeHtml(w.treino)}" />
+          <input type="number" class="pw-kcal" data-idx="${idx}" value="${w.kcal}" />
+        </div>
+        <input type="text" class="pw-dica" data-idx="${idx}" value="${escapeHtml(w.dica)}" style="margin-top:6px;" />
+      </div>
+    `).join('');
+    openGenericModal('Editar Semana de Treinos & Metas Calóricas', `
+      ${rows}
+      <button type="button" id="savePlanWeekBtn" class="btn btn-primary btn-block">Salvar Alterações</button>
+    `);
+    document.getElementById('savePlanWeekBtn').addEventListener('click', () => {
+      document.querySelectorAll('.pw-treino').forEach(inp => {
+        const i = Number(inp.dataset.idx);
+        u.plano.semanaTreinos[i].treino = inp.value;
+      });
+      document.querySelectorAll('.pw-kcal').forEach(inp => {
+        const i = Number(inp.dataset.idx);
+        u.plano.semanaTreinos[i].kcal = Number(inp.value) || u.anamnese.metaKcal;
+      });
+      document.querySelectorAll('.pw-dica').forEach(inp => {
+        const i = Number(inp.dataset.idx);
+        u.plano.semanaTreinos[i].dica = inp.value;
+      });
+      saveDB(true);
+      closeGenericModal();
+      renderScoreboard();
+      renderPlanoTab();
+      showToast('✅ Semana de treinos e metas atualizada!');
+    });
+  });
+
+  // =========================================================
+  // ESCALA DE FENÓTIPOS DE COMPORTAMENTO ALIMENTAR (EFCA)
+  // =========================================================
+  const EFCA_QUESTIONS = [
+    // Comer Emocional (1-4)
+    { fenotipo: 'Comer Emocional', q: '1. Quando estou estressado(a), ansioso(a) ou triste, sinto vontade de comer mesmo sem estar com fome física.' },
+    { fenotipo: 'Comer Emocional', q: '2. Uso a comida como forma de me acalmar, confortar ou aliviar tensões do dia.' },
+    { fenotipo: 'Comer Emocional', q: '3. Quando enfrento frustrações ou problemas no trabalho/casa, acabo descontando na alimentação.' },
+    { fenotipo: 'Comer Emocional', q: '4. Nos momentos de tédio ou solidão, procuro algo gostoso para comer para me sentir melhor.' },
+    // Comer Hiperfágico (5-8)
+    { fenotipo: 'Comer Hiperfágico', q: '5. Costumo comer grandes quantidades de comida de uma só vez, mesmo depois de já me sentir satisfeito(a).' },
+    { fenotipo: 'Comer Hiperfágico', q: '6. Tenho dificuldade em parar de comer quando estou diante de uma refeição farta.' },
+    { fenotipo: 'Comer Hiperfágico', q: '7. Sinto que demoro a perceber a saciedade e só paro quando o estômago está muito cheio/pesado.' },
+    { fenotipo: 'Comer Hiperfágico', q: '8. Repito o prato com frequência mesmo sem sentir fome real.' },
+    // Comer Desorganizado (9-12)
+    { fenotipo: 'Comer Desorganizado', q: '9. Pulo refeições ao longo do dia e chego à noite com muita fome, comendo exageradamente.' },
+    { fenotipo: 'Comer Desorganizado', q: '10. Não tenho horários regulares para me alimentar e acabo beliscando o que estiver mais fácil.' },
+    { fenotipo: 'Comer Desorganizado', q: '11. Deixo para decidir o que comer apenas na hora em que já estou com muita fome.' },
+    { fenotipo: 'Comer Desorganizado', q: '12. Minha rotina alimentar muda completamente entre dias úteis e fins de semana.' },
+    // Comer Hedônico (13-16)
+    { fenotipo: 'Comer Hedônico', q: '13. Quando vejo ou sinto o cheiro de uma comida muito saborosa (doces, frituras, lanches), não consigo resistir mesmo sem fome.' },
+    { fenotipo: 'Comer Hedônico', q: '14. Penso com frequência em alimentos altamente palatáveis e sinto desejo intenso por eles.' },
+    { fenotipo: 'Comer Hedônico', q: '15. Quando começo a comer um doce ou petisco que gosto muito, tenho dificuldade em comer apenas uma pequena porção.' },
+    { fenotipo: 'Comer Hedônico', q: '16. A busca pelo prazer imediato do sabor fala mais alto do que meus objetivos de emagrecimento.' }
+  ];
+
+  const EFCA_GUIDANCE = {
+    'Comer Emocional': 'Gatilho ligado à regulação de emoções (estresse, ansiedade, cansaço). Estratégia: criar pausa de 10 minutos antes de comer ("diário de gatilhos"), substituir recompensa alimentar por descompressão não-alimentar e acompanhamento com Psicólogo/Médico.',
+    'Comer Hiperfágico': 'Gatilho ligado à sinalização tardia de saciedade e volume gástrico. Estratégia: iniciar refeições por saladas/fibras e proteínas magras, mastigar devagar (20 min por refeição) e fracionar porções antes de sentar à mesa.',
+    'Comer Desorganizado': 'Gatilho ligado ao caos de horários e jejum prolongado não planejado. Estratégia: definir âncoras fixas de horário (café, almoço, lanche proteico às 16h30 e jantar) e deixar marmitas/lanches prontos.',
+    'Comer Hedônico': 'Gatilho ligado à hiper-responsividade aos estímulos de prazer/palatabilidade. Estratégia: controle de ambiente (não estocar gatilhos visíveis em casa), incluir pequenas porções planejadas dos favoritos para evitar efeito proibição.'
+  };
+
+  function openEfcaModal() {
+    const qHtml = EFCA_QUESTIONS.map((item, idx) => `
+      <div class="meal-card">
+        <div style="font-size:0.86rem;font-weight:700;margin-bottom:6px;">${item.q}</div>
+        <select class="efca-ans" data-idx="${idx}">
+          <option value="1">1 - Nunca</option>
+          <option value="2">2 - Raramente</option>
+          <option value="3" selected>3 - Às vezes</option>
+          <option value="4">4 - Quase sempre</option>
+          <option value="5">5 - Sempre</option>
+        </select>
+      </div>
+    `).join('');
+
+    openGenericModal('🧠 Escala de Fenótipos de Comportamento Alimentar (EFCA)', `
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0;">
+        Responda com sinceridade com que frequência cada situação acontece com você atualmente.
+      </p>
+      ${qHtml}
+      <button type="button" id="submitEfcaBtn" class="btn btn-primary btn-block">Calcular Meu Fenótipo Alimentar</button>
+      <div id="efcaResultArea" class="hidden" style="margin-top:14px;"></div>
+    `);
+
+    document.getElementById('submitEfcaBtn').addEventListener('click', () => {
+      const answers = Array.from(document.querySelectorAll('.efca-ans')).map(s => Number(s.value));
+      const scores = {
+        'Comer Emocional': answers.slice(0, 4).reduce((a, b) => a + b, 0),
+        'Comer Hiperfágico': answers.slice(4, 8).reduce((a, b) => a + b, 0),
+        'Comer Desorganizado': answers.slice(8, 12).reduce((a, b) => a + b, 0),
+        'Comer Hedônico': answers.slice(12, 16).reduce((a, b) => a + b, 0)
+      };
+      const total = answers.reduce((a, b) => a + b, 0);
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const dominante = sorted[0][0];
+
+      const classify = (sc) => sc >= 15 ? 'Alto (Atenção prioritária)' : sc >= 10 ? 'Moderado' : 'Baixo';
+
+      const u = getActiveUser();
+      if (u) {
+        u.efcaHistory = u.efcaHistory || [];
+        u.efcaHistory.push({
+          id: 'EFCA_' + Date.now(),
+          date: todayISO(),
+          total,
+          scores,
+          dominante,
+          answers
+        });
+        saveDB(true);
+        renderPlanoTab();
+      }
+
+      const resBox = document.getElementById('efcaResultArea');
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = `
+        <div class="callout info">
+          <div style="font-size:0.95rem;font-weight:800;margin-bottom:6px;">
+            🎯 Fenótipo Dominante: <span style="color:var(--primary);">${dominante}</span> (${sorted[0][1]}/20 pts)
+          </div>
+          <ul style="margin:6px 0;padding-left:18px;font-size:0.84rem;">
+            ${sorted.map(([k, v]) => `<li><strong>${k}:</strong> ${v}/20 pontos — <em>${classify(v)}</em></li>`).join('')}
+          </ul>
+          <div style="font-size:0.83rem;margin-top:8px;">
+            <strong>Conduta recomendada:</strong> ${EFCA_GUIDANCE[dominante]}
+          </div>
+        </div>
+      `;
+      resBox.scrollIntoView({ behavior: 'smooth' });
+      showToast('✅ Resultado EFCA salvo e sincronizado com a planilha!');
+    });
+  }
+
+  document.getElementById('openEfcaModalBtn').addEventListener('click', openEfcaModal);
+
+  // =========================================================
+  // RELATÓRIO .PDF PARA MÉDICO E/OU NUTRICIONISTA
+  // =========================================================
+  function openPdfReportModal() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    const hasEfca = u.efcaHistory && u.efcaHistory.length > 0;
+
+    openGenericModal('📄 Gerar Relatório Clínico em .PDF', `
+      <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0;">
+        Personalize os blocos que deseja incluir no documento clínico para levar ao seu <strong>Médico e/ou Nutricionista</strong>:
+      </p>
+      <div class="form-grid">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pdfIncAnamnese" checked style="width:auto;" /> Dados antropométricos, metas calóricas/proteicas e rotina
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pdfIncEvolucao" checked style="width:auto;" /> Histórico de pesagens, ritmo semanal e medidas de cintura
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pdfIncSemana" checked style="width:auto;" /> Resumo alimentar e de treinos (últimos 7 dias)
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" id="pdfIncEfca" ${hasEfca ? 'checked' : ''} style="width:auto;" />
+          <span><strong>Incluir resultado da Escala EFCA (Comportamento Alimentar)</strong> ${hasEfca ? '✅' : '(não preenchido ainda)'}</span>
+        </label>
+        <button type="button" id="generatePdfNowBtn" class="btn btn-primary btn-block">🖨️ Gerar & Salvar Relatório em .PDF</button>
+      </div>
+    `);
+
+    document.getElementById('generatePdfNowBtn').addEventListener('click', () => {
+      const incAnam = document.getElementById('pdfIncAnamnese').checked;
+      const incEvol = document.getElementById('pdfIncEvolucao').checked;
+      const incSem = document.getElementById('pdfIncSemana').checked;
+      const incEfca = document.getElementById('pdfIncEfca').checked;
+
+      const a = u.anamnese;
+      const wStats = getWeightStats(u);
+      const imc = a.altura > 0 ? (wStats.latestWeight / (a.altura * a.altura)) : 0;
+
+      let html = `
+        <h1>Marcusnator Pro Athlete 2.0 By Dr. Hans</h1>
+        <p style="margin:0 0 10px;font-size:10pt;color:#475569;">
+          <strong>Relatório de Acompanhamento Clínico e Nutricional</strong> • Emitido em ${formatDateBR(todayISO())}
+        </p>
+        <p style="font-size:10.5pt;"><strong>Paciente / Atleta:</strong> ${escapeHtml(u.nome)} | <strong>Idade:</strong> ${a.idade} anos | <strong>Sexo:</strong> ${a.sexo}</p>
+      `;
+
+      if (incAnam) {
+        html += `
+          <h2>1. Dados Antropométricos, Metas e Hidratação</h2>
+          <table>
+            <tr><th>Altura</th><td>${fmtDec(a.altura, 2)} m</td><th>IMC Atual</th><td>${fmtDec(imc, 1)} kg/m²</td></tr>
+            <tr><th>Peso Inicial (${formatDateBR(a.dataInicio)})</th><td>${fmtDec(a.pesoAtual, 1)} kg</td><th>Peso Atual</th><td>${fmtDec(wStats.latestWeight, 1)} kg</td></tr>
+            <tr><th>Peso Meta</th><td>${fmtDec(a.pesoMeta, 1)} kg</td><th>Data-Alvo</th><td>${formatDateBR(a.dataAlvo)}</td></tr>
+            <tr><th>Meta Calórica Diária</th><td>${fmtInt(a.metaKcal)} kcal</td><th>Meta Proteica Diária</th><td>${fmtDec(a.metaProt, 1)} g</td></tr>
+            <tr><th>Hidratação Prescrita</th><td>${a.aguaMlKg || 35} ml/kg (${fmtInt(a.aguaMetaMl || 2500)} ml/dia)</td><th>Suplementos</th><td>${escapeHtml(a.suplementos || 'Nenhum')}</td></tr>
+          </table>
+          <p style="font-size:9.5pt;margin-top:6px;">
+            <strong>Rotina & Treinos:</strong> Acorda ${a.acordar} / Dorme ${a.dormir} | Trabalho: ${escapeHtml(a.horarioTrabalho)} (${escapeHtml(a.modalidadeTrabalho)}) | Treinos: ${escapeHtml(a.treinosSemana)}<br/>
+            <strong>Preferências:</strong> Não quer cortar: ${escapeHtml(a.naoCortar || '—')} | Restrições: ${escapeHtml(a.naoCome || '—')} | Delivery: ${escapeHtml(a.deliveryFreq)}
+          </p>
+        `;
+      }
+
+      if (incEvol) {
+        const rows = wStats.valid.slice(-12).map(p => `
+          <tr>
+            <td>${formatDateBR(p.date)}</td>
+            <td>${fmtDec(p.peso, 1)} kg</td>
+            <td>${p.cintura ? fmtDec(p.cintura, 1) + ' cm' : '—'}</td>
+            <td>${escapeHtml(p.obs || '')}</td>
+          </tr>
+        `).join('');
+        html += `
+          <h2>2. Evolução de Peso e Medidas Corporais</h2>
+          <p style="font-size:9.5pt;">Variação total desde o início: <strong>${fmtDec(wStats.latestWeight - wStats.startWeight, 1)} kg</strong> | Média dos últimos 7 dias: <strong>${fmtDec(wStats.avg7, 1)} kg</strong></p>
+          <table>
+            <thead><tr><th>Data</th><th>Peso (kg)</th><th>Cintura (cm)</th><th>Observação</th></tr></thead>
+            <tbody>${rows || '<tr><td colspan="4">Sem registros</td></tr>'}</tbody>
+          </table>
+        `;
+      }
+
+      if (incSem) {
+        let sk = 0, sp = 0, sd = 0, sw = 0;
+        for (let i = 6; i >= 0; i--) {
+          const dIso = addDaysISO(todayISO(), -i);
+          const c = getConsumedForDate(u, dIso);
+          sk += c.kcal; sp += c.prot;
+          sd += (u.diario || []).filter(x => x.date === dIso && x.delivery).length;
+          sw += (u.treinos || []).filter(x => x.date === dIso).length;
+        }
+        html += `
+          <h2>3. Adesão Alimentar e Treinos (Últimos 7 Dias)</h2>
+          <table>
+            <tr><th>Média Calórica</th><td>${fmtInt(sk / 7)} kcal/dia</td><th>Média Proteica</th><td>${fmtDec(sp / 7, 1)} g/dia</td></tr>
+            <tr><th>Refeições Delivery (7d)</th><td>${sd}</td><th>Sessões de Treino (7d)</th><td>${sw}</td></tr>
+          </table>
+        `;
+      }
+
+      if (incEfca) {
+        const lastEfca = (u.efcaHistory && u.efcaHistory.length) ? u.efcaHistory[u.efcaHistory.length - 1] : null;
+        if (lastEfca) {
+          html += `
+            <h2>4. Escala de Fenótipos de Comportamento Alimentar (EFCA)</h2>
+            <p style="font-size:9.5pt;">Data da avaliação: ${formatDateBR(lastEfca.date)} | <strong>Fenótipo Dominante: ${escapeHtml(lastEfca.dominante)}</strong> (Score Total: ${lastEfca.total}/80)</p>
+            <table>
+              <thead><tr><th>Fenótipo</th><th>Pontuação (máx. 20)</th><th>Interpretação Clínica</th></tr></thead>
+              <tbody>
+                ${Object.entries(lastEfca.scores).map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${v} / 20</td><td>${escapeHtml(EFCA_GUIDANCE[k])}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          `;
+        } else {
+          html += `<h2>4. Escala EFCA</h2><p style="font-size:9.5pt;">Questionário EFCA ainda não respondido pelo usuário.</p>`;
+        }
+      }
+
+      html += `
+        <p style="margin-top:16px;font-size:8.5pt;color:#475569;border-top:1px solid #CBD5E1;padding-top:6px;">
+          Aviso: Este relatório foi gerado pela ferramenta de automonitoramento Marcusnator Pro Athlete 2.0 By Dr. Hans e destina-se exclusivamente ao suporte na consulta com Médico, Nutricionista, Profissional de Educação Física ou Psicólogo.
+        </p>
+      `;
+
+      document.getElementById('printReportArea').innerHTML = html;
+      closeGenericModal();
+      setTimeout(() => window.print(), 250);
+    });
+  }
+
+  // =========================================================
+  // SISTEMA DE NOTIFICAÇÕES (INCISIVIDADE + MOTIVO)
+  // =========================================================
+  function defaultNotifications() {
+    return [
+      { id: 'N1', tipo: '💧 Beber água', hora: '10:00', ativo: true, incisividade: 2, motivo: 'Manter metabolismo ativo e evitar falsa fome' },
+      { id: 'N2', tipo: '🍽️ Se alimentar', hora: '12:30', ativo: true, incisividade: 2, motivo: 'Bater minha meta diária de proteína e energia' },
+      { id: 'N3', tipo: '💧 Beber água', hora: '15:30', ativo: true, incisividade: 3, motivo: 'Performance nos treinos e hidratação celular' },
+      { id: 'N4', tipo: '⚖️ Colocar as medições', hora: '07:00', ativo: true, incisividade: 2, motivo: 'Acompanhar minha evolução real com precisão' },
+      { id: 'N5', tipo: '🏋️ Treinar / Registrar treino', hora: '18:00', ativo: false, incisividade: 3, motivo: 'Construir disciplina e saúde a longo prazo' },
+      { id: 'N6', tipo: '🌙 Preparar sono / fechar janela alimentar', hora: '22:15', ativo: false, incisividade: 1, motivo: 'Recuperação hormonal e controle do apetite' }
+    ];
+  }
+
+  const INCISIVIDADE_LABELS = {
+    1: '1 - Gentil & Acolhedor',
+    2: '2 - Direto & Objetivo',
+    3: '3 - Firme (Modo Treinador)',
+    4: '4 - Hardcore Marcusnator Pro Athlete'
+  };
+
+  function buildNotificationMessage(n) {
+    const mot = n.motivo ? ` Motivo: ${n.motivo}.` : '';
+    const inc = Number(n.incisividade) || 2;
+    if (inc === 1) return `🌿 Lembrete gentil (${n.tipo}): cuide de você agora com calma.${mot}`;
+    if (inc === 2) return `📌 Hora de: ${n.tipo}.${mot}`;
+    if (inc === 3) return `⚡ Foco total! Não adie: ${n.tipo} agora.${mot}`;
+    return `🔥 ALERTA MARCUSNATOR PRO ATHLETE: Sem desculpas! Execute AGORA: ${n.tipo.toUpperCase()}!${mot}`;
+  }
+
+  function openNotificationsModal() {
+    const u = getActiveUser();
+    if (!u) return;
+    u.notifications = u.notifications || defaultNotifications();
+
+    const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+
+    const renderList = () => u.notifications.map((n, idx) => `
+      <div class="meal-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:6px;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:800;cursor:pointer;">
+            <input type="checkbox" class="nt-active" data-idx="${idx}" ${n.ativo ? 'checked' : ''} style="width:auto;" />
+            <span>${escapeHtml(n.tipo)}</span>
+          </label>
+          <div style="display:flex;gap:5px;align-items:center;">
+            <input type="time" class="nt-time" data-idx="${idx}" value="${n.hora}" style="width:auto;padding:4px 7px;font-size:0.8rem;" />
+            <button type="button" class="btn btn-soft btn-sm nt-test" data-idx="${idx}" title="Testar agora">🔔</button>
+            <button type="button" class="btn btn-danger btn-sm nt-del" data-idx="${idx}">✕</button>
+          </div>
+        </div>
+        <div class="form-grid two-col">
+          <div class="field">
+            <label>Nível de incisividade</label>
+            <select class="nt-inc" data-idx="${idx}">
+              ${[1, 2, 3, 4].map(lvl => `<option value="${lvl}" ${Number(n.incisividade) === lvl ? 'selected' : ''}>${INCISIVIDADE_LABELS[lvl]}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field">
+            <label>Motivo da notificação</label>
+            <input type="text" class="nt-motivo" data-idx="${idx}" value="${escapeHtml(n.motivo || '')}" placeholder="Ex.: Saúde, estética, disciplina..." />
+          </div>
+        </div>
+        <div style="font-size:0.76rem;color:var(--text-muted);margin-top:6px;font-style:italic;">
+          Prévia: "${escapeHtml(buildNotificationMessage(n))}"
+        </div>
+      </div>
+    `).join('');
+
+    openGenericModal('🔔 Notificações & Lembretes Inteligentes', `
+      <div class="callout info" style="margin-top:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span>Permissão do navegador: <strong>${perm === 'granted' ? 'Ativada ✅' : perm === 'denied' ? 'Bloqueada ❌' : 'Pendente'}</strong></span>
+          <button type="button" id="reqNotifPermBtn" class="btn btn-primary btn-sm">Ativar Notificações no Aparelho</button>
+        </div>
+      </div>
+      <div id="notifItemsWrap">${renderList()}</div>
+      <div class="meal-card" style="border-style:dashed;">
+        <strong>➕ Adicionar Novo Lembrete</strong>
+        <div class="form-grid two-col" style="margin-top:6px;">
+          <select id="newNotifTipo">
+            <option value="💧 Beber água">💧 Beber água</option>
+            <option value="🍽️ Se alimentar">🍽️ Se alimentar</option>
+            <option value="⚖️ Colocar as medições">⚖️ Colocar as medições (peso/cintura)</option>
+            <option value="🏋️ Treinar / Registrar treino">🏋️ Treinar / Registrar treino</option>
+            <option value="📊 Revisão semanal de segunda-feira">📊 Revisão semanal de segunda-feira</option>
+            <option value="💊 Tomar suplementos">💊 Tomar suplementos</option>
+            <option value="🌙 Preparar sono">🌙 Preparar sono</option>
+          </select>
+          <input type="time" id="newNotifHora" value="14:00" />
+        </div>
+        <div class="form-grid two-col" style="margin-top:6px;">
+          <select id="newNotifInc">
+            <option value="1">1 - Gentil & Acolhedor</option>
+            <option value="2" selected>2 - Direto & Objetivo</option>
+            <option value="3">3 - Firme (Modo Treinador)</option>
+            <option value="4">4 - Hardcore Marcusnator Pro Athlete</option>
+          </select>
+          <input type="text" id="newNotifMotivo" placeholder="Motivo (ex.: Bater minha meta)" />
+        </div>
+        <button type="button" id="addNotifBtn" class="btn btn-soft btn-block btn-sm" style="margin-top:8px;">+ Adicionar Lembrete</button>
+      </div>
+      <button type="button" id="saveNotifsBtn" class="btn btn-primary btn-block">💾 Salvar Configurações de Notificação</button>
+    `);
+
+    document.getElementById('reqNotifPermBtn').addEventListener('click', async () => {
+      if (!('Notification' in window)) {
+        showToast('Este navegador não suporta notificações push locais.');
+        return;
+      }
+      const p = await Notification.requestPermission();
+      showToast(p === 'granted' ? '✅ Notificações ativadas!' : '⚠️ Permissão não concedida.');
+    });
+
+    document.getElementById('addNotifBtn').addEventListener('click', () => {
+      u.notifications.push({
+        id: 'N_' + Date.now(),
+        tipo: document.getElementById('newNotifTipo').value,
+        hora: document.getElementById('newNotifHora').value || '14:00',
+        ativo: true,
+        incisividade: Number(document.getElementById('newNotifInc').value) || 2,
+        motivo: document.getElementById('newNotifMotivo').value.trim() || 'Compromisso com minha meta'
+      });
+      saveDB(true);
+      openNotificationsModal();
+    });
+
+    document.querySelectorAll('.nt-test').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const n = u.notifications[Number(btn.dataset.idx)];
+        triggerBrowserNotification(n);
+      });
+    });
+
+    document.querySelectorAll('.nt-del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        u.notifications.splice(Number(btn.dataset.idx), 1);
+        saveDB(true);
+        openNotificationsModal();
+      });
+    });
+
+    document.getElementById('saveNotifsBtn').addEventListener('click', () => {
+      document.querySelectorAll('.nt-active').forEach(el => { u.notifications[Number(el.dataset.idx)].ativo = el.checked; });
+      document.querySelectorAll('.nt-time').forEach(el => { u.notifications[Number(el.dataset.idx)].hora = el.value; });
+      document.querySelectorAll('.nt-inc').forEach(el => { u.notifications[Number(el.dataset.idx)].incisividade = Number(el.value); });
+      document.querySelectorAll('.nt-motivo').forEach(el => { u.notifications[Number(el.dataset.idx)].motivo = el.value.trim(); });
+      saveDB(true);
+      closeGenericModal();
+      showToast('🔔 Notificações salvas!');
+    });
+  }
+
+  function triggerBrowserNotification(n) {
+    const msg = buildNotificationMessage(n);
+    showToast(msg);
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Marcusnator Pro Athlete 2.0', {
+        body: msg,
+        icon: './icons/icon-192.png'
+      });
+    }
+  }
+
+  // Background minute checker for active notifications
+  let lastNotifMinute = '';
+  setInterval(() => {
+    const u = getActiveUser();
+    if (!u || !Array.isArray(u.notifications)) return;
+    const now = new Date();
+    const hhmm = now.toTimeString().slice(0, 5);
+    if (hhmm === lastNotifMinute) return;
+    lastNotifMinute = hhmm;
+    u.notifications.forEach(n => {
+      if (n.ativo && n.hora === hhmm) {
+        triggerBrowserNotification(n);
+      }
+    });
+  }, 20000);
+
+  // =========================================================
+  // GOOGLE SHEETS CONFIG MODAL & PWA INSTALL GUIDE MODAL
+  // =========================================================
+  function openSheetsConfigModal() {
+    openGenericModal('☁️ Sincronização com Google Sheets', `
+      <p style="font-size:0.83rem;color:var(--text-muted);margin-top:0;">
+        Planilha oficial vinculada: <a href="https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700;">Marcusnator 2.0 Pro Athlete By Dr. Hans</a>.
+      </p>
+      <div class="form-grid">
+        <div class="field">
+          <label>URL do Web App do Google Apps Script (termina em /exec)</label>
+          <input type="url" id="appsScriptUrlInput" value="${escapeHtml(DB.appsScriptUrl || '')}" placeholder="https://script.google.com/macros/s/.../exec" />
+        </div>
+        <div class="btn-row">
+          <button type="button" id="saveSheetsUrlBtn" class="btn btn-primary">Salvar URL & Sincronizar Agora</button>
+          <button type="button" id="pullNowBtn" class="btn btn-soft">⬇️ Puxar Dados da Planilha</button>
+        </div>
+        <div class="callout" style="font-size:0.78rem;">
+          <strong>Como ativar (1 vez):</strong><br/>
+          1. Abra a planilha acima &gt; <em>Extensões &gt; Apps Script</em>.<br/>
+          2. Cole o arquivo <code>apps-script/Code.gs</code> do pacote e salve.<br/>
+          3. Clique em <em>Implantar &gt; Nova implantação &gt; App da Web</em> (Executar como: <strong>Eu</strong> | Acesso: <strong>Qualquer pessoa</strong>) e cole a URL gerada acima.
+        </div>
+      </div>
+    `);
+
+    document.getElementById('saveSheetsUrlBtn').addEventListener('click', () => {
+      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
+      saveDB(false);
+      if (DB.activeProfileId) syncProfileToSheets(DB.activeProfileId, false);
+      else pullProfilesFromSheets();
+      closeGenericModal();
+    });
+
+    document.getElementById('pullNowBtn').addEventListener('click', async () => {
+      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
+      saveDB(false);
+      await pullProfilesFromSheets();
+      if (DB.activeProfileId) {
+        await pullFullBundleForProfile(DB.activeProfileId);
+        routeApp();
+      }
+      closeGenericModal();
+    });
+  }
+
+  function openInstallHelpModal() {
+    openGenericModal('📲 Instalar na Tela Principal (Android & iPhone)', `
+      <div class="form-grid" style="font-size:0.85rem;">
+        <div class="callout info" style="margin:0;">
+          <strong>🤖 Android (Google Chrome):</strong><br/>
+          1. Toque no botão abaixo (se disponível) ou no menu <strong>⋮</strong> no canto superior direito do Chrome.<br/>
+          2. Selecione <strong>"Adicionar à tela inicial"</strong> ou <strong>"Instalar aplicativo"</strong>.<br/>
+          3. O ícone exclusivo <strong>Marcusnator 2.0</strong> aparecerá junto aos seus apps!
+        </div>
+        <div class="callout" style="margin:0;">
+          <strong>🍎 iPhone / iPad (Safari):</strong><br/>
+          1. Abra este link no navegador <strong>Safari</strong>.<br/>
+          2. Toque no ícone <strong>Compartilhar</strong> (quadrado com seta para cima na barra inferior).<br/>
+          3. Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong>.<br/>
+          4. Confirme em <strong>"Adicionar"</strong> no canto superior direito.
+        </div>
+        ${deferredPrompt ? '<button type="button" id="modalInstallTriggerBtn" class="btn btn-primary btn-block">📲 Instalar Agora</button>' : ''}
+      </div>
+    `);
+    const btn = document.getElementById('modalInstallTriggerBtn');
+    if (btn && deferredPrompt) {
+      btn.addEventListener('click', async () => {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        closeGenericModal();
+      });
+    }
+  }
+
+  // =========================================================
+  // TOP-LEFT "2 RISCOS" MENU & MODAL HELPERS
+  // =========================================================
+  const drawerOverlay = document.getElementById('drawerOverlay');
+  document.getElementById('menuTwoLinesBtn').addEventListener('click', () => {
+    const u = getActiveUser();
+    document.getElementById('drawerProfileName').textContent = u ? u.nome : 'Não conectado';
+    drawerOverlay.classList.add('open');
+  });
+  document.getElementById('closeDrawerBtn').addEventListener('click', () => drawerOverlay.classList.remove('open'));
+  drawerOverlay.addEventListener('click', (e) => { if (e.target === drawerOverlay) drawerOverlay.classList.remove('open'); });
+
+  function handleSwitchOrLogout(msg) {
+    drawerOverlay.classList.remove('open');
+    DB.activeProfileId = null;
+    saveDB(false);
+    populateAuthProfileDropdowns();
+    routeApp();
+    showToast(msg);
+  }
+
+  document.getElementById('drawerSwitchProfileBtn').addEventListener('click', () => handleSwitchOrLogout('🔄 Selecione ou crie outro perfil.'));
+  document.getElementById('drawerLogoutBtn').addEventListener('click', () => handleSwitchOrLogout('🚪 Logout realizado com sucesso.'));
+
+  document.getElementById('drawerEditProfileBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    if (!getActiveUser()) { showToast('Entre em um perfil primeiro.'); return; }
+    openOnboardingForEdit();
+  });
+  document.getElementById('drawerEfcaBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    openEfcaModal();
+  });
+  document.getElementById('drawerPdfBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    if (!getActiveUser() || !getActiveUser().anamnese) { showToast('Complete seu perfil primeiro.'); return; }
+    openPdfReportModal();
+  });
+  document.getElementById('drawerNotifBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    if (!getActiveUser()) { showToast('Entre em um perfil primeiro.'); return; }
+    openNotificationsModal();
+  });
+  document.getElementById('drawerSheetsBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    openSheetsConfigModal();
+  });
+  document.getElementById('drawerInstallHelpBtn').addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    openInstallHelpModal();
+  });
+
+  document.getElementById('syncStatusBtn').addEventListener('click', openSheetsConfigModal);
+  document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    applyTheme(DB.theme === 'dark' ? 'light' : 'dark');
+    saveDB(false);
+  });
+
+  document.getElementById('toggleChangelogBtn').addEventListener('click', () => {
+    document.getElementById('changelogBox').classList.toggle('hidden');
+  });
+
+  function openGenericModal(title, bodyHtml) {
+    document.getElementById('genericModalTitle').textContent = title;
+    document.getElementById('genericModalBody').innerHTML = bodyHtml;
+    document.getElementById('genericModalOverlay').classList.add('open');
+  }
+  function closeGenericModal() {
+    document.getElementById('genericModalOverlay').classList.remove('open');
+  }
+  document.getElementById('closeGenericModalBtn').addEventListener('click', closeGenericModal);
+  document.getElementById('genericModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'genericModalOverlay') closeGenericModal();
+  });
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Tab switching
+  document.querySelectorAll('.nav-tab').forEach(tabBtn => {
+    tabBtn.addEventListener('click', () => {
+      const target = tabBtn.dataset.tab;
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.toggle('active', b === tabBtn));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('hidden', p.id !== 'tab-' + target));
+      if (target === 'cardapio') renderCardapioTab();
+      if (target === 'diario') renderDiaryTab();
+      if (target === 'evolucao') renderEvolucaoTab();
+      if (target === 'semana') renderSemanaTab();
+      if (target === 'plano') renderPlanoTab();
+    });
+  });
+
+  // =========================================================
+  // PWA INSTALL PROMPT & SERVICE WORKER
+  // =========================================================
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').classList.remove('hidden');
+  });
+  document.getElementById('triggerInstallBtn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('installBanner').classList.add('hidden');
+    } else {
+      openInstallHelpModal();
+    }
+  });
+  document.getElementById('dismissInstallBtn').addEventListener('click', () => {
+    document.getElementById('installBanner').classList.add('hidden');
+  });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+
+  // =========================================================
+  // MAIN ROUTER
+  // =========================================================
+  function routeApp() {
+    const u = getActiveUser();
+    const headerBadge = document.getElementById('headerUserBadge');
+    setSyncIndicator(DB.appsScriptUrl ? 'ok' : 'warn', DB.appsScriptUrl ? 'Planilha' : 'Local');
+
+    if (!u) {
+      headerBadge.textContent = '';
+      document.getElementById('authView').classList.remove('hidden');
+      document.getElementById('onboardingView').classList.add('hidden');
+      document.getElementById('trackerView').classList.add('hidden');
+      populateAuthProfileDropdowns();
+      return;
+    }
+
+    headerBadge.textContent = `• ${u.nome.split(' ')[0]}`;
+
+    if (!u.anamnese) {
+      openOnboardingForEdit();
+      return;
+    }
+
+    document.getElementById('authView').classList.add('hidden');
+    document.getElementById('onboardingView').classList.add('hidden');
+    document.getElementById('trackerView').classList.remove('hidden');
+
+    updateStickyModeUI();
+    renderScoreboard();
+    renderCardapioTab();
+    renderDiaryTab();
+    renderEvolucaoTab();
+    renderSemanaTab();
+    renderPlanoTab();
+  }
+
+  routeApp();
+})();
+</script>
+</body>
+</html>
