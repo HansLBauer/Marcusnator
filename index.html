@@ -360,7 +360,7 @@
               </div>
               <div class="input-row">
                 <button type="button" id="btn-menu-prev" class="btn btn-secondary btn-sm">←</button>
-                <span id="menu-date-display" style="font-weight:700;font-size:0.88rem;min-width:96px;text-align:center;"></span>
+                <button type="button" id="menu-date-display" class="btn btn-secondary btn-sm" style="min-width:140px;" title="Abrir calendário"></button>
                 <button type="button" id="btn-menu-next" class="btn btn-secondary btn-sm">→</button>
               </div>
             </div>
@@ -869,7 +869,7 @@
           <strong>Aviso Importante:</strong> Este aplicativo é apenas uma ferramenta e não substitui profissionais como Nutricionista, Médico, Profissional de Educação Física, Fisioterapeuta e Psicólogos. Faça questão de sempre estar acompanhando de ajuda profissional!
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <span><strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> · Versão <code id="app-semver-badge">v2.0.0</code> (SemVer)</span>
+          <span><strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> · Versão <code id="app-semver-badge">v2.1.0</code> (SemVer)</span>
           <button type="button" id="btn-open-changelog" class="btn btn-secondary btn-sm">Log de Mudanças</button>
         </div>
       </footer>
@@ -1014,6 +1014,27 @@
       <div class="input-row" style="justify-content:flex-end;">
         <button type="button" id="btn-confirm-cancel" class="btn btn-secondary btn-sm">Cancelar</button>
         <button type="button" id="btn-confirm-ok" class="btn btn-danger btn-sm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Calendário Interativo (com Dias da Semana) -->
+  <div id="modal-calendar" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:360px;">
+      <div class="card-header" style="margin-bottom:10px;">
+        <button type="button" id="cal-prev-month" class="btn btn-secondary btn-sm">←</button>
+        <strong id="cal-month-label" style="font-size:0.95rem;text-transform:capitalize;"></strong>
+        <button type="button" id="cal-next-month" class="btn btn-secondary btn-sm">→</button>
+      </div>
+      <div class="cal-grid-header">
+        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+      </div>
+      <div id="cal-grid-days" class="cal-grid-days"></div>
+      <div id="cal-selected-preview" style="margin-top:10px;text-align:center;font-size:0.82rem;font-weight:600;color:var(--primary);"></div>
+      <div class="input-row" style="justify-content:space-between;margin-top:12px;">
+        <button type="button" id="cal-btn-today" class="btn btn-secondary btn-sm">Hoje</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-calendar">Fechar</button>
       </div>
     </div>
   </div>
