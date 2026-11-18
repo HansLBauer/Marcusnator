@@ -1,17 +1,8 @@
-# Marcusnator Pro Athlete 2.0 By Dr. Hans
+# Marcusnator Pro Athlete 2.0 By Dr. Hans (v1.2.0)
 
-WebApp Progressivo (PWA) de rastreamento de emagrecimento, nutrição, treino, evolução clínica e comportamento alimentar (EFCA), pronto para hospedagem gratuita no **GitHub Pages** e instalação na tela inicial do **Android** e **iPhone (iOS)**.
+WebApp Progressivo (PWA) de rastreamento de emagrecimento, bioimpedância, avaliação do tipo de corpo, nutrição, treino e comportamento alimentar (EFCA), pronto para hospedagem no **GitHub Pages** e instalação na tela inicial do **Android** e **iPhone (iOS)**.
 
-## Como publicar no GitHub Pages
-1. Crie um repositório no GitHub (ex.: `marcusnator-pro-athlete`).
-2. Envie todos os arquivos desta pasta (`index.html`, `manifest.webmanifest`, `sw.js` e a pasta `icons/`).
-3. Acesse **Settings > Pages** no repositório, selecione a branch `main` e pasta `/ (root)` e salve.
-4. Abra o link gerado no celular:
-   - **Android (Chrome):** Toque no banner *"Instalar Aplicativo"* ou no menu `⋮` > **Adicionar à tela inicial**.
-   - **iPhone (Safari):** Toque no botão **Compartilhar** (`↑`) > **Adicionar à Tela de Início**.
-
-## Como ativar a sincronização com o Google Sheets
-1. Abra a planilha **Marcusnator 2.0 Pro Athlete By Dr. Hans**.
-2. Vá em **Extensões > Apps Script**, cole o conteúdo de `apps-script/Code.gs` e salve.
-3. Clique em **Implantar > Nova implantação > App da Web** (Executar como: *Eu* | Acesso: *Qualquer pessoa*).
-4. Copie a URL gerada (`/exec`) e cole na opção **Sincronizar Google Sheets** dentro do menu (`=`) do aplicativo.
+## Como publicar / atualizar no GitHub Pages
+1. Envie os arquivos deste pacote (`index.html`, `manifest.webmanifest`, `sw.js` e a pasta `icons/`) para o seu repositório no GitHub.
+2. O aplicativo já vem pré-conectado ao servidor de sincronização em nuvem (`https://script.google.com/macros/s/AKfycbw5-2vvg04kQTUSJ5AJBPK3gsPZcq3K6cvmYKc5Xpl28efEhM-J-9YAQ8kwmYUhUBkf/exec`).
+3. Para usar os recursos de Inteligência Artificial, toque em **Configurar Gemini (IA)** no topo do aplicativo (ou no menu `=`) e insira sua chave da API do Google Gemini (`AIzaSy...`).

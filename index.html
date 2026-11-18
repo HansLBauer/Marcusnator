@@ -638,9 +638,13 @@
     </div>
 
     <div class="topbar-actions">
-      <button id="syncStatusBtn" class="icon-pill" title="Sincronização Google Sheets">
-        <span id="syncDot" class="sync-dot"></span>
-        <span id="syncLabel">Planilha</span>
+      <button id="geminiConfigTopBtn" class="icon-pill" title="Configurar API do Gemini (IA)" style="border-color:var(--primary);">
+        <span id="geminiDot" class="sync-dot"></span>
+        <span id="geminiTopLabel">Configurar Gemini (IA)</span>
+      </button>
+      <button id="syncStatusBtn" class="icon-pill" title="Sincronização em Nuvem">
+        <span id="syncDot" class="sync-dot ok"></span>
+        <span id="syncLabel">Nuvem</span>
       </button>
       <button id="themeToggleBtn" class="icon-pill" title="Alternar modo claro/escuro">🌙</button>
     </div>
@@ -671,9 +675,12 @@
       <img src="./icons/icon-192.png" alt="Logo" style="width:74px;height:74px;border-radius:18px;box-shadow:var(--shadow);margin-bottom:10px;" />
       <h1 style="margin:0;font-size:1.32rem;font-weight:900;">Marcusnator Pro Athlete 2.0</h1>
       <div style="color:var(--accent);font-weight:800;font-size:0.86rem;margin-top:2px;">By Dr. Hans</div>
-      <p style="color:var(--text-muted);font-size:0.85rem;margin:8px auto 0;max-width:480px;">
-        Rastreamento clínico e esportivo de emagrecimento, macros, treino e comportamento alimentar sincronizado com Google Sheets.
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:8px auto 10px;max-width:480px;">
+        Rastreamento clínico e esportivo de emagrecimento, bioimpedância, tipo corporal, macros, treino e comportamento alimentar com IA Gemini integrada.
       </p>
+      <button type="button" class="btn btn-soft btn-sm open-gemini-cfg-btn" style="border-color:var(--primary);">
+        🤖 Configurar API do Gemini (IA)
+      </button>
     </div>
 
     <div class="card">
@@ -701,7 +708,7 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Entrar no Rastreador</button>
         <button type="button" id="pullProfilesFromSheetBtn" class="btn btn-soft btn-block btn-sm">
-          ☁️ Buscar perfis salvos na Planilha Google Sheets
+          ☁️ Atualizar / Buscar perfis salvos na Nuvem
         </button>
       </form>
 
@@ -770,7 +777,7 @@
     <div class="card">
       <div class="card-title">
         <span>📋 Configuração Inicial do Perfil</span>
-        <span class="section-tag">Salvo na Planilha</span>
+        <span class="section-tag">Sincronização Automática</span>
       </div>
       <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0;">
         Preencha seus dados, metas e rotina para que o <strong>Marcusnator Pro Athlete 2.0</strong> calibre suas calorias, proteínas, hidratação e plano semanal.
@@ -814,29 +821,83 @@
           </div>
         </div>
 
+        <!-- Bioimpedância & Composição Corporal -->
+        <div class="meal-card" style="margin-top:14px;border-color:var(--primary);">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+            <div>
+              <strong style="font-size:0.92rem;color:var(--primary);">🧬 Bioimpedância & Composição Corporal</strong>
+              <div style="font-size:0.76rem;color:var(--text-muted);">
+                Usado para calcular o gasto calórico real pela Massa Magra (Katch-McArdle / Cunningham) e gerar sua <strong>Avaliação do Tipo de Corpo</strong>.
+              </div>
+            </div>
+            <button type="button" id="estimateBfBtn" class="btn btn-soft btn-sm" title="Estimar % de gordura caso não tenha balança de bioimpedância">
+              📐 Estimar % Gordura
+            </button>
+          </div>
+          <div class="form-grid three-col">
+            <div class="field">
+              <label>Taxa de gordura corporal (%)</label>
+              <input type="text" id="obBfPct" placeholder="Ex.: 24,5" />
+            </div>
+            <div class="field">
+              <label>Massa Magra / Livre de Gordura (kg)</label>
+              <input type="text" id="obLeanMassKg" placeholder="Auto ou digite (ex.: 66,8)" />
+            </div>
+            <div class="field">
+              <label>Meta de gordura corporal (%)</label>
+              <input type="text" id="obBfTargetPct" placeholder="Ex.: 16,0 (opcional)" />
+            </div>
+            <div class="field">
+              <label>Massa Muscular Esquelética - MME (kg)</label>
+              <input type="text" id="obSmmKg" placeholder="Ex.: 31,5 (opcional)" />
+            </div>
+            <div class="field">
+              <label>Gordura Visceral (nível 1–30)</label>
+              <input type="number" id="obVisceralFat" min="1" max="50" step="0.5" placeholder="Ex.: 8 (opcional)" />
+            </div>
+            <div class="field">
+              <label>Água Corporal Total (%)</label>
+              <input type="text" id="obTbwPct" placeholder="Ex.: 55,2 (opcional)" />
+            </div>
+            <div class="field">
+              <label>TMB medida na Bioimpedância (kcal)</label>
+              <input type="number" id="obBioBmr" min="800" max="4500" placeholder="Ex.: 1790 (opcional)" />
+            </div>
+            <div class="field">
+              <label>Idade Metabólica (anos)</label>
+              <input type="number" id="obMetabolicAge" min="12" max="100" placeholder="Ex.: 28 (opcional)" />
+            </div>
+            <div class="field">
+              <label>Massa Óssea / Mineral (kg)</label>
+              <input type="text" id="obBoneMassKg" placeholder="Ex.: 3,1 (opcional)" />
+            </div>
+          </div>
+          <div id="obBodyTypeLivePreview" style="margin-top:10px;"></div>
+        </div>
+
         <!-- Medidas Corporais Dinâmicas -->
         <div style="margin-top:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);">Medidas corporais iniciais (cm)</label>
+            <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);">Medidas corporais em circunferência (cm)</label>
             <button type="button" id="addMeasureRowBtn" class="btn btn-soft btn-sm">+ Adicionar medida</button>
           </div>
           <div id="obMeasuresContainer" class="form-grid"></div>
         </div>
 
-        <!-- Calorias e Proteína com Calculadora Inteligente -->
+        <!-- Calorias e Proteína com Calculadora Inteligente (Mifflin-St Jeor + Katch-McArdle + Cunningham) -->
         <div class="form-grid two-col" style="margin-top:12px;">
           <div class="field">
             <label>Meta diária de calorias (kcal) *</label>
             <div style="display:flex;gap:6px;">
               <input type="number" id="obMetaKcal" placeholder="Ex.: 2100" required />
-              <button type="button" id="calcKcalBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular</button>
+              <button type="button" id="calcKcalBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular p/ Mim</button>
             </div>
           </div>
           <div class="field">
             <label>Meta diária de proteína (g) *</label>
             <div style="display:flex;gap:6px;">
               <input type="number" id="obMetaProt" placeholder="Ex.: 165" required />
-              <button type="button" id="calcProtBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular</button>
+              <button type="button" id="calcProtBtn" class="btn btn-accent btn-sm" style="white-space:nowrap;">⚡ Calcular p/ Mim</button>
             </div>
           </div>
         </div>
@@ -906,8 +967,19 @@
           </div>
         </div>
 
-        <div class="btn-row" style="margin-top:16px;">
-          <button type="submit" class="btn btn-primary btn-block">💾 Salvar Perfil & Abrir Rastreador</button>
+        <div class="callout info" style="margin-top:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;font-weight:700;">
+              <input type="checkbox" id="obUseGeminiApiCheck" checked style="width:auto;" />
+              <span>🤖 Gerar meu Cardápio Base, Semana de Treinos e Marmitas via <strong>API do Gemini (IA)</strong> ao salvar</span>
+            </label>
+            <button type="button" class="btn btn-soft btn-sm open-gemini-cfg-btn" style="border-color:var(--primary);">
+              🔑 Configurar API do Gemini (IA)
+            </button>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:12px;">
+          <button type="submit" id="obSubmitBtn" class="btn btn-primary btn-block">💾 Salvar Perfil & Abrir Rastreador</button>
         </div>
       </form>
     </div>
@@ -990,16 +1062,23 @@
           </div>
         </div>
 
-        <!-- Integração com Gemini -->
+        <!-- Integração Exclusiva via API do Gemini (IA) -->
         <div class="callout info">
-          <div style="font-weight:800;margin-bottom:4px;">🤖 Integração com Gemini (Montar & Ajustar Cardápio)</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+            <div style="font-weight:800;">🤖 Cardápio Inteligente — API do Gemini (IA)</div>
+            <button type="button" class="btn btn-soft btn-sm open-gemini-cfg-btn" style="border-color:var(--primary);">
+              ⚙️ Configurar API do Gemini (IA)
+            </button>
+          </div>
           <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">
-            Copie o contexto completo do seu perfil e metas para pedir o cardápio no chat do Gemini. Se mudar alguma refeição, peça o ajuste das restantes e cole a resposta aqui!
+            O Gemini utiliza seus dados antropométricos, bioimpedância, rotina, alimentos favoritos, aversões e meta do dia para montar o cardápio completo ou recalibrar automaticamente as refeições que faltam quando você altera alguma refeição.
+          </div>
+          <div class="field" style="margin-bottom:8px;">
+            <input type="text" id="geminiMenuCustomNote" placeholder="Instrução opcional para hoje (ex.: Hoje quero comer churrasco no almoço / lanches rápidos no plantão)" style="font-size:0.83rem;padding:8px 10px;" />
           </div>
           <div class="btn-row">
-            <button type="button" id="copyGeminiMenuPromptBtn" class="btn btn-primary btn-sm">📋 Copiar Prompt: Montar Cardápio</button>
-            <button type="button" id="copyGeminiAdjustPromptBtn" class="btn btn-accent btn-sm">🔄 Copiar Prompt: Ajustar Restantes</button>
-            <button type="button" id="openImportMenuModalBtn" class="btn btn-soft btn-sm">📥 Colar Cardápio do Gemini</button>
+            <button type="button" id="directGeminiGenerateMenuBtn" class="btn btn-primary btn-sm">✨ Montar Cardápio do Dia (Gemini IA)</button>
+            <button type="button" id="directGeminiAdjustMenuBtn" class="btn btn-accent btn-sm">🔄 Ajustar Refeições Restantes (Gemini IA)</button>
             <button type="button" id="addCustomPlannedMealBtn" class="btn btn-soft btn-sm">+ Nova Refeição</button>
           </div>
         </div>
@@ -1016,16 +1095,56 @@
           <input type="date" id="diaryDateInput" style="width:auto;padding:6px 10px;font-size:0.82rem;" />
         </div>
 
-        <!-- Assistente Foto/Descrição Chat -->
+        <!-- Assistente Multimodal Direto (Foto + Texto via API do Gemini) -->
         <div class="callout info">
-          <div style="font-weight:800;">📸 Estimar Refeição por Foto ou Descrição no Chat</div>
-          <div style="font-size:0.8rem;color:var(--text-muted);margin:3px 0 8px;">
-            Regra clínica ativa: alimentos considerados <strong>já prontos/cozidos</strong> e, na dúvida, adotado o <strong>cenário mais calórico</strong> (especialmente comida de restaurante/delivery).
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+            <div style="font-weight:800;">📸 Estimar Refeição por Foto e/ou Descrição (Gemini Vision API)</div>
+            <span class="section-tag">Pronto/Cozido • Cenário + Calórico</span>
           </div>
-          <div class="btn-row">
-            <button type="button" id="copyEstimateFoodPromptBtn" class="btn btn-primary btn-sm">📋 Copiar Prompt de Estimativa p/ Chat</button>
-            <button type="button" id="openImportDiaryModalBtn" class="btn btn-accent btn-sm">📥 Colar Estimativa JSON no Diário</button>
+          <div style="font-size:0.79rem;color:var(--text-muted);margin-bottom:10px;">
+            Envie uma foto do prato (câmera ou galeria) e/ou descreva o que comeu. A IA considera o alimento <strong>já pronto/cozido</strong> e, na dúvida, adota o <strong>cenário mais calórico</strong> (especialmente em restaurantes/delivery).
           </div>
+          <div class="form-grid two-col" style="margin-bottom:8px;">
+            <div class="field">
+              <label>📷 Foto do prato (opcional)</label>
+              <input type="file" id="aiFoodPhotoInput" accept="image/*" style="padding:7px;font-size:0.8rem;" />
+            </div>
+            <div class="field">
+              <label>Qual refeição?</label>
+              <select id="aiFoodMealType" style="padding:8px 10px;font-size:0.85rem;">
+                <option value="Almoço">Almoço</option>
+                <option value="Café da manhã">Café da manhã</option>
+                <option value="Lanche da manhã">Lanche da manhã</option>
+                <option value="Lanche da tarde">Lanche da tarde</option>
+                <option value="Pré/Pós-treino">Pré/Pós-treino</option>
+                <option value="Jantar">Jantar</option>
+                <option value="Ceia">Ceia</option>
+              </select>
+            </div>
+          </div>
+          <div id="aiFoodPhotoPreviewWrap" class="hidden" style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+            <img id="aiFoodPhotoPreviewImg" src="" alt="Prévia do prato" style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border);" />
+            <div style="font-size:0.78rem;color:var(--text-muted);">
+              <div>Foto carregada e otimizada para envio à IA.</div>
+              <button type="button" id="clearAiPhotoBtn" class="btn btn-danger btn-sm" style="margin-top:4px;">Remover foto</button>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>📝 Descrição da refeição (ou detalhes da foto)</label>
+            <input type="text" id="aiFoodTextInput" placeholder="Ex.: Prato feito no restaurante com arroz, feijão, 2 bifes acebolados e batata frita" style="font-size:0.85rem;" />
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.82rem;cursor:pointer;font-weight:700;">
+              <input type="checkbox" id="aiFoodIsDelivery" style="width:auto;" /> 🛵 É de restaurante / delivery (aplicar margem calórica de segurança)
+            </label>
+            <button type="button" id="directGeminiEstimateFoodBtn" class="btn btn-primary btn-sm">
+              ✨ Estimar com Gemini IA & Lançar no Diário
+            </button>
+          </div>
+          <div style="margin-top:8px;display:flex;justify-content:flex-end;">
+            <button type="button" class="btn btn-soft btn-sm open-gemini-cfg-btn">⚙️ Configurar API do Gemini (IA)</button>
+          </div>
+          <div id="aiFoodEstimateResultBox" class="callout hidden" style="margin-top:8px;background:var(--bg-card);"></div>
         </div>
 
         <!-- Formulário Manual de Refeição -->
@@ -1063,7 +1182,7 @@
               <input type="checkbox" id="diaryIsDelivery" style="width:auto;" /> 🛵 Delivery / Restaurante
             </label>
             <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;cursor:pointer;">
-              <input type="checkbox" id="diaryIsClaude" style="width:auto;" /> 🤖 Estimado pelo Claude / IA
+              <input type="checkbox" id="diaryIsClaude" style="width:auto;" /> 🤖 Estimado pelo Gemini (IA)
             </label>
           </div>
           <div style="grid-column:1/-1;">
@@ -1075,27 +1194,39 @@
         <div id="diaryMealsList"></div>
       </div>
 
-      <!-- Registro de Peso e Cintura -->
+      <!-- Registro de Peso, Cintura e Bioimpedância do Dia -->
       <div class="card">
         <div class="card-title">
-          <span>⚖️ Peso & Cintura do Dia</span>
+          <span>⚖️ Peso, Cintura & Bioimpedância do Dia</span>
           <span class="section-tag">Peso 3×/sem • Cintura 15/15d</span>
         </div>
-        <form id="weightWaistForm" class="form-grid two-col">
+        <form id="weightWaistForm" class="form-grid three-col">
           <div class="field">
             <label>Peso em jejum (kg)</label>
             <input type="text" id="diaryWeightInput" placeholder="Ex.: 87,4" />
           </div>
           <div class="field">
-            <label>Cintura na altura do umbigo (cm)</label>
+            <label>Cintura no umbigo (cm)</label>
             <input type="text" id="diaryWaistInput" placeholder="Ex.: 94,5" />
           </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label>Observação (opcional: retenção, sono, pós-evento)</label>
-            <input type="text" id="diaryMeasureNote" placeholder="Ex.: Pesagem em jejum após treino de pernas" />
+          <div class="field">
+            <label>Taxa de Gordura (%)</label>
+            <input type="text" id="diaryBfInput" placeholder="Ex.: 23,8 (opcional)" />
+          </div>
+          <div class="field">
+            <label>Massa Magra / MLG (kg)</label>
+            <input type="text" id="diaryLeanInput" placeholder="Ex.: 66,6 (opcional)" />
+          </div>
+          <div class="field">
+            <label>Gordura Visceral (nível)</label>
+            <input type="number" id="diaryVisceralInput" min="1" max="50" step="0.5" placeholder="Ex.: 8 (opcional)" />
+          </div>
+          <div class="field">
+            <label>Observação</label>
+            <input type="text" id="diaryMeasureNote" placeholder="Ex.: Em jejum / Bioimpedância" />
           </div>
           <div style="grid-column:1/-1;">
-            <button type="submit" class="btn btn-primary btn-block">Salvar Peso / Medida</button>
+            <button type="submit" class="btn btn-primary btn-block">Salvar Peso / Medidas / Bioimpedância</button>
           </div>
         </form>
       </div>
@@ -1143,9 +1274,11 @@
         </div>
         <p id="mondayReviewText" style="font-size:0.84rem;margin:0 0 10px;"></p>
         <div class="btn-row">
-          <button type="button" id="applyPlateauAdjustBtn" class="btn btn-accent btn-sm">⚡ Ajustar Meta (-100 kcal se estagnado)</button>
-          <button type="button" id="copyMondayReviewPromptBtn" class="btn btn-soft btn-sm">🤖 Revisar Semana com Gemini</button>
+          <button type="button" id="directGeminiMondayReviewBtn" class="btn btn-primary btn-sm">✨ Analisar Semana & Ajustar Plano (Gemini IA)</button>
+          <button type="button" id="applyPlateauAdjustBtn" class="btn btn-accent btn-sm">⚡ Ajuste Rápido (-100 kcal)</button>
+          <button type="button" class="btn btn-soft btn-sm open-gemini-cfg-btn">⚙️ Configurar API do Gemini (IA)</button>
         </div>
+        <div id="mondayGeminiAnalysisBox" class="callout info hidden" style="margin-top:10px;"></div>
       </div>
 
       <!-- KPIs Evolução -->
@@ -1170,6 +1303,21 @@
           <div class="k-val" style="color:var(--accent);" id="evPrevisao">--/--/----</div>
           <div class="k-sub" id="evAlvoRef">Alvo: --/--/----</div>
         </div>
+      </div>
+
+      <!-- Card: Avaliação do Tipo de Corpo & Bioimpedância -->
+      <div class="card" style="border-color:var(--primary);">
+        <div class="card-title">
+          <span>🧬 Avaliação do Tipo de Corpo & Bioimpedância</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" id="bodyMatrixScaleStdBtn" class="btn btn-primary btn-sm" style="padding:4px 9px;font-size:0.73rem;">Escala Clássica (18% / 28%)</button>
+            <button type="button" id="bodyMatrixScaleSexBtn" class="btn btn-soft btn-sm" style="padding:4px 9px;font-size:0.73rem;">Calibrada p/ Sexo</button>
+          </div>
+        </div>
+        <p style="font-size:0.79rem;color:var(--text-muted);margin-top:0;">
+          Cruzamento entre <strong>IMC (kg/m²)</strong> e <strong>Taxa de Gordura Corporal (%)</strong> com mapeamento de somatotipo, Índice de Massa Livre de Gordura (FFMI), Massa Muscular Esquelética e gasto energético basal ajustado pela massa magra.
+        </p>
+        <div id="bodyTypeMatrixContainer"></div>
       </div>
 
       <!-- Gráfico 1: Realidade x Projetado -->
@@ -1279,6 +1427,25 @@
 
     <!-- TAB 5: PLANO -->
     <main id="tab-plano" class="container tab-pane hidden">
+      <!-- 0. Inteligência Artificial Gemini: Gerar Plano Personalizado Completo -->
+      <div class="card" style="border-color:var(--primary);">
+        <div class="card-title">
+          <span>🤖 Plano Estratégico Personalizado pelo Gemini IA</span>
+          <span class="section-tag">API Direta</span>
+        </div>
+        <p style="font-size:0.83rem;color:var(--text-muted);margin-top:0;">
+          Gere ou atualize automaticamente sua <strong>Semana de Treinos com metas calóricas</strong>, <strong>Cardápio Base</strong>, <strong>Trocas Equivalentes</strong>, <strong>Regras de Fim de Semana</strong> (incluindo os alimentos que você gosta) e <strong>Lista de Compras & Preparo de Marmitas</strong> usando a API do Gemini.
+        </p>
+        <div class="btn-row">
+          <button type="button" id="directGeminiFullPlanBtn" class="btn btn-primary" style="flex:1;">
+            ✨ Gerar / Atualizar Todo o Meu Plano com Gemini (IA)
+          </button>
+          <button type="button" class="btn btn-soft open-gemini-cfg-btn">
+            ⚙️ Configurar API do Gemini (IA)
+          </button>
+        </div>
+      </div>
+
       <!-- 1. Ingesta de Água -->
       <div class="card">
         <div class="card-title">
@@ -1409,13 +1576,15 @@
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div>
-        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.0.0</code> (SemVer)
+        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.2.0</code> (SemVer)
       </div>
       <button type="button" id="toggleChangelogBtn" class="btn btn-soft btn-sm">📜 Log de Mudanças (SemVer)</button>
     </div>
     <div id="changelogBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
       <strong>Histórico de Versões — Versionamento Semântico (MAJOR.MINOR.PATCH):</strong>
       <ul style="margin:6px 0 0;padding-left:18px;">
+        <li style="margin-bottom:6px;"><strong>v1.2.0 (17/11/2026):</strong> (1) Conexão nativa pré-configurada com o endpoint do Google Apps Script em nuvem e remoção de todos os links externos para a planilha e instruções de implantação; (2) módulo completo de <strong>Bioimpedância & Composição Corporal</strong> (Taxa de Gordura %, Massa Livre de Gordura/Massa Magra, Massa Muscular Esquelética, Gordura Visceral, Água Corporal Total, TMB da Bioimpedância, Idade Metabólica e Massa Óssea) no cadastro inicial e no Diário; (3) cálculo metabólico avançado integrando as equações de <strong>Katch-McArdle</strong>, <strong>Cunningham</strong> e <strong>Mifflin-St Jeor</strong> ajustadas pela massa magra; (4) matriz interativa de <strong>Avaliação do Tipo de Corpo</strong> (10 zonas: <em>Atletas, Gordura muscular, Obesidade, Músculo, Ajuste, Excesso, Muscular Magro, Slim, Marasmo, Fino e Gordura invisível</em>) com plotagem exata do pino atual, pino de meta, FFMI e diagnóstico clínico; (5) consolidação da <strong>API do Gemini (IA)</strong> como método único e exclusivo de inteligência artificial em todo o aplicativo, com acesso rápido para configurar a chave em todas as telas e atualização automática do Service Worker (Network-First).</li>
+        <li style="margin-bottom:6px;"><strong>v1.1.0 (17/11/2026):</strong> Integração direta com a API REST do Google Gemini (<code>generativelanguage.googleapis.com</code>) direto no navegador: (1) geração automática de Cardápio Diário personalizado em 1 clique na aba Cardápio; (2) recalibração inteligente das refeições restantes do dia via Gemini API quando uma refeição é feita, ajustada ou pulada; (3) estimativa multimodal (Visão Computacional + Texto) no Diário permitindo fotografar o prato com o celular para o Gemini estimar calorias e proteínas (considerando alimento pronto/cozido e cenário mais calórico para restaurantes/delivery) e lançar automaticamente; (4) análise clínica semanal de segunda-feira e geração completa da aba Plano via Gemini API.</li>
         <li><strong>v1.0.0 (17/11/2026):</strong> Lançamento inicial do WebApp PWA para GitHub Pages (instalável em Android e iOS com ícone dedicado); autenticação com pergunta de recuperação de senha; anamnese completa; placar superior fixo/ocultável ao rolar; abas Cardápio, Diário, Evolução (gráficos Realidade × Projetado e Projetado Realístico baseado em evidências), Semana e Plano; integração bidirecional com Google Sheets via Apps Script; Escala EFCA de fenótipos alimentares; exportação de relatório clínico em .PDF para Médico/Nutricionista e sistema de notificações com níveis de incisividade e motivo personalizado.</li>
       </ul>
     </div>
@@ -1459,8 +1628,11 @@
     <button id="drawerNotifBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
       🔔 Configurar Notificações
     </button>
+    <button id="drawerGeminiBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;border-color:var(--primary);">
+      🤖 Configurar API do Gemini (IA)
+    </button>
     <button id="drawerSheetsBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
-      ☁️ Configurar Planilha Google Sheets
+      ☁️ Sincronização em Nuvem (Script)
     </button>
     <button id="drawerInstallHelpBtn" class="btn btn-soft btn-block" style="justify-content:flex-start;">
       📲 Instalar no Android / iPhone
@@ -1487,7 +1659,7 @@
 (function() {
   'use strict';
 
-  const SPREADSHEET_ID = '1lM9dHsrdv59n_HkY5Oa75UBzbabNDUfdCvgOMgCWxxc';
+  const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5-2vvg04kQTUSJ5AJBPK3gsPZcq3K6cvmYKc5Xpl28efEhM-J-9YAQ8kwmYUhUBkf/exec';
   const STORAGE_KEY = 'marcusnator_pro_athlete_v2_db';
 
   // Brazilian number formatters
@@ -1545,10 +1717,21 @@
   function loadDB() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (!parsed.appsScriptUrl || !parsed.appsScriptUrl.trim()) {
+          parsed.appsScriptUrl = DEFAULT_APPS_SCRIPT_URL;
+        }
+        if (!parsed.geminiModel) parsed.geminiModel = 'gemini-2.5-flash';
+        if (!parsed.bodyMatrixScale) parsed.bodyMatrixScale = 'classic';
+        return parsed;
+      }
     } catch (e) {}
     return {
-      appsScriptUrl: '',
+      appsScriptUrl: DEFAULT_APPS_SCRIPT_URL,
+      geminiApiKey: '',
+      geminiModel: 'gemini-2.5-flash',
+      bodyMatrixScale: 'classic',
       theme: 'dark',
       stickyAutoHide: false,
       activeProfileId: null,
@@ -1617,7 +1800,7 @@
           Peso_Atual_kg: u.anamnese.pesoAtual,
           Peso_Meta_kg: u.anamnese.pesoMeta,
           Data_Alvo: u.anamnese.dataAlvo,
-          Medidas_Corporais_JSON: u.anamnese.medidas || [],
+          Medidas_Corporais_JSON: [...(u.anamnese.medidas || []), { _isBioMeta: true, ...(u.anamnese.bio || {}) }],
           Meta_Kcal: u.anamnese.metaKcal,
           Meta_Proteina_g: u.anamnese.metaProt,
           Data_Inicio: u.anamnese.dataInicio,
@@ -1712,7 +1895,7 @@
       const json = await res.json();
       if (json && json.ok) {
         setSyncIndicator('ok', 'Sincronizado');
-        if (!silent) showToast('✅ Dados sincronizados com a planilha Google Sheets!');
+        if (!silent) showToast('✅ Dados sincronizados na nuvem!');
       } else {
         throw new Error((json && json.error) || 'Erro na resposta');
       }
@@ -1778,6 +1961,9 @@
       if (!u) return;
       if (json.anamnese) {
         const a = json.anamnese;
+        const parsedMed = safeParseJSON(a.Medidas_Corporais_JSON, []);
+        const medList = Array.isArray(parsedMed) ? parsedMed.filter(x => !x._isBioMeta) : (parsedMed.medidas || []);
+        const bioMeta = Array.isArray(parsedMed) ? (parsedMed.find(x => x._isBioMeta) || {}) : (parsedMed.bio || {});
         u.anamnese = {
           altura: parseBrNum(a.Altura_m),
           idade: Number(a.Idade) || 30,
@@ -1785,7 +1971,8 @@
           pesoAtual: parseBrNum(a.Peso_Atual_kg),
           pesoMeta: parseBrNum(a.Peso_Meta_kg),
           dataAlvo: String(a.Data_Alvo || '').slice(0, 10),
-          medidas: safeParseJSON(a.Medidas_Corporais_JSON, []),
+          medidas: medList,
+          bio: bioMeta,
           metaKcal: Number(a.Meta_Kcal) || 2000,
           metaProt: parseBrNum(a.Meta_Proteina_g) || 150,
           dataInicio: String(a.Data_Inicio || todayISO()).slice(0, 10),
@@ -1833,15 +2020,22 @@
         }));
       }
       if (Array.isArray(json.pesagens) && json.pesagens.length) {
-        u.pesagens = json.pesagens.map(p => ({
-          id: p.ID_Registro,
-          date: String(p.Data_ISO).slice(0, 10),
-          peso: p.Peso_kg ? parseBrNum(p.Peso_kg) : null,
-          cintura: p.Cintura_cm ? parseBrNum(p.Cintura_cm) : null,
-          outras: safeParseJSON(p.Outras_Medidas_JSON, []),
-          obs: p.Observacao || '',
-          criadoEm: p.Criado_Em
-        }));
+        u.pesagens = json.pesagens.map(p => {
+          const parsedOutras = safeParseJSON(p.Outras_Medidas_JSON, []);
+          const bioEntry = Array.isArray(parsedOutras) ? (parsedOutras.find(x => x && x._isBio) || {}) : {};
+          return {
+            id: p.ID_Registro,
+            date: String(p.Data_ISO).slice(0, 10),
+            peso: p.Peso_kg ? parseBrNum(p.Peso_kg) : null,
+            cintura: p.Cintura_cm ? parseBrNum(p.Cintura_cm) : null,
+            bfPct: bioEntry.bfPct ? parseBrNum(bioEntry.bfPct) : null,
+            leanMassKg: bioEntry.leanMassKg ? parseBrNum(bioEntry.leanMassKg) : null,
+            visceralFat: bioEntry.visceralFat ? parseBrNum(bioEntry.visceralFat) : null,
+            outras: parsedOutras,
+            obs: p.Observacao || '',
+            criadoEm: p.Criado_Em
+          };
+        });
       }
       if (Array.isArray(json.treinos) && json.treinos.length) {
         u.treinos = json.treinos.map(t => ({
@@ -2044,7 +2238,7 @@
     p.senhaHash = await sha256(newPass);
     DB.activeProfileId = p.id;
     saveDB(true);
-    showToast('✅ Senha redefinida e salva na planilha!');
+    showToast('✅ Senha redefinida e salva e sincronizada!');
     routeApp();
   });
 
@@ -2082,6 +2276,53 @@
 
   document.getElementById('addMeasureRowBtn').addEventListener('click', () => addMeasureRow('Quadril', ''));
 
+  // Auto-sync BF% and Lean Mass in Onboarding
+  function syncObBioFields(source) {
+    const peso = parseBrNum(document.getElementById('obPesoAtual')?.value);
+    const bfEl = document.getElementById('obBfPct');
+    const leanEl = document.getElementById('obLeanMassKg');
+    if (!peso || !bfEl || !leanEl) return;
+    if (source === 'bf') {
+      const bf = parseBrNum(bfEl.value);
+      if (bf > 2 && bf < 70) {
+        const lean = peso * (1 - bf / 100);
+        leanEl.value = fmtDec(lean, 1);
+      }
+    } else if (source === 'lean') {
+      const lean = parseBrNum(leanEl.value);
+      if (lean > 15 && lean < peso) {
+        const bf = ((peso - lean) / peso) * 100;
+        bfEl.value = fmtDec(bf, 1);
+      }
+    }
+    updateObBodyTypeLivePreview();
+  }
+
+  document.getElementById('obBfPct')?.addEventListener('input', () => syncObBioFields('bf'));
+  document.getElementById('obLeanMassKg')?.addEventListener('input', () => syncObBioFields('lean'));
+  document.getElementById('obPesoAtual')?.addEventListener('input', () => syncObBioFields('bf'));
+  document.getElementById('obAltura')?.addEventListener('input', () => updateObBodyTypeLivePreview());
+  document.getElementById('obSexo')?.addEventListener('change', () => updateObBodyTypeLivePreview());
+
+  document.getElementById('estimateBfBtn')?.addEventListener('click', () => {
+    const altRaw = parseBrNum(document.getElementById('obAltura').value);
+    const idade = parseInt(document.getElementById('obIdade').value, 10) || 30;
+    const sexo = document.getElementById('obSexo').value;
+    const peso = parseBrNum(document.getElementById('obPesoAtual').value);
+    if (!altRaw || !peso) {
+      showToast('Preencha Altura e Peso atual primeiro para estimar o % de gordura.');
+      return;
+    }
+    const altM = altRaw > 3 ? altRaw / 100 : altRaw;
+    const imc = peso / (altM * altM);
+    // Deurenberg validated equation: BF% = (1.20 * BMI) + (0.23 * Age) - (10.8 * sex_male) - 5.4
+    const isMale = sexo === 'Masculino' ? 1 : 0;
+    const estBf = Math.max(6, Math.min(60, (1.20 * imc) + (0.23 * idade) - (10.8 * isMale) - 5.4));
+    document.getElementById('obBfPct').value = fmtDec(estBf, 1);
+    syncObBioFields('bf');
+    showToast(`📐 Taxa de gordura estimada em ${fmtDec(estBf, 1)}% (Fórmula Clínica de Deurenberg).`);
+  });
+
   function calculateRecommendedMacros() {
     const altura = parseBrNum(document.getElementById('obAltura').value);
     const idade = parseInt(document.getElementById('obIdade').value, 10);
@@ -2092,23 +2333,50 @@
     const dataInicio = document.getElementById('obDataInicio').value || todayISO();
     const treinosTxt = document.getElementById('obTreinosSemana').value.toLowerCase();
 
+    const bfPct = parseBrNum(document.getElementById('obBfPct')?.value);
+    let leanMassKg = parseBrNum(document.getElementById('obLeanMassKg')?.value);
+    const bioBmr = parseBrNum(document.getElementById('obBioBmr')?.value);
+
     if (!altura || !idade || !pesoAtual) {
       showToast('Preencha Altura, Idade e Peso atual para calcular.');
       return null;
     }
 
+    if (!leanMassKg && bfPct > 2 && bfPct < 75) {
+      leanMassKg = pesoAtual * (1 - bfPct / 100);
+    }
+
     const altCm = altura < 3 ? altura * 100 : altura;
-    // Mifflin-St Jeor
-    const tmb = sexo === 'Feminino'
+    // 1. Mifflin-St Jeor (Peso Total)
+    const tmbMifflin = sexo === 'Feminino'
       ? (10 * pesoAtual) + (6.25 * altCm) - (5 * idade) - 161
       : (10 * pesoAtual) + (6.25 * altCm) - (5 * idade) + 5;
+
+    // 2. Katch-McArdle & Cunningham (Baseadas na Massa Livre de Gordura - Bioimpedância)
+    let tmbKatch = null;
+    let tmbCunningham = null;
+    let tmbSelected = tmbMifflin;
+    let formulaUsed = 'Mifflin-St Jeor (Antropométrica)';
+
+    if (leanMassKg > 15 && leanMassKg < pesoAtual) {
+      tmbKatch = 370 + (21.6 * leanMassKg);
+      tmbCunningham = 500 + (22.0 * leanMassKg);
+      // Average between Katch-McArdle and Cunningham for athletic/exercising body composition
+      tmbSelected = (tmbKatch * 0.55) + (tmbCunningham * 0.45);
+      formulaUsed = 'Katch-McArdle + Cunningham (Ajustada pela Massa Magra da Bioimpedância)';
+    }
+
+    if (bioBmr >= 900 && bioBmr <= 4500) {
+      tmbSelected = leanMassKg > 15 ? (tmbSelected * 0.5 + bioBmr * 0.5) : bioBmr;
+      formulaUsed = 'Híbrida (TMB Medida na Bioimpedância + Katch-McArdle/Cunningham)';
+    }
 
     let fator = 1.375;
     if (treinosTxt.includes('6') || treinosTxt.includes('todos') || treinosTxt.includes('diário')) fator = 1.65;
     else if (treinosTxt.includes('4') || treinosTxt.includes('5')) fator = 1.55;
     else if (treinosTxt.includes('0') || treinosTxt.includes('nenhum') || treinosTxt.includes('sedent')) fator = 1.2;
 
-    const get = tmb * fator;
+    const get = tmbSelected * fator;
     let deficitDiario = 500;
     let diasMeta = 90;
     if (pesoMeta && dataAlvo && dataAlvo > dataInicio) {
@@ -2121,10 +2389,32 @@
 
     const piso = sexo === 'Feminino' ? 1250 : 1500;
     const metaKcal = Math.max(piso, Math.round((get - deficitDiario) / 10) * 10);
-    const refPesoProt = pesoMeta && pesoMeta < pesoAtual ? (pesoAtual * 0.4 + pesoMeta * 0.6) : pesoAtual;
-    const metaProt = Math.round(refPesoProt * 2.0);
 
-    return { tmb: Math.round(tmb), get: Math.round(get), metaKcal, metaProt, deficitDiario: Math.round(deficitDiario), diasMeta };
+    // Protein calculation: if Lean Mass is known, 2.35 g/kg of Lean Mass (gold standard in caloric deficit); otherwise 2.0 g/kg adjusted weight
+    let metaProt = 150;
+    let protMethod = '~2,0 g/kg de peso ajustado';
+    if (leanMassKg > 15 && leanMassKg < pesoAtual) {
+      metaProt = Math.round(leanMassKg * 2.35);
+      protMethod = `2,35 g/kg de Massa Magra (${fmtDec(leanMassKg, 1)} kg MLG)`;
+    } else {
+      const refPesoProt = pesoMeta && pesoMeta < pesoAtual ? (pesoAtual * 0.4 + pesoMeta * 0.6) : pesoAtual;
+      metaProt = Math.round(refPesoProt * 2.0);
+    }
+
+    return {
+      tmb: Math.round(tmbSelected),
+      tmbMifflin: Math.round(tmbMifflin),
+      tmbKatch: tmbKatch ? Math.round(tmbKatch) : null,
+      tmbCunningham: tmbCunningham ? Math.round(tmbCunningham) : null,
+      formulaUsed,
+      protMethod,
+      leanMassKg,
+      get: Math.round(get),
+      metaKcal,
+      metaProt,
+      deficitDiario: Math.round(deficitDiario),
+      diasMeta
+    };
   }
 
   document.getElementById('calcKcalBtn').addEventListener('click', () => {
@@ -2133,7 +2423,10 @@
     document.getElementById('obMetaKcal').value = r.metaKcal;
     const box = document.getElementById('calcExplanationBox');
     box.classList.remove('hidden');
-    box.innerHTML = `⚡ <strong>Cálculo Clínico (Mifflin-St Jeor):</strong> TMB estimada em <strong>${fmtInt(r.tmb)} kcal</strong> e Gasto Energético Total (GET) em <strong>${fmtInt(r.get)} kcal/dia</strong>. Aplicado déficit seguro de ~${fmtInt(r.deficitDiario)} kcal/dia → Meta sugerida: <strong>${fmtInt(r.metaKcal)} kcal/dia</strong>.`;
+    const bioDetails = r.tmbKatch
+      ? `<br/>• <strong>TMB Katch-McArdle (Massa Magra):</strong> ${fmtInt(r.tmbKatch)} kcal | <strong>Cunningham (Atleta):</strong> ${fmtInt(r.tmbCunningham)} kcal | <strong>Mifflin-St Jeor:</strong> ${fmtInt(r.tmbMifflin)} kcal`
+      : '';
+    box.innerHTML = `⚡ <strong>Cálculo Metabólico (${r.formulaUsed}):</strong>${bioDetails}<br/>• <strong>TMB Adotada:</strong> ${fmtInt(r.tmb)} kcal/dia → <strong>Gasto Energético Total (GET):</strong> ${fmtInt(r.get)} kcal/dia.<br/>• Déficit diário calibrado de ~${fmtInt(r.deficitDiario)} kcal/dia → <strong>Meta sugerida: ${fmtInt(r.metaKcal)} kcal/dia</strong>.`;
   });
 
   document.getElementById('calcProtBtn').addEventListener('click', () => {
@@ -2142,7 +2435,7 @@
     document.getElementById('obMetaProt').value = r.metaProt;
     const box = document.getElementById('calcExplanationBox');
     box.classList.remove('hidden');
-    box.innerHTML = `🥩 <strong>Meta Proteica (~2,0 g/kg ajustado):</strong> Sugerimos <strong>${fmtInt(r.metaProt)} g/dia</strong> para preservação máxima de massa magra e saciedade durante o déficit calórico.`;
+    box.innerHTML = `🥩 <strong>Meta Proteica (${r.protMethod}):</strong> Sugerimos <strong>${fmtInt(r.metaProt)} g/dia</strong> para blindar sua massa muscular e maximizar a saciedade durante o emagrecimento.`;
   });
 
   function recommendedWaterMlKg(age) {
@@ -2281,6 +2574,20 @@
     const pesoAtual = parseBrNum(document.getElementById('obPesoAtual').value);
     const defaultMlKg = (u.anamnese && u.anamnese.aguaMlKg) ? u.anamnese.aguaMlKg : recommendedWaterMlKg(idade);
 
+    const bfPctVal = parseBrNum(document.getElementById('obBfPct')?.value);
+    const leanMassVal = parseBrNum(document.getElementById('obLeanMassKg')?.value) || (bfPctVal > 2 && bfPctVal < 75 ? Number((pesoAtual * (1 - bfPctVal / 100)).toFixed(1)) : 0);
+    const bioObj = {
+      bfPct: bfPctVal || null,
+      leanMassKg: leanMassVal || null,
+      bfTargetPct: parseBrNum(document.getElementById('obBfTargetPct')?.value) || null,
+      smmKg: parseBrNum(document.getElementById('obSmmKg')?.value) || null,
+      visceralFat: parseBrNum(document.getElementById('obVisceralFat')?.value) || null,
+      tbwPct: parseBrNum(document.getElementById('obTbwPct')?.value) || null,
+      bioBmr: parseBrNum(document.getElementById('obBioBmr')?.value) || null,
+      metabolicAge: parseInt(document.getElementById('obMetabolicAge')?.value, 10) || null,
+      boneMassKg: parseBrNum(document.getElementById('obBoneMassKg')?.value) || null
+    };
+
     const anamnese = {
       altura: parseBrNum(document.getElementById('obAltura').value),
       idade,
@@ -2290,6 +2597,7 @@
       dataAlvo: document.getElementById('obDataAlvo').value,
       dataInicio: document.getElementById('obDataInicio').value || todayISO(),
       medidas,
+      bio: bioObj,
       metaKcal: parseInt(document.getElementById('obMetaKcal').value, 10) || 2000,
       metaProt: parseBrNum(document.getElementById('obMetaProt').value) || 150,
       acordar: document.getElementById('obAcordar').value,
@@ -2317,7 +2625,10 @@
         date: anamnese.dataInicio,
         peso: pesoAtual,
         cintura: waistEntry ? waistEntry.valor : null,
-        outras: medidas,
+        bfPct: bioObj.bfPct || null,
+        leanMassKg: bioObj.leanMassKg || null,
+        visceralFat: bioObj.visceralFat || null,
+        outras: [...medidas, { _isBio: true, bfPct: bioObj.bfPct, leanMassKg: bioObj.leanMassKg, visceralFat: bioObj.visceralFat }],
         obs: 'Registro inicial (Anamnese)',
         criadoEm: new Date().toISOString()
       }];
@@ -2349,8 +2660,11 @@
     }
 
     saveDB(true);
-    showToast('✅ Dados salvos e sincronizados com a planilha!');
+    showToast('✅ Dados salvos e sincronizados na nuvem!');
     routeApp();
+    if (document.getElementById('obUseGeminiApiCheck')?.checked && DB.geminiApiKey) {
+      generateFullPlanWithGemini(false);
+    }
   });
 
   function openOnboardingForEdit() {
@@ -2383,6 +2697,17 @@
       document.getElementById('obTempoCozinhar').value = a.tempoCozinhar || '';
       document.getElementById('obDeliveryFreq').value = a.deliveryFreq || 'Raramente (0 a 1x por semana)';
       document.getElementById('obSuplementos').value = a.suplementos || '';
+      const bio = a.bio || {};
+      document.getElementById('obBfPct').value = bio.bfPct ? fmtDec(bio.bfPct, 1) : '';
+      document.getElementById('obLeanMassKg').value = bio.leanMassKg ? fmtDec(bio.leanMassKg, 1) : '';
+      document.getElementById('obBfTargetPct').value = bio.bfTargetPct ? fmtDec(bio.bfTargetPct, 1) : '';
+      document.getElementById('obSmmKg').value = bio.smmKg ? fmtDec(bio.smmKg, 1) : '';
+      document.getElementById('obVisceralFat').value = bio.visceralFat || '';
+      document.getElementById('obTbwPct').value = bio.tbwPct ? fmtDec(bio.tbwPct, 1) : '';
+      document.getElementById('obBioBmr').value = bio.bioBmr || '';
+      document.getElementById('obMetabolicAge').value = bio.metabolicAge || '';
+      document.getElementById('obBoneMassKg').value = bio.boneMassKg ? fmtDec(bio.boneMassKg, 1) : '';
+      setTimeout(updateObBodyTypeLivePreview, 50);
       if (a.medidas && a.medidas.length) {
         a.medidas.forEach(m => addMeasureRow(m.tipo, fmtDec(m.valor, 1)));
       } else {
@@ -2826,7 +3151,7 @@ Mantenha intactas as refeições já marcadas como FEITO/AJUSTADO e recalibre ap
       closeGenericModal();
       renderScoreboard();
       renderCardapioTab();
-      showToast('✅ Cardápio importado e salvo na planilha!');
+      showToast('✅ Cardápio importado e salvo e sincronizado!');
     });
   });
 
@@ -2913,7 +3238,7 @@ Mantenha intactas as refeições já marcadas como FEITO/AJUSTADO e recalibre ap
               <span class="section-tag">${escapeHtml(item.horario)}</span>
               <strong>${escapeHtml(item.refeicao)}</strong>
               ${item.delivery ? '<span class="section-tag warn">🛵 Delivery</span>' : ''}
-              ${item.estimadoIA ? '<span class="section-tag" style="background:rgba(168,85,247,0.16);color:#C084FC;">🤖 Estimado pelo Claude / IA</span>' : ''}
+              ${item.estimadoIA ? '<span class="section-tag" style="background:rgba(168,85,247,0.16);color:#C084FC;">🤖 Estimado pelo Gemini (IA)</span>' : ''}
             </div>
             <div style="font-size:0.85rem;color:var(--text-muted);">${escapeHtml(item.descricao)}</div>
             <div style="font-size:0.84rem;font-weight:800;margin-top:4px;">
@@ -3061,45 +3386,81 @@ Regras obrigatórias de estimativa:
     });
   });
 
+  // Auto-sync BF% and Lean Mass in Diary
+  document.getElementById('diaryBfInput')?.addEventListener('input', () => {
+    const u = getActiveUser();
+    const w = parseBrNum(document.getElementById('diaryWeightInput').value) || (u && getWeightStats(u).latestWeight) || 0;
+    const bf = parseBrNum(document.getElementById('diaryBfInput').value);
+    if (w > 20 && bf > 2 && bf < 70) {
+      document.getElementById('diaryLeanInput').value = fmtDec(w * (1 - bf / 100), 1);
+    }
+  });
+
   document.getElementById('weightWaistForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const u = getActiveUser();
     if (!u) return;
     const peso = parseBrNum(document.getElementById('diaryWeightInput').value);
     const cintura = parseBrNum(document.getElementById('diaryWaistInput').value);
+    const bfPct = parseBrNum(document.getElementById('diaryBfInput')?.value);
+    let leanMassKg = parseBrNum(document.getElementById('diaryLeanInput')?.value);
+    const visceralFat = parseBrNum(document.getElementById('diaryVisceralInput')?.value);
     const obs = document.getElementById('diaryMeasureNote').value.trim();
 
-    if (!peso && !cintura) {
-      showToast('Informe pelo menos o peso ou a medida de cintura.');
+    if (!peso && !cintura && !bfPct && !leanMassKg) {
+      showToast('Informe pelo menos o peso, cintura ou dados de bioimpedância.');
       return;
+    }
+
+    const refW = peso || getWeightStats(u).latestWeight || (u.anamnese && u.anamnese.pesoAtual) || 0;
+    if (!leanMassKg && bfPct > 2 && refW > 20) {
+      leanMassKg = Number((refW * (1 - bfPct / 100)).toFixed(1));
     }
 
     u.pesagens = u.pesagens || [];
     const existingIdx = u.pesagens.findIndex(p => p.date === selectedDiaryDate);
     if (existingIdx >= 0) {
-      if (peso) u.pesagens[existingIdx].peso = peso;
-      if (cintura) u.pesagens[existingIdx].cintura = cintura;
-      if (obs) u.pesagens[existingIdx].obs = obs;
+      const rec = u.pesagens[existingIdx];
+      if (peso) rec.peso = peso;
+      if (cintura) rec.cintura = cintura;
+      if (bfPct) rec.bfPct = bfPct;
+      if (leanMassKg) rec.leanMassKg = leanMassKg;
+      if (visceralFat) rec.visceralFat = visceralFat;
+      if (obs) rec.obs = obs;
+      rec.outras = [{ _isBio: true, bfPct: rec.bfPct, leanMassKg: rec.leanMassKg, visceralFat: rec.visceralFat }];
     } else {
       u.pesagens.push({
         id: 'PES_' + Date.now(),
         date: selectedDiaryDate,
         peso: peso || null,
         cintura: cintura || null,
-        outras: [],
+        bfPct: bfPct || null,
+        leanMassKg: leanMassKg || null,
+        visceralFat: visceralFat || null,
+        outras: [{ _isBio: true, bfPct: bfPct || null, leanMassKg: leanMassKg || null, visceralFat: visceralFat || null }],
         obs,
         criadoEm: new Date().toISOString()
       });
     }
 
+    if (u.anamnese) {
+      u.anamnese.bio = u.anamnese.bio || {};
+      if (bfPct) u.anamnese.bio.bfPct = bfPct;
+      if (leanMassKg) u.anamnese.bio.leanMassKg = leanMassKg;
+      if (visceralFat) u.anamnese.bio.visceralFat = visceralFat;
+    }
+
     document.getElementById('diaryWeightInput').value = '';
     document.getElementById('diaryWaistInput').value = '';
+    if (document.getElementById('diaryBfInput')) document.getElementById('diaryBfInput').value = '';
+    if (document.getElementById('diaryLeanInput')) document.getElementById('diaryLeanInput').value = '';
+    if (document.getElementById('diaryVisceralInput')) document.getElementById('diaryVisceralInput').value = '';
     document.getElementById('diaryMeasureNote').value = '';
     saveDB(true);
     renderScoreboard();
     renderEvolucaoTab();
     renderSemanaTab();
-    showToast('✅ Pesagem / medida salva e sincronizada!');
+    showToast('✅ Pesagem, medidas e bioimpedância salvas!');
   });
 
   document.getElementById('workoutForm').addEventListener('submit', (e) => {
@@ -3125,6 +3486,406 @@ Regras obrigatórias de estimativa:
   // =========================================================
   // TAB 3: EVOLUÇÃO + GRÁFICOS (SVG ENGINE)
   // =========================================================
+
+  // =========================================================
+  // BODY TYPE MATRIX ("AVALIAÇÃO DO TIPO DE CORPO") & BIOIMPEDANCE ENGINE (v1.2.0)
+  // =========================================================
+  const BODY_TYPE_INFO = {
+    'Atletas': {
+      badge: '🏆 Atletas',
+      color: '#10B981',
+      desc: 'IMC elevado decorrente de alta densidade muscular (FFMI superior) e baixo percentual de gordura corporal.',
+      conduta: 'Priorizar manutenção da massa magra com alta ingestão proteica (2,2–2,5 g/kg MLG) e periodização de carboidratos nos treinos intensos.'
+    },
+    'Gordura muscular': {
+      badge: '💪 Gordura muscular',
+      color: '#F59E0B',
+      desc: 'Forte estrutura muscular combinada com camada moderada de tecido adiposo (IMC ≥ 25,0).',
+      conduta: 'Déficit calórico moderado (350–500 kcal/dia) com treino de força pesado para revelar a musculatura sem catabolizar.'
+    },
+    'Obesidade': {
+      badge: '⚠️ Obesidade',
+      color: '#14B8A6',
+      desc: 'IMC ≥ 25,0 associado a taxa elevada de gordura corporal. Prioridade clínica na redução de massa gorda e gordura visceral.',
+      conduta: 'Déficit calórico consistente (500–750 kcal/dia), meta proteica calculada pela Massa Livre de Gordura, controle da carga glicêmica e cárdio + musculação.'
+    },
+    'Músculo': {
+      badge: '🏋️ Músculo',
+      color: '#10B981',
+      desc: 'Excelente relação músculo-gordura dentro da faixa de IMC normal-alto (21,8 a 25,0).',
+      conduta: 'Foco em recomposição corporal fina ou manutenção estética com aporte proteico fracionado em 4 refeições.'
+    },
+    'Ajuste': {
+      badge: '✨ Ajuste (Ideal / Fit)',
+      color: '#10B981',
+      desc: 'Equilíbrio fisiológico ideal entre IMC (18,5 a 25,0) e percentual de gordura saudável.',
+      conduta: 'Manter consistência nos treinos e dieta normocalórica ou leve déficit estético conforme objetivo.'
+    },
+    'Excesso': {
+      badge: '⚡ Excesso de Gordura',
+      color: '#F59E0B',
+      desc: 'IMC entre 21,8 e 25,0, porém com percentual de gordura acima da faixa ideal para a composição corporal.',
+      conduta: 'Recomposição corporal: déficit calórico leve (300–450 kcal/dia) + sobrecarga progressiva na musculação para trocar gordura por músculo.'
+    },
+    'Muscular Magro': {
+      badge: '🔥 Muscular Magro',
+      color: '#38BDF8',
+      desc: 'Baixo percentual de gordura com boa definição muscular e estrutura corporal leve (IMC 18,5 a 21,8).',
+      conduta: 'Evitar déficits agressivos; manter superávit limpo ou manutenção calórica para ganho gradual de massa magra.'
+    },
+    'Slim': {
+      badge: '🌿 Slim',
+      color: '#38BDF8',
+      desc: 'Estrutura esguia com percentual de gordura controlado e IMC entre 18,5 e 21,8.',
+      conduta: 'Foco em hipertrofia muscular progressiva e aporte proteico de 2,0 g/kg para tonificação.'
+    },
+    'Gordura invisível': {
+      badge: '🔍 Gordura invisível (Falso Magro)',
+      color: '#EF4444',
+      desc: 'Peso/IMC aparentemente normal ou baixo (< 21,8), mas com alta proporção de gordura e baixa massa muscular (sarcopenia relativa).',
+      conduta: 'Evitar dietas muito restritivas! Priorizar musculação intensa + alta proteína (2,2 g/kg) para construir massa magra e reduzir % de gordura.'
+    },
+    'Marasmo': {
+      badge: '⚠️ Marasmo (Baixo Peso & Depleção)',
+      color: '#EF4444',
+      desc: 'IMC < 18,5 com reservas reduzidas de gordura e massa muscular.',
+      conduta: 'Atenção clínica: priorizar recuperação nutricional hipercalórica controlada, rica em proteínas e micronutrientes.'
+    },
+    'Fino': {
+      badge: '🍃 Fino',
+      color: '#38BDF8',
+      desc: 'IMC < 18,5 com percentual de gordura dentro da faixa basal.',
+      conduta: 'Treinamento resistido focado em hipertrofia com superávit calórico estruturado (+250 a +400 kcal/dia).'
+    }
+  };
+
+  function getThresholdsForBodyMatrix(sexo, scaleMode) {
+    // Classic scale matches the exact 18.0% / 28.0% cutoffs from the reference chart
+    if (scaleMode === 'classic' || sexo === 'Feminino') {
+      return { tLow: 18.0, tMid: 23.0, tHigh: 28.0, minX: 8.0, maxX: 40.0, labelMode: scaleMode === 'classic' ? 'Escala Clássica (18,0% / 28,0%)' : 'Escala Feminina (18,0% / 28,0%)' };
+    }
+    // Male clinical sports medicine cutoffs
+    return { tLow: 12.0, tMid: 16.0, tHigh: 20.0, minX: 5.0, maxX: 32.0, labelMode: 'Escala Masculina (12,0% / 20,0%)' };
+  }
+
+  function classifyBodyType(imc, bfPct, thr) {
+    if (imc >= 25.0) {
+      if (bfPct < thr.tMid) return 'Atletas';
+      if (bfPct < thr.tHigh) return 'Gordura muscular';
+      return 'Obesidade';
+    }
+    if (imc >= 21.8) {
+      if (bfPct < thr.tMid) return 'Músculo';
+      if (bfPct < thr.tHigh) return 'Ajuste';
+      return 'Excesso';
+    }
+    if (imc >= 18.5) {
+      if (bfPct < thr.tLow) return 'Muscular Magro';
+      if (bfPct < thr.tMid) return 'Slim';
+      if (bfPct < thr.tHigh) return 'Ajuste';
+      return 'Gordura invisível';
+    }
+    // imc < 18.5
+    if (bfPct < thr.tLow) return 'Marasmo';
+    if (bfPct < thr.tHigh) return 'Fino';
+    return 'Gordura invisível';
+  }
+
+  function getLatestBioSnapshot(u) {
+    const a = (u && u.anamnese) || {};
+    const bio = a.bio || {};
+    const wStats = u ? getWeightStats(u) : { latestWeight: 0, startWeight: 0, valid: [] };
+    const peso = wStats.latestWeight || a.pesoAtual || 0;
+    const altRaw = a.altura || 1.70;
+    const altM = altRaw > 3 ? altRaw / 100 : altRaw;
+    const imc = altM > 0 ? peso / (altM * altM) : 0;
+
+    // Check most recent weigh-in with bfPct
+    const withBf = (u?.pesagens || []).filter(p => p.bfPct && p.bfPct > 0).sort((x, y) => x.date.localeCompare(y.date));
+    const latestPesBio = withBf.length ? withBf[withBf.length - 1] : null;
+
+    let bfPct = (latestPesBio && latestPesBio.bfPct) || bio.bfPct || 0;
+    let isEstimatedBf = false;
+    if (!bfPct && imc > 0) {
+      const isMale = (a.sexo || 'Masculino') === 'Masculino' ? 1 : 0;
+      bfPct = Math.max(6, Math.min(58, (1.20 * imc) + (0.23 * (a.idade || 30)) - (10.8 * isMale) - 5.4));
+      isEstimatedBf = true;
+    }
+
+    let leanMassKg = (latestPesBio && latestPesBio.leanMassKg) || bio.leanMassKg || (peso > 0 && bfPct > 0 ? peso * (1 - bfPct / 100) : 0);
+    const fatMassKg = Math.max(0, peso - leanMassKg);
+    const ffmi = altM > 0 && leanMassKg > 0 ? leanMassKg / (altM * altM) : 0;
+    const visceral = (latestPesBio && latestPesBio.visceralFat) || bio.visceralFat || null;
+
+    // Target coordinates
+    const pesoMeta = a.pesoMeta || peso;
+    const imcMeta = altM > 0 ? pesoMeta / (altM * altM) : imc;
+    const bfMeta = bio.bfTargetPct || Math.max((a.sexo === 'Feminino' ? 19 : 13), bfPct - Math.max(2, (peso - pesoMeta) * 0.55));
+
+    return {
+      peso,
+      altM,
+      imc,
+      bfPct,
+      isEstimatedBf,
+      leanMassKg,
+      fatMassKg,
+      ffmi,
+      visceral,
+      smmKg: bio.smmKg || null,
+      tbwPct: bio.tbwPct || null,
+      bioBmr: bio.bioBmr || null,
+      metabolicAge: bio.metabolicAge || null,
+      boneMassKg: bio.boneMassKg || null,
+      imcMeta,
+      bfMeta
+    };
+  }
+
+  function buildBodyTypeSVG(imc, bfPct, imcMeta, bfMeta, thr, activeZone) {
+    // Coordinate system matching the exact visual layout of "Avaliação do tipo de corpo":
+    // X-axis (BF%): 4 columns of width 135 each -> total grid width = 540 (from x=68 to x=608)
+    // Col 1: < tLow (x: 68..203)
+    // Col 2: tLow .. tMid (x: 203..338)
+    // Col 3: tMid .. tHigh (x: 338..473)
+    // Col 4: >= tHigh (x: 473..608)
+    // Y-axis (IMC): 4 rows of height 74 each -> total grid height = 296 (from y=36 to y=332)
+    // Row 1 (top): IMC >= 25.0 (y: 36..110)
+    // Row 2: IMC 21.8 .. 25.0 (y: 110..184)
+    // Row 3: IMC 18.5 .. 21.8 (y: 184..258)
+    // Row 4 (bottom): IMC < 18.5 (y: 258..332)
+
+    const rects = [
+      { name: 'Atletas', x: 68, y: 36, w: 270, h: 74, verticalText: false },
+      { name: 'Gordura muscular', x: 338, y: 36, w: 135, h: 74, verticalText: false },
+      { name: 'Obesidade', x: 473, y: 36, w: 135, h: 74, verticalText: false },
+      { name: 'Músculo', x: 68, y: 110, w: 270, h: 74, verticalText: false },
+      { name: 'Ajuste', x: 338, y: 110, w: 135, h: 148, verticalText: true },
+      { name: 'Excesso', x: 473, y: 110, w: 135, h: 74, verticalText: false },
+      { name: 'Muscular Magro', x: 68, y: 184, w: 135, h: 74, verticalText: false },
+      { name: 'Slim', x: 203, y: 184, w: 135, h: 74, verticalText: false },
+      { name: 'Gordura invisível', x: 473, y: 184, w: 135, h: 148, verticalText: true },
+      { name: 'Marasmo', x: 68, y: 258, w: 135, h: 74, verticalText: false },
+      { name: 'Fino', x: 203, y: 258, w: 270, h: 74, verticalText: false }
+    ];
+
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const tileBg = isDark ? '#1E293B' : '#E5E7EB';
+    const tileStroke = isDark ? '#0F172A' : '#FFFFFF';
+    const tileText = isDark ? '#CBD5E1' : '#4B5563';
+    const activeFill = '#38B2AC'; // Vibrant teal matching reference image
+
+    // Piecewise linear mapping from BF% -> X (68..608)
+    const mapBfToX = (bf) => {
+      if (bf <= thr.tLow) {
+        const t = Math.max(0.06, Math.min(0.96, (bf - thr.minX) / Math.max(1, thr.tLow - thr.minX)));
+        return 68 + t * 135;
+      }
+      if (bf <= thr.tMid) {
+        const t = (bf - thr.tLow) / Math.max(1, thr.tMid - thr.tLow);
+        return 203 + t * 135;
+      }
+      if (bf <= thr.tHigh) {
+        const t = (bf - thr.tMid) / Math.max(1, thr.tHigh - thr.tMid);
+        return 338 + t * 135;
+      }
+      const t = Math.max(0.05, Math.min(0.92, (bf - thr.tHigh) / Math.max(1, thr.maxX - thr.tHigh)));
+      return 473 + t * 135;
+    };
+
+    // Piecewise linear mapping from IMC -> Y (36..332)
+    const mapImcToY = (v) => {
+      if (v >= 25.0) {
+        const t = Math.max(0.08, Math.min(0.90, (v - 25.0) / 11.0));
+        return 110 - t * 74;
+      }
+      if (v >= 21.8) {
+        const t = (v - 21.8) / (25.0 - 21.8);
+        return 184 - t * 74;
+      }
+      if (v >= 18.5) {
+        const t = (v - 18.5) / (21.8 - 18.5);
+        return 258 - t * 74;
+      }
+      const t = Math.max(0.08, Math.min(0.92, (18.5 - v) / 4.5));
+      return 258 + t * 74;
+    };
+
+    const curX = mapBfToX(bfPct).toFixed(1);
+    const curY = mapImcToY(imc).toFixed(1);
+    const metaX = mapBfToX(bfMeta).toFixed(1);
+    const metaY = mapImcToY(imcMeta).toFixed(1);
+
+    const rectsSvg = rects.map(r => {
+      const isAct = r.name === activeZone;
+      const fill = isAct ? activeFill : tileBg;
+      const txtCol = isAct ? '#FFFFFF' : tileText;
+      const fw = isAct ? '800' : '600';
+      const cx = r.x + r.w / 2;
+      const cy = r.y + r.h / 2;
+
+      let labelSvg = '';
+      if (r.verticalText) {
+        labelSvg = `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" fill="${txtCol}" font-size="13.5" font-weight="${fw}" transform="rotate(90 ${cx} ${cy})">${r.name}</text>`;
+      } else if (r.name === 'Gordura muscular' || r.name === 'Muscular Magro') {
+        const parts = r.name.split(' ');
+        labelSvg = `
+          <text x="${cx}" y="${cy - 7}" text-anchor="middle" fill="${txtCol}" font-size="13" font-weight="${fw}">${parts[0]}</text>
+          <text x="${cx}" y="${cy + 11}" text-anchor="middle" fill="${txtCol}" font-size="13" font-weight="${fw}">${parts[1]}</text>
+        `;
+      } else {
+        labelSvg = `<text x="${cx}" y="${cy + 4}" text-anchor="middle" fill="${txtCol}" font-size="13.5" font-weight="${fw}">${r.name}</text>`;
+      }
+
+      return `
+        <g>
+          <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${fill}" stroke="${tileStroke}" stroke-width="2.5" rx="3" />
+          ${labelSvg}
+        </g>
+      `;
+    }).join('');
+
+    return `
+      <svg viewBox="0 0 628 382" style="width:100%;max-width:620px;height:auto;display:block;margin:0 auto;font-family:inherit;">
+        <!-- Title & Axis Headers -->
+        <text x="48" y="18" text-anchor="end" fill="#94A3B8" font-size="12" font-weight="700">IMC</text>
+        <text x="62" y="32" text-anchor="end" fill="#94A3B8" font-size="10.5">(kg/m²)</text>
+
+        <!-- 10 Body Type Zones -->
+        ${rectsSvg}
+
+        <!-- Outer Axis Lines (Left & Bottom) -->
+        <line x1="66" y1="34" x2="66" y2="335" stroke="#94A3B8" stroke-width="2" />
+        <line x1="66" y1="335" x2="610" y2="335" stroke="#94A3B8" stroke-width="2" />
+
+        <!-- Y-Axis Threshold Labels -->
+        <text x="60" y="114" text-anchor="end" fill="${isDark ? '#E2E8F0' : '#1E293B'}" font-size="13.5" font-weight="700">25,0</text>
+        <text x="60" y="262" text-anchor="end" fill="${isDark ? '#E2E8F0' : '#1E293B'}" font-size="13.5" font-weight="700">18,5</text>
+
+        <!-- X-Axis Threshold Labels -->
+        <text x="203" y="354" text-anchor="middle" fill="${isDark ? '#E2E8F0' : '#1E293B'}" font-size="13.5" font-weight="700">${fmtDec(thr.tLow, 1)}</text>
+        <text x="473" y="354" text-anchor="middle" fill="${isDark ? '#E2E8F0' : '#1E293B'}" font-size="13.5" font-weight="700">${fmtDec(thr.tHigh, 1)}</text>
+        <text x="608" y="374" text-anchor="end" fill="#94A3B8" font-size="13" font-weight="700">Taxa de gordura corporal (%)</text>
+
+        <!-- Trajectory Vector from Current to Target -->
+        <line x1="${curX}" y1="${curY}" x2="${metaX}" y2="${metaY}" stroke="#F59E0B" stroke-width="2" stroke-dasharray="5,4" />
+        <circle cx="${metaX}" cy="${metaY}" r="5.5" fill="#F59E0B" stroke="#0F172A" stroke-width="1.5" />
+        <text x="${metaX}" y="${Number(metaY) - 9}" text-anchor="middle" fill="#F59E0B" font-size="10" font-weight="800">🎯 Meta</text>
+
+        <!-- Current Position Pin -->
+        <circle cx="${curX}" cy="${curY}" r="11" fill="rgba(239,68,68,0.25)" />
+        <circle cx="${curX}" cy="${curY}" r="6.5" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" />
+        <rect x="${Math.max(70, Math.min(515, Number(curX) - 48))}" y="${Math.max(38, Number(curY) - 28)}" width="96" height="18" rx="9" fill="#0F172A" stroke="#EF4444" stroke-width="1" />
+        <text x="${Math.max(118, Math.min(563, Number(curX)))}" y="${Math.max(50, Number(curY) - 16)}" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="800">
+          📍 ${fmtDec(bfPct, 1)}% | IMC ${fmtDec(imc, 1)}
+        </text>
+      </svg>
+    `;
+  }
+
+  function renderBodyTypeSection() {
+    const u = getActiveUser();
+    const cont = document.getElementById('bodyTypeMatrixContainer');
+    if (!u || !u.anamnese || !cont) return;
+
+    const snap = getLatestBioSnapshot(u);
+    const scaleMode = DB.bodyMatrixScale || 'classic';
+    const thr = getThresholdsForBodyMatrix(u.anamnese.sexo, scaleMode);
+    const activeZone = classifyBodyType(snap.imc, snap.bfPct, thr);
+    const targetZone = classifyBodyType(snap.imcMeta, snap.bfMeta, thr);
+    const info = BODY_TYPE_INFO[activeZone] || BODY_TYPE_INFO['Ajuste'];
+
+    // Toggle button states
+    const btnStd = document.getElementById('bodyMatrixScaleStdBtn');
+    const btnSex = document.getElementById('bodyMatrixScaleSexBtn');
+    if (btnStd && btnSex) {
+      btnStd.className = 'btn btn-sm ' + (scaleMode === 'classic' ? 'btn-primary' : 'btn-soft');
+      btnSex.className = 'btn btn-sm ' + (scaleMode === 'sex' ? 'btn-primary' : 'btn-soft');
+    }
+
+    const svgChart = buildBodyTypeSVG(snap.imc, snap.bfPct, snap.imcMeta, snap.bfMeta, thr, activeZone);
+
+    // FFMI interpretation
+    const isMale = u.anamnese.sexo === 'Masculino';
+    let ffmiStatus = 'Normal';
+    if (snap.ffmi > (isMale ? 22.5 : 18.5)) ffmiStatus = 'Atlético / Muscular Superior';
+    else if (snap.ffmi > (isMale ? 20.0 : 16.5)) ffmiStatus = 'Acima da Média';
+    else if (snap.ffmi < (isMale ? 17.5 : 14.0)) ffmiStatus = 'Baixa Reserva Muscular';
+
+    // Visceral fat status
+    const viscStatus = snap.visceral
+      ? (snap.visceral <= 9 ? `${snap.visceral} (Saudável ✅)` : snap.visceral <= 14 ? `${snap.visceral} (Alerta Visceral ⚠️)` : `${snap.visceral} (Alto Risco 🚨)`)
+      : 'Não informado';
+
+    cont.innerHTML = `
+      <div class="chart-box" style="padding:12px;">
+        ${svgChart}
+      </div>
+      <div class="kpi-grid" style="margin-top:12px;margin-bottom:8px;">
+        <div class="kpi-box">
+          <div class="k-lbl">Tipo de Corpo Atual</div>
+          <div class="k-val" style="color:var(--primary);">${escapeHtml(activeZone)}</div>
+          <div class="k-sub">Meta: ${escapeHtml(targetZone)}</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Taxa de Gordura</div>
+          <div class="k-val">${fmtDec(snap.bfPct, 1)}% ${snap.isEstimatedBf ? '<span style="font-size:0.68rem;color:var(--accent);">(Est.)</span>' : ''}</div>
+          <div class="k-sub">Massa Gorda: ${fmtDec(snap.fatMassKg, 1)} kg</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Massa Magra (MLG)</div>
+          <div class="k-val" style="color:var(--info);">${fmtDec(snap.leanMassKg, 1)} kg</div>
+          <div class="k-sub">FFMI: ${fmtDec(snap.ffmi, 1)} kg/m² (${ffmiStatus})</div>
+        </div>
+        <div class="kpi-box">
+          <div class="k-lbl">Bioimpedância Extra</div>
+          <div class="k-val" style="font-size:0.92rem;">Visc: ${viscStatus}</div>
+          <div class="k-sub">${snap.smmKg ? `MME: ${fmtDec(snap.smmKg, 1)}kg • ` : ''}${snap.tbwPct ? `Água: ${fmtDec(snap.tbwPct, 1)}%` : 'Edite no perfil'}</div>
+        </div>
+      </div>
+      <div class="callout info" style="margin-bottom:0;">
+        <div style="font-weight:800;margin-bottom:3px;">${info.badge} — Diagnóstico de Composição Corporal (${thr.labelMode})</div>
+        <div style="font-size:0.82rem;margin-bottom:4px;">${info.desc}</div>
+        <div style="font-size:0.82rem;color:var(--primary);font-weight:700;">💡 Conduta Clínica: ${info.conduta}</div>
+      </div>
+    `;
+  }
+
+  function updateObBodyTypeLivePreview() {
+    const previewEl = document.getElementById('obBodyTypeLivePreview');
+    if (!previewEl) return;
+    const altRaw = parseBrNum(document.getElementById('obAltura')?.value);
+    const peso = parseBrNum(document.getElementById('obPesoAtual')?.value);
+    const bf = parseBrNum(document.getElementById('obBfPct')?.value);
+    const sexo = document.getElementById('obSexo')?.value || 'Masculino';
+    if (!altRaw || !peso || !bf) {
+      previewEl.innerHTML = '';
+      return;
+    }
+    const altM = altRaw > 3 ? altRaw / 100 : altRaw;
+    const imc = peso / (altM * altM);
+    const thr = getThresholdsForBodyMatrix(sexo, DB.bodyMatrixScale || 'classic');
+    const zone = classifyBodyType(imc, bf, thr);
+    const info = BODY_TYPE_INFO[zone] || BODY_TYPE_INFO['Ajuste'];
+    const lean = peso * (1 - bf / 100);
+    previewEl.innerHTML = `
+      <div class="callout info" style="margin:6px 0 0;padding:9px 12px;font-size:0.81rem;">
+        <strong>Prévia da Avaliação Corporal:</strong> Com IMC <strong>${fmtDec(imc, 1)} kg/m²</strong> e <strong>${fmtDec(bf, 1)}%</strong> de gordura (Massa Magra: <strong>${fmtDec(lean, 1)} kg</strong>), sua classificação na matriz é <span style="color:var(--primary);font-weight:800;">${info.badge}</span>.
+      </div>
+    `;
+  }
+
+  document.getElementById('bodyMatrixScaleStdBtn')?.addEventListener('click', () => {
+    DB.bodyMatrixScale = 'classic';
+    saveDB(false);
+    renderBodyTypeSection();
+  });
+  document.getElementById('bodyMatrixScaleSexBtn')?.addEventListener('click', () => {
+    DB.bodyMatrixScale = 'sex';
+    saveDB(false);
+    renderBodyTypeSection();
+  });
+
   function renderEvolucaoTab() {
     const u = getActiveUser();
     if (!u || !u.anamnese) return;
@@ -3178,6 +3939,7 @@ Regras obrigatórias de estimativa:
       revTxt.innerHTML = `Toda segunda-feira revise sua média semanal: Média atual (7d) = <strong>${fmtDec(avgLast7, 1)} kg</strong> | Semana anterior = <strong>${fmtDec(avgPrev7, 1)} kg</strong> (diferença: <strong>${delta7 <= 0 ? '' : '+'}${fmtDec(delta7, 2)} kg</strong>).`;
     }
 
+    renderBodyTypeSection();
     renderRealityVsProjectedChart(u, wStats);
     renderEvidenceRealisticChart(u, wStats);
     renderWaistHistory(u);
@@ -3841,7 +4603,8 @@ Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou aj
         html += `
           <h2>1. Dados Antropométricos, Metas e Hidratação</h2>
           <table>
-            <tr><th>Altura</th><td>${fmtDec(a.altura, 2)} m</td><th>IMC Atual</th><td>${fmtDec(imc, 1)} kg/m²</td></tr>
+            <tr><th>Altura</th><td>${fmtDec(a.altura, 2)} m</td><th>IMC Atual / Tipo de Corpo</th><td>${fmtDec(imc, 1)} kg/m² (${classifyBodyType(imc, getLatestBioSnapshot(u).bfPct, getThresholdsForBodyMatrix(a.sexo, 'classic'))})</td></tr>
+            <tr><th>Taxa de Gordura Corporal</th><td>${fmtDec(getLatestBioSnapshot(u).bfPct, 1)}%</td><th>Massa Magra (MLG) / FFMI</th><td>${fmtDec(getLatestBioSnapshot(u).leanMassKg, 1)} kg (FFMI ${fmtDec(getLatestBioSnapshot(u).ffmi, 1)} kg/m²)</td></tr>
             <tr><th>Peso Inicial (${formatDateBR(a.dataInicio)})</th><td>${fmtDec(a.pesoAtual, 1)} kg</td><th>Peso Atual</th><td>${fmtDec(wStats.latestWeight, 1)} kg</td></tr>
             <tr><th>Peso Meta</th><td>${fmtDec(a.pesoMeta, 1)} kg</td><th>Data-Alvo</th><td>${formatDateBR(a.dataAlvo)}</td></tr>
             <tr><th>Meta Calórica Diária</th><td>${fmtInt(a.metaKcal)} kcal</td><th>Meta Proteica Diária</th><td>${fmtDec(a.metaProt, 1)} g</td></tr>
@@ -4104,30 +4867,29 @@ Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou aj
   // GOOGLE SHEETS CONFIG MODAL & PWA INSTALL GUIDE MODAL
   // =========================================================
   function openSheetsConfigModal() {
-    openGenericModal('☁️ Sincronização com Google Sheets', `
+    openGenericModal('☁️ Sincronização em Nuvem (Script)', `
       <p style="font-size:0.83rem;color:var(--text-muted);margin-top:0;">
-        Planilha oficial vinculada: <a href="https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700;">Marcusnator 2.0 Pro Athlete By Dr. Hans</a>.
+        Conexão ativa e configurada com o servidor de sincronização do aplicativo.
       </p>
       <div class="form-grid">
         <div class="field">
-          <label>URL do Web App do Google Apps Script (termina em /exec)</label>
-          <input type="url" id="appsScriptUrlInput" value="${escapeHtml(DB.appsScriptUrl || '')}" placeholder="https://script.google.com/macros/s/.../exec" />
+          <label>URL do Script de Sincronização</label>
+          <input type="url" id="appsScriptUrlInput" value="${escapeHtml(DB.appsScriptUrl || DEFAULT_APPS_SCRIPT_URL)}" placeholder="https://script.google.com/macros/s/.../exec" />
         </div>
         <div class="btn-row">
-          <button type="button" id="saveSheetsUrlBtn" class="btn btn-primary">Salvar URL & Sincronizar Agora</button>
-          <button type="button" id="pullNowBtn" class="btn btn-soft">⬇️ Puxar Dados da Planilha</button>
-        </div>
-        <div class="callout" style="font-size:0.78rem;">
-          <strong>Como ativar (1 vez):</strong><br/>
-          1. Abra a planilha acima &gt; <em>Extensões &gt; Apps Script</em>.<br/>
-          2. Cole o arquivo <code>apps-script/Code.gs</code> do pacote e salve.<br/>
-          3. Clique em <em>Implantar &gt; Nova implantação &gt; App da Web</em> (Executar como: <strong>Eu</strong> | Acesso: <strong>Qualquer pessoa</strong>) e cole a URL gerada acima.
+          <button type="button" id="saveSheetsUrlBtn" class="btn btn-primary">☁️ Sincronizar Agora</button>
+          <button type="button" id="pullNowBtn" class="btn btn-soft">⬇️ Atualizar Dados da Nuvem</button>
+          <button type="button" id="restoreDefaultScriptUrlBtn" class="btn btn-soft btn-sm">Restaurar URL Padrão</button>
         </div>
       </div>
     `);
 
+    document.getElementById('restoreDefaultScriptUrlBtn').addEventListener('click', () => {
+      document.getElementById('appsScriptUrlInput').value = DEFAULT_APPS_SCRIPT_URL;
+    });
+
     document.getElementById('saveSheetsUrlBtn').addEventListener('click', () => {
-      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
+      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim() || DEFAULT_APPS_SCRIPT_URL;
       saveDB(false);
       if (DB.activeProfileId) syncProfileToSheets(DB.activeProfileId, false);
       else pullProfilesFromSheets();
@@ -4135,7 +4897,7 @@ Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou aj
     });
 
     document.getElementById('pullNowBtn').addEventListener('click', async () => {
-      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
+      DB.appsScriptUrl = document.getElementById('appsScriptUrlInput').value.trim() || DEFAULT_APPS_SCRIPT_URL;
       saveDB(false);
       await pullProfilesFromSheets();
       if (DB.activeProfileId) {
@@ -4303,12 +5065,729 @@ Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou aj
   }
 
   // =========================================================
+
+  // =========================================================
+  // DIRECT GEMINI API ENGINE (v1.1.0)
+  // =========================================================
+  let currentAiPhotoBase64 = null;
+  let currentAiPhotoMime = 'image/jpeg';
+
+  function updateGeminiIndicator() {
+    const dot = document.getElementById('geminiDot');
+    const lbl = document.getElementById('geminiTopLabel');
+    if (!dot || !lbl) return;
+    if (DB.geminiApiKey && DB.geminiApiKey.trim().length > 10) {
+      dot.className = 'sync-dot ok';
+      lbl.textContent = 'Gemini (IA) Ativo';
+    } else {
+      dot.className = 'sync-dot';
+      lbl.textContent = 'Configurar Gemini (IA)';
+    }
+  }
+
+  function openGeminiConfigModal(onSuccessCallback) {
+    const curKey = DB.geminiApiKey || '';
+    const curModel = DB.geminiModel || 'gemini-2.5-flash';
+    openGenericModal('🤖 Configurar API Direta do Google Gemini', `
+      <p style="font-size:0.83rem;color:var(--text-muted);margin-top:0;">
+        Conecte sua chave da API do Gemini para que o aplicativo monte cardápios personalizados, recalibre refeições restantes, analise fotos dos seus pratos e ajuste seu plano diretamente na tela.
+      </p>
+      <div class="form-grid">
+        <div class="field">
+          <label>Gemini API Key *</label>
+          <input type="password" id="geminiApiKeyInput" value="${escapeHtml(curKey)}" placeholder="AIzaSy..." autocomplete="off" />
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">
+            Sua chave fica salva exclusivamente no armazenamento local do seu aparelho. Obtenha gratuitamente no <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700;">Google AI Studio</a>.
+          </div>
+        </div>
+        <div class="field">
+          <label>Modelo Gemini</label>
+          <select id="geminiModelSelect">
+            <option value="gemini-2.5-flash" ${curModel === 'gemini-2.5-flash' ? 'selected' : ''}>gemini-2.5-flash (Recomendado: Rápido, Multimodal & Preciso)</option>
+            <option value="gemini-2.5-pro" ${curModel === 'gemini-2.5-pro' ? 'selected' : ''}>gemini-2.5-pro (Raciocínio Clínico Avançado)</option>
+            <option value="gemini-2.0-flash" ${curModel === 'gemini-2.0-flash' ? 'selected' : ''}>gemini-2.0-flash (Alta velocidade)</option>
+          </select>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="saveGeminiCfgBtn" class="btn btn-primary">💾 Salvar Chave API</button>
+          <button type="button" id="testGeminiCfgBtn" class="btn btn-accent">⚡ Testar Conexão Agora</button>
+          ${curKey ? '<button type="button" id="clearGeminiKeyBtn" class="btn btn-danger btn-sm">Remover Chave</button>' : ''}
+        </div>
+        <div id="geminiTestResultBox" class="callout hidden"></div>
+      </div>
+    `);
+
+    document.getElementById('saveGeminiCfgBtn').addEventListener('click', () => {
+      const k = document.getElementById('geminiApiKeyInput').value.trim();
+      const m = document.getElementById('geminiModelSelect').value;
+      DB.geminiApiKey = k;
+      DB.geminiModel = m;
+      saveDB(false);
+      updateGeminiIndicator();
+      closeGenericModal();
+      showToast('🤖 Configuração da API do Gemini salva!');
+      if (typeof onSuccessCallback === 'function' && k) onSuccessCallback();
+    });
+
+    document.getElementById('testGeminiCfgBtn').addEventListener('click', async () => {
+      const k = document.getElementById('geminiApiKeyInput').value.trim();
+      const m = document.getElementById('geminiModelSelect').value;
+      const box = document.getElementById('geminiTestResultBox');
+      if (!k) {
+        box.className = 'callout renal';
+        box.classList.remove('hidden');
+        box.textContent = 'Insira sua Gemini API Key antes de testar.';
+        return;
+      }
+      DB.geminiApiKey = k;
+      DB.geminiModel = m;
+      saveDB(false);
+      updateGeminiIndicator();
+
+      box.className = 'callout info';
+      box.classList.remove('hidden');
+      box.textContent = '⏳ Testando comunicação com a API do Google Gemini...';
+      try {
+        const res = await callGeminiAPI({
+          prompt: 'Responda apenas um JSON {"status":"ok","mensagem":"Conexão ativa com Marcusnator Pro Athlete 2.0!"}',
+          expectJson: true
+        });
+        box.innerHTML = `✅ <strong>Sucesso!</strong> Modelo <code>${escapeHtml(m)}</code> respondeu: ${escapeHtml((res && res.mensagem) || 'Conectado!')}`;
+      } catch (err) {
+        box.className = 'callout renal';
+        box.innerHTML = `❌ <strong>Falha na chamada:</strong> ${escapeHtml(err.message)}`;
+      }
+    });
+
+    const clearBtn = document.getElementById('clearGeminiKeyBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        DB.geminiApiKey = '';
+        saveDB(false);
+        updateGeminiIndicator();
+        closeGenericModal();
+        showToast('Chave da API removida.');
+      });
+    }
+  }
+
+  async function callGeminiAPI({ prompt, systemInstruction = '', imageBase64 = null, imageMimeType = 'image/jpeg', expectJson = true }) {
+    const apiKey = (DB.geminiApiKey || '').trim();
+    if (!apiKey) {
+      throw new Error('API_KEY_MISSING');
+    }
+    const model = DB.geminiModel || 'gemini-2.5-flash';
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+    const parts = [];
+    if (prompt) parts.push({ text: prompt });
+    if (imageBase64) {
+      parts.push({
+        inline_data: {
+          mime_type: imageMimeType || 'image/jpeg',
+          data: imageBase64
+        }
+      });
+    }
+
+    const body = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: {
+        temperature: 0.35
+      }
+    };
+
+    if (expectJson) {
+      body.generationConfig.responseMimeType = 'application/json';
+    }
+
+    if (systemInstruction) {
+      body.systemInstruction = {
+        parts: [{ text: systemInstruction }]
+      };
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      const errMsg = (data && data.error && data.error.message) || `Erro HTTP ${response.status}`;
+      throw new Error(errMsg);
+    }
+
+    const textOut = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n') || '';
+    if (!textOut) {
+      throw new Error('A API do Gemini retornou uma resposta vazia.');
+    }
+
+    if (expectJson) {
+      const parsed = extractJsonFromText(textOut);
+      if (!parsed) {
+        try { return JSON.parse(textOut); } catch (e) {
+          throw new Error('Não foi possível interpretar o JSON retornado pelo Gemini.');
+        }
+      }
+      return parsed;
+    }
+    return textOut;
+  }
+
+  function buildUserContextSummary(u, targetDateIso) {
+    const a = u.anamnese || {};
+    const wStats = getWeightStats(u);
+    const metaDiaKcal = getDailyCalorieTarget(u, targetDateIso || todayISO());
+    const lastEfca = (u.efcaHistory && u.efcaHistory.length) ? u.efcaHistory[u.efcaHistory.length - 1] : null;
+    return `
+DADOS DO ATLETA / PACIENTE:
+- Nome: ${u.nome} | Sexo: ${a.sexo} | Idade: ${a.idade} anos | Altura: ${fmtDec(a.altura, 2)} m
+- Peso inicial: ${fmtDec(wStats.startWeight, 1)} kg | Peso atual: ${fmtDec(wStats.latestWeight, 1)} kg | Peso meta: ${fmtDec(a.pesoMeta, 1)} kg (Data-alvo: ${formatDateBR(a.dataAlvo)})
+- Bioimpedância & Composição Corporal: Gordura Corporal = ${fmtDec(getLatestBioSnapshot(u).bfPct, 1)}% | Massa Magra (MLG) = ${fmtDec(getLatestBioSnapshot(u).leanMassKg, 1)} kg | FFMI = ${fmtDec(getLatestBioSnapshot(u).ffmi, 1)} kg/m² | Tipo Corporal = ${classifyBodyType(getLatestBioSnapshot(u).imc, getLatestBioSnapshot(u).bfPct, getThresholdsForBodyMatrix(a.sexo, 'classic'))}
+- Meta de Calorias para a data (${formatDateBR(targetDateIso || todayISO())} - ${weekdayBR(targetDateIso || todayISO())}): ${metaDiaKcal} kcal
+- Meta Diária de Proteína: ${a.metaProt} g
+- Horários: Acorda às ${a.acordar} | Dorme às ${a.dormir} | Trabalho: ${a.horarioTrabalho} (${a.modalidadeTrabalho})
+- Treinos da semana: ${a.treinosSemana}
+- O que costuma comer hoje: ${a.comeHoje}
+- Comidas que gosta e NÃO quer cortar: ${a.naoCortar || 'Nenhuma específica'}
+- Comidas que NÃO come (restrições/aversões): ${a.naoCome || 'Nenhuma'}
+- Tempo disponível para cozinhar: ${a.tempoCozinhar || '2h no domingo'}
+- Frequência de delivery: ${a.deliveryFreq || 'Raramente'}
+- Suplementos: ${a.suplementos || 'Nenhum'}
+${lastEfca ? `- Fenótipo de Comportamento Alimentar (EFCA): ${lastEfca.dominante} (Score: ${lastEfca.total}/80)` : ''}`.trim();
+  }
+
+  // 1. Direct Gemini: Generate Full Day Menu (Aba Cardápio)
+  async function generateDayMenuWithGemini() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    if (!DB.geminiApiKey) {
+      openGeminiConfigModal(() => generateDayMenuWithGemini());
+      return;
+    }
+
+    const btn = document.getElementById('directGeminiGenerateMenuBtn');
+    const customNote = (document.getElementById('geminiMenuCustomNote')?.value || '').trim();
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Montando cardápio com Gemini...';
+
+    try {
+      const metaDia = getDailyCalorieTarget(u, selectedMenuDate);
+      const sys = 'Você é o nutricionista esportivo e médico especialista do aplicativo Marcusnator Pro Athlete 2.0 By Dr. Hans. Monte planos alimentares práticos, brasileiros, com alimentos prontos/cozidos e precisão rigorosa de calorias e proteínas.';
+      const prompt = `Monte o cardápio planejado completo para o dia ${formatDateBR(selectedMenuDate)} (${weekdayBR(selectedMenuDate)}).
+${buildUserContextSummary(u, selectedMenuDate)}
+${customNote ? `\nINSTRUÇÃO ESPECIAL DO USUÁRIO PARA HOJE: "${customNote}"` : ''}
+
+REGRAS OBRIGATÓRIAS:
+1. A soma total das calorias das refeições deve ficar muito próxima de ${metaDia} kcal (tolerância ±40 kcal) e bater a meta de ${u.anamnese.metaProt}g de proteína.
+2. Respeite rigorosamente os horários de acordar/dormir/treino, as comidas que a pessoa gosta e NUNCA inclua alimentos da lista de "Comidas que NÃO come".
+3. Informe quantidades em medidas caseiras + gramas do alimento JÁ PRONTO/COZIDO.
+4. Retorne EXCLUSIVAMENTE um objeto JSON válido com esta estrutura exata:
+{
+  "data": "${selectedMenuDate}",
+  "observacao_nutricional": "Resumo curto da estratégia do dia",
+  "refeicoes": [
+    {
+      "horario": "07:00",
+      "nome": "Café da manhã",
+      "itens": [
+        {"item": "Ovos mexidos", "qtd": "3 unidades (150g)", "kcal": 225, "prot": 19}
+      ]
+    }
+  ]
+}`;
+
+      const result = await callGeminiAPI({ prompt, systemInstruction: sys, expectJson: true });
+      if (!result || !Array.isArray(result.refeicoes) || result.refeicoes.length === 0) {
+        throw new Error('Formato de cardápio inválido retornado pela IA.');
+      }
+
+      // Replace planned meals for selectedMenuDate
+      u.cardapio = (u.cardapio || []).filter(c => c.date !== selectedMenuDate);
+      result.refeicoes.forEach((r, idx) => {
+        const itens = (r.itens || []).map(it => ({
+          item: it.item || 'Alimento',
+          qtd: it.qtd || '',
+          kcal: Math.round(Number(it.kcal) || 0),
+          prot: parseBrNum(it.prot) || 0
+        }));
+        const kcal = itens.reduce((s, i) => s + i.kcal, 0);
+        const prot = itens.reduce((s, i) => s + i.prot, 0);
+        u.cardapio.push({
+          id: 'CRD_' + Date.now() + '_' + idx,
+          date: selectedMenuDate,
+          nome: r.nome || `Refeição ${idx + 1}`,
+          horario: r.horario || '12:00',
+          itens,
+          kcal,
+          prot,
+          status: 'a comer'
+        });
+      });
+
+      saveDB(true);
+      renderScoreboard();
+      renderCardapioTab();
+      showToast('✨ Cardápio do dia montado pelo Gemini e salvo e sincronizado!');
+    } catch (err) {
+      if (err.message === 'API_KEY_MISSING') openGeminiConfigModal(() => generateDayMenuWithGemini());
+      else showToast('❌ Erro ao gerar cardápio: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+
+  // 2. Direct Gemini: Adjust Remaining Meals of the Day (Aba Cardápio)
+  async function adjustRemainingMealsWithGemini() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    if (!DB.geminiApiKey) {
+      openGeminiConfigModal(() => adjustRemainingMealsWithGemini());
+      return;
+    }
+
+    const meals = (u.cardapio || []).filter(c => c.date === selectedMenuDate);
+    const remainingMeals = meals.filter(m => m.status === 'a comer');
+    if (remainingMeals.length === 0) {
+      showToast('Não há refeições com status "A comer" neste dia para recalibrar.');
+      return;
+    }
+
+    const btn = document.getElementById('directGeminiAdjustMenuBtn');
+    const customNote = (document.getElementById('geminiMenuCustomNote')?.value || '').trim();
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Recalibrando restantes...';
+
+    try {
+      const metaDia = getDailyCalorieTarget(u, selectedMenuDate);
+      const cons = getConsumedForDate(u, selectedMenuDate);
+      const kcalRestante = Math.max(150, Math.round(metaDia - cons.kcal));
+      const protRestante = Math.max(15, Math.round(u.anamnese.metaProt - cons.prot));
+
+      const statusList = meals.map(m => `- [${m.status.toUpperCase()}] ${m.horario} ${m.nome}: ${Math.round(m.kcal)} kcal, ${fmtDec(m.prot, 1)}g prot`).join('\n');
+      const toAdjustNames = remainingMeals.map(m => `${m.horario} - ${m.nome}`).join('; ');
+
+      const prompt = `O usuário alterou/cumpriu parte da rotina de hoje (${formatDateBR(selectedMenuDate)}) e precisa que você recalibre APENAS as refeições restantes ("a comer"):
+${buildUserContextSummary(u, selectedMenuDate)}
+${customNote ? `\nOBSERVAÇÃO DO USUÁRIO: "${customNote}"` : ''}
+
+SITUAÇÃO DO DIA ATÉ AGORA:
+- Meta total do dia: ${metaDia} kcal e ${u.anamnese.metaProt}g de proteína
+- Já consumido hoje (no Diário / refeições feitas ou ajustadas): ${Math.round(cons.kcal)} kcal e ${fmtDec(cons.prot, 1)}g de proteína
+- SALDO RESTANTE PARA DISTRIBUIR NAS REFEIÇÕES QUE FALTAM: ${kcalRestante} kcal e ${protRestante}g de proteína
+- Histórico das refeições de hoje:
+${statusList}
+
+REFEIÇÕES QUE FALTAM ("a comer") PARA VOCÊ RECALIBRAR (${remainingMeals.length} refeição/ões):
+${toAdjustNames}
+
+Retorne EXCLUSIVAMENTE um JSON válido contendo apenas as refeições "a comer" recalibradas para fechar o saldo de ${kcalRestante} kcal e ${protRestante}g de proteína:
+{
+  "refeicoes_ajustadas": [
+    {
+      "horario": "20:00",
+      "nome": "Jantar",
+      "itens": [
+        {"item": "Filé de frango grelhado", "qtd": "180g pronto", "kcal": 297, "prot": 55}
+      ]
+    }
+  ]
+}`;
+
+      const result = await callGeminiAPI({ prompt, expectJson: true });
+      const list = result.refeicoes_ajustadas || result.refeicoes;
+      if (!Array.isArray(list) || list.length === 0) {
+        throw new Error('A IA não retornou refeições ajustadas válidas.');
+      }
+
+      // Remove old 'a comer' meals for selectedMenuDate and insert recalibrated ones
+      u.cardapio = u.cardapio.filter(c => !(c.date === selectedMenuDate && c.status === 'a comer'));
+      list.forEach((r, idx) => {
+        const itens = (r.itens || []).map(it => ({
+          item: it.item || 'Alimento',
+          qtd: it.qtd || '',
+          kcal: Math.round(Number(it.kcal) || 0),
+          prot: parseBrNum(it.prot) || 0
+        }));
+        const kcal = itens.reduce((s, i) => s + i.kcal, 0);
+        const prot = itens.reduce((s, i) => s + i.prot, 0);
+        u.cardapio.push({
+          id: 'CRD_' + Date.now() + '_ADJ_' + idx,
+          date: selectedMenuDate,
+          nome: r.nome || `Refeição Ajustada ${idx + 1}`,
+          horario: r.horario || '20:00',
+          itens,
+          kcal,
+          prot,
+          status: 'a comer'
+        });
+      });
+
+      saveDB(true);
+      renderScoreboard();
+      renderCardapioTab();
+      showToast(`🔄 ${list.length} refeição(ões) restante(s) recalibrada(s) pelo Gemini!`);
+    } catch (err) {
+      if (err.message === 'API_KEY_MISSING') openGeminiConfigModal(() => adjustRemainingMealsWithGemini());
+      else showToast('❌ Erro ao recalibrar: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+
+  // 3. Direct Gemini Vision + Text: Estimate Meal Photo/Description & Log to Diário
+  function compressImageFileToBase64(file, maxDim = 1024, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          const base64 = dataUrl.split(',')[1];
+          resolve({ dataUrl, base64, mimeType: 'image/jpeg' });
+        };
+        img.onerror = reject;
+        img.src = ev.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const aiPhotoInput = document.getElementById('aiFoodPhotoInput');
+  if (aiPhotoInput) {
+    aiPhotoInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        const compressed = await compressImageFileToBase64(file);
+        currentAiPhotoBase64 = compressed.base64;
+        currentAiPhotoMime = compressed.mimeType;
+        document.getElementById('aiFoodPhotoPreviewImg').src = compressed.dataUrl;
+        document.getElementById('aiFoodPhotoPreviewWrap').classList.remove('hidden');
+      } catch (err) {
+        showToast('Erro ao processar imagem.');
+      }
+    });
+  }
+
+  const clearAiPhotoBtn = document.getElementById('clearAiPhotoBtn');
+  if (clearAiPhotoBtn) {
+    clearAiPhotoBtn.addEventListener('click', () => {
+      currentAiPhotoBase64 = null;
+      if (aiPhotoInput) aiPhotoInput.value = '';
+      document.getElementById('aiFoodPhotoPreviewWrap').classList.add('hidden');
+    });
+  }
+
+  async function estimateAndLogFoodWithGemini() {
+    const u = getActiveUser();
+    if (!u) return;
+    if (!DB.geminiApiKey) {
+      openGeminiConfigModal(() => estimateAndLogFoodWithGemini());
+      return;
+    }
+
+    const descText = (document.getElementById('aiFoodTextInput')?.value || '').trim();
+    const isDeliv = document.getElementById('aiFoodIsDelivery')?.checked || false;
+    const mealType = document.getElementById('aiFoodMealType')?.value || 'Almoço';
+
+    if (!currentAiPhotoBase64 && !descText) {
+      showToast('📸 Envie uma foto do prato ou digite a descrição da refeição para estimar.');
+      return;
+    }
+
+    const btn = document.getElementById('directGeminiEstimateFoodBtn');
+    const resBox = document.getElementById('aiFoodEstimateResultBox');
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Analisando com Gemini IA...';
+
+    try {
+      const prompt = `Analise a refeição ${currentAiPhotoBase64 ? 'na imagem anexada ' : ''}${descText ? `com a descrição: "${descText}"` : ''} para registro no Diário Alimentar.
+Contexto: Refeição = "${mealType}" | Restaurante/Delivery = ${isDeliv ? 'SIM' : 'NÃO'}.
+
+REGRAS CLÍNICAS OBRIGATÓRIAS DE ESTIMATIVA:
+1. Considere SEMPRE o alimento JÁ PRONTO / COZIDO (peso preparado).
+2. Na dúvida sobre gramatura, óleo de preparo, manteiga, molhos ou cortes de carne (principalmente quando for comida de restaurante ou delivery), adote OBRIGATORIAMENTE o CENÁRIO MAIS CALÓRICO por segurança no déficit calórico.
+3. Retorne EXCLUSIVAMENTE um JSON válido com esta estrutura:
+{
+  "refeicao": "${mealType}",
+  "descricao_detalhada": "Lista clara de cada item identificado com peso pronto estimado (ex: 160g arroz branco cozido, 150g bife de chorizo grelhado com gordura de preparo...)",
+  "kcal_total": 680,
+  "proteina_total_g": 44.5,
+  "delivery": ${isDeliv ? 'true' : 'false'},
+  "justificativa_cenario_calorico": "Explicação curta de como as calorias ocultas/preparo foram contabilizadas"
+}`;
+
+      const result = await callGeminiAPI({
+        prompt,
+        imageBase64: currentAiPhotoBase64,
+        imageMimeType: currentAiPhotoMime,
+        expectJson: true
+      });
+
+      const kcal = Math.round(Number(result.kcal_total ?? result.kcal) || 0);
+      const prot = parseBrNum(result.proteina_total_g ?? result.prot);
+      const desc = result.descricao_detalhada || result.descricao || descText || 'Refeição analisada por foto via Gemini Vision';
+      const nowTime = document.getElementById('diaryMealTime')?.value || new Date().toTimeString().slice(0, 5);
+
+      u.diario = u.diario || [];
+      u.diario.push({
+        id: 'DIA_' + Date.now(),
+        date: selectedDiaryDate,
+        horario: nowTime,
+        refeicao: result.refeicao || mealType,
+        descricao: desc,
+        kcal,
+        prot,
+        delivery: Boolean(result.delivery ?? isDeliv),
+        estimadoIA: true,
+        criadoEm: new Date().toISOString()
+      });
+
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = `
+        <div style="font-weight:800;color:var(--primary);margin-bottom:4px;">
+          ✅ Lançado no Diário: ${fmtInt(kcal)} kcal • ${fmtDec(prot, 1)}g proteína
+        </div>
+        <div style="font-size:0.82rem;"><strong>Itens estimados (prontos/cozidos):</strong> ${escapeHtml(desc)}</div>
+        ${result.justificativa_cenario_calorico ? `<div style="font-size:0.76rem;color:var(--text-muted);margin-top:3px;"><em>Nota da IA: ${escapeHtml(result.justificativa_cenario_calorico)}</em></div>` : ''}
+      `;
+
+      // Reset inputs
+      document.getElementById('aiFoodTextInput').value = '';
+      if (clearAiPhotoBtn) clearAiPhotoBtn.click();
+
+      saveDB(true);
+      renderScoreboard();
+      renderDiaryTab();
+      renderSemanaTab();
+      showToast('✨ Refeição estimada pelo Gemini e lançada no Diário!');
+    } catch (err) {
+      if (err.message === 'API_KEY_MISSING') openGeminiConfigModal(() => estimateAndLogFoodWithGemini());
+      else showToast('❌ Erro na estimativa: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+
+  // 4. Direct Gemini: Monday Weekly Review & Plateau Adjustment (Aba Evolução)
+  async function analyzeMondayReviewWithGemini() {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    if (!DB.geminiApiKey) {
+      openGeminiConfigModal(() => analyzeMondayReviewWithGemini());
+      return;
+    }
+
+    const btn = document.getElementById('directGeminiMondayReviewBtn');
+    const box = document.getElementById('mondayGeminiAnalysisBox');
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Analisando evolução...';
+
+    try {
+      const wStats = getWeightStats(u);
+      const tIso = todayISO();
+      let sumKcal = 0, sumProt = 0, delivs = 0, treinosCount = 0;
+      for (let i = 6; i >= 0; i--) {
+        const dIso = addDaysISO(tIso, -i);
+        const c = getConsumedForDate(u, dIso);
+        sumKcal += c.kcal; sumProt += c.prot;
+        delivs += (u.diario || []).filter(x => x.date === dIso && x.delivery).length;
+        treinosCount += (u.treinos || []).filter(x => x.date === dIso).length;
+      }
+
+      const pesagensRecentes = wStats.valid.slice(-8).map(p => `${formatDateBR(p.date)}: ${fmtDec(p.peso, 1)}kg${p.cintura ? ` (cintura ${fmtDec(p.cintura, 1)}cm)` : ''}`).join(' | ');
+
+      const prompt = `Realize a Revisão Semanal de Segunda-feira do paciente/atleta no Marcusnator Pro Athlete 2.0 By Dr. Hans:
+${buildUserContextSummary(u, tIso)}
+- Histórico recente de pesagens: ${pesagensRecentes || 'Apenas inicial'}
+- Média de peso últimos 7 dias: ${fmtDec(wStats.avg7, 1)} kg
+- Média calórica consumida últimos 7 dias: ${Math.round(sumKcal / 7)} kcal/dia | Média proteica: ${fmtDec(sumProt / 7, 1)} g/dia
+- Deliveries na semana: ${delivs} | Treinos realizados na semana: ${treinosCount}
+
+Avalie clinicamente se o ritmo está adequado, se há platô verdadeiro ou apenas oscilação hídrica, e recomende a meta diária de calorias e proteínas para a nova semana.
+Retorne EXCLUSIVAMENTE um JSON válido:
+{
+  "diagnostico_semanal": "Análise direta e motivadora de 2 a 3 frases sobre a semana",
+  "esta_estagnado": false,
+  "nova_meta_kcal_sugerida": ${u.anamnese.metaKcal},
+  "nova_meta_proteina_sugerida": ${u.anamnese.metaProt},
+  "acoes_praticas_semana": ["Ação 1", "Ação 2", "Ação 3"]
+}`;
+
+      const res = await callGeminiAPI({ prompt, expectJson: true });
+      box.classList.remove('hidden');
+      const sugKcal = Number(res.nova_meta_kcal_sugerida) || u.anamnese.metaKcal;
+      const sugProt = Number(res.nova_meta_proteina_sugerida) || u.anamnese.metaProt;
+
+      box.innerHTML = `
+        <div style="font-weight:800;margin-bottom:4px;">🩺 Parecer Semanal do Gemini IA:</div>
+        <div style="font-size:0.83rem;margin-bottom:6px;">${escapeHtml(res.diagnostico_semanal || '')}</div>
+        <ul style="margin:4px 0 8px;padding-left:18px;font-size:0.81rem;">
+          ${(res.acoes_praticas_semana || []).map(a => `<li>${escapeHtml(a)}</li>`).join('')}
+        </ul>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:0.82rem;font-weight:700;">Meta sugerida: <strong>${fmtInt(sugKcal)} kcal/dia</strong> • <strong>${fmtInt(sugProt)}g proteína</strong></span>
+          <button type="button" id="applyGeminiSuggestedMetaBtn" class="btn btn-primary btn-sm">✅ Aplicar Meta Sugerida</button>
+        </div>
+      `;
+
+      document.getElementById('applyGeminiSuggestedMetaBtn').addEventListener('click', () => {
+        u.anamnese.metaKcal = sugKcal;
+        u.anamnese.metaProt = sugProt;
+        saveDB(true);
+        renderScoreboard();
+        renderEvolucaoTab();
+        renderPlanoTab();
+        showToast(`✅ Novas metas aplicadas: ${fmtInt(sugKcal)} kcal e ${fmtInt(sugProt)}g proteína!`);
+      });
+    } catch (err) {
+      if (err.message === 'API_KEY_MISSING') openGeminiConfigModal(() => analyzeMondayReviewWithGemini());
+      else showToast('❌ Erro na revisão semanal: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    }
+  }
+
+  // 5. Direct Gemini: Generate Full Custom Plan (Aba Plano & Onboarding)
+  async function generateFullPlanWithGemini(silent = false) {
+    const u = getActiveUser();
+    if (!u || !u.anamnese) return;
+    if (!DB.geminiApiKey) {
+      if (!silent) openGeminiConfigModal(() => generateFullPlanWithGemini(false));
+      return;
+    }
+
+    const btn = document.getElementById('directGeminiFullPlanBtn');
+    const origText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Gerando estratégia personalizada com Gemini IA...';
+    }
+
+    try {
+      const prompt = `Monte o Plano Estratégico Personalizado completo do usuário no aplicativo Marcusnator Pro Athlete 2.0 By Dr. Hans:
+${buildUserContextSummary(u, todayISO())}
+
+Personalize profundamente:
+1. "semanaTreinos": 7 dias (Segunda-feira a Domingo), ajustando a meta de calorias de cada dia conforme o gasto do treino daquele dia (dias de treino mais pesado podem ter meta maior; dias de descanso meta menor, mantendo a média semanal em ${u.anamnese.metaKcal} kcal) + 1 dica prática por dia.
+2. "cardapioBase": 4 a 5 refeições de um dia típico somando ~${u.anamnese.metaKcal} kcal e ~${u.anamnese.metaProt}g de proteína, respeitando os alimentos que a pessoa come hoje, o que gosta e sem incluir aversões.
+3. "trocas": listas de trocas equivalentes para "proteinas", "carboidratos" e "lanches" com gramaturas prontas e calorias.
+4. "regrasFds": 4 regras práticas para o fim de semana adaptadas especificamente às comidas que a pessoa gosta e não quer cortar (${u.anamnese.naoCortar || 'refeição livre'}).
+5. "regrasDia": 4 regras de ouro diárias (proteína, água, sono, pesagem).
+6. "marmitas": "tempo" (${u.anamnese.tempoCozinhar || '2h no domingo'}), "compras" (lista de compras exata para a semana) e "ordemPreparo" (passo a passo cronometrado para cozinhar tudo dentro do tempo disponível).
+7. "guiaDelivery": 4 categorias com "cat", "pedir" e "evitar".
+
+Retorne EXCLUSIVAMENTE um JSON válido com esta estrutura exata:
+{
+  "semanaTreinos": [{"dia": "Segunda-feira", "treino": "...", "kcal": 2100, "dica": "..."}],
+  "cardapioBase": [{"horario": "07:00", "nome": "Café da manhã", "itens": [{"item": "...", "qtd": "...", "kcal": 250, "prot": 20}]}],
+  "trocas": {"proteinas": ["..."], "carboidratos": ["..."], "lanches": ["..."]},
+  "regrasFds": ["..."],
+  "regrasDia": ["..."],
+  "marmitas": {"tempo": "...", "compras": ["..."], "ordemPreparo": ["..."]},
+  "guiaDelivery": [{"cat": "...", "pedir": "...", "evitar": "..."}]
+}`;
+
+      const res = await callGeminiAPI({ prompt, expectJson: true });
+      if (!res || !Array.isArray(res.semanaTreinos) || !Array.isArray(res.cardapioBase)) {
+        throw new Error('Estrutura de plano incompleta retornada pela IA.');
+      }
+
+      const existingEvents = (u.plano && u.plano.eventos) || [];
+      u.plano = {
+        semanaTreinos: res.semanaTreinos,
+        eventos: existingEvents,
+        cardapioBase: res.cardapioBase,
+        trocas: res.trocas || u.plano?.trocas || {},
+        regrasFds: res.regrasFds || u.plano?.regrasFds || [],
+        regrasDia: res.regrasDia || u.plano?.regrasDia || [],
+        marmitas: res.marmitas || u.plano?.marmitas || {},
+        guiaDelivery: res.guiaDelivery || u.plano?.guiaDelivery || []
+      };
+
+      // Also update today's Cardápio if all meals are still 'a comer'
+      const tIso = todayISO();
+      const todayMeals = (u.cardapio || []).filter(c => c.date === tIso);
+      if (todayMeals.every(m => m.status === 'a comer')) {
+        u.cardapio = (u.cardapio || []).filter(c => c.date !== tIso);
+        u.plano.cardapioBase.forEach((m, idx) => {
+          const kcal = (m.itens || []).reduce((s, it) => s + (Number(it.kcal) || 0), 0);
+          const prot = (m.itens || []).reduce((s, it) => s + (parseBrNum(it.prot) || 0), 0);
+          u.cardapio.push({
+            id: 'CRD_' + Date.now() + '_' + idx,
+            date: tIso,
+            nome: m.nome,
+            horario: m.horario,
+            itens: JSON.parse(JSON.stringify(m.itens || [])),
+            kcal,
+            prot,
+            status: 'a comer'
+          });
+        });
+      }
+
+      saveDB(true);
+      renderScoreboard();
+      renderCardapioTab();
+      renderPlanoTab();
+      if (!silent) showToast('✨ Plano completo e Cardápio Base gerados sob medida pelo Gemini!');
+    } catch (err) {
+      if (!silent) {
+        if (err.message === 'API_KEY_MISSING') openGeminiConfigModal(() => generateFullPlanWithGemini(false));
+        else showToast('❌ Erro ao gerar plano com IA: ' + err.message);
+      }
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
+  }
+
+  // Bind Direct Gemini UI Buttons
+  document.getElementById('geminiConfigTopBtn')?.addEventListener('click', () => openGeminiConfigModal());
+  document.getElementById('drawerGeminiBtn')?.addEventListener('click', () => {
+    drawerOverlay.classList.remove('open');
+    openGeminiConfigModal();
+  });
+  document.querySelectorAll('.open-gemini-cfg-btn').forEach(b => {
+    b.addEventListener('click', () => openGeminiConfigModal());
+  });
+  document.getElementById('directGeminiGenerateMenuBtn')?.addEventListener('click', generateDayMenuWithGemini);
+  document.getElementById('directGeminiAdjustMenuBtn')?.addEventListener('click', adjustRemainingMealsWithGemini);
+  document.getElementById('directGeminiEstimateFoodBtn')?.addEventListener('click', estimateAndLogFoodWithGemini);
+  document.getElementById('directGeminiMondayReviewBtn')?.addEventListener('click', analyzeMondayReviewWithGemini);
+  document.getElementById('directGeminiFullPlanBtn')?.addEventListener('click', () => generateFullPlanWithGemini(false));
+
   // MAIN ROUTER
   // =========================================================
   function routeApp() {
     const u = getActiveUser();
     const headerBadge = document.getElementById('headerUserBadge');
-    setSyncIndicator(DB.appsScriptUrl ? 'ok' : 'warn', DB.appsScriptUrl ? 'Planilha' : 'Local');
+    setSyncIndicator(DB.appsScriptUrl ? 'ok' : 'warn', DB.appsScriptUrl ? 'Nuvem' : 'Local');
+    updateGeminiIndicator();
 
     if (!u) {
       headerBadge.textContent = '';
@@ -4340,6 +5819,9 @@ Avalie se houve estagnação (platô) e me diga se devo manter as calorias ou aj
   }
 
   routeApp();
+  if (DB.appsScriptUrl && Object.keys(DB.profiles || {}).length === 0) {
+    pullProfilesFromSheets();
+  }
 })();
 </script>
 </body>
