@@ -533,7 +533,51 @@
     }
 
     
-    /* Medication & Study Comparison Charts (v1.3.0) */
+    /* Medication & Study Comparison Charts (v1.3.2) */
+    .med-compare-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      transition: border-color 0.15s ease;
+    }
+    .med-compare-bar.active-scrub {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .med-compare-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .med-compare-lbl {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+    .med-compare-val {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .med-compare-diff {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
     .med-chart-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -578,14 +622,14 @@
       transition: all 0.18s ease;
     }
     .med-pill-btn.active {
-      background: #58355E;
-      border-color: #9333EA;
-      color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(147, 51, 234, 0.28);
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: none;
     }
     .med-pill-btn:hover {
       border-color: var(--primary);
-      color: var(--text);
+      color: var(--primary);
     }
     .med-info-circle {
       width: 26px;
@@ -597,12 +641,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-size: 0.86rem;
+      font-weight: 900;
+      line-height: 1;
       cursor: pointer;
+      padding: 0;
+      transition: all 0.15s ease;
     }
     .med-info-circle:hover {
       border-color: var(--primary);
+      background: var(--primary-soft);
       color: var(--primary);
     }
     .med-period-bar {
@@ -613,9 +663,9 @@
     }
     .med-period-btn {
       padding: 7px 8px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: transparent;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-elev);
       color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 700;
@@ -623,11 +673,15 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
+    .med-period-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
     .med-period-btn.active {
-      background: #58355E;
-      color: #FFFFFF;
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
       font-weight: 800;
-      box-shadow: 0 2px 8px rgba(88, 53, 94, 0.35);
     }
     .med-unit-switch {
       display: inline-flex;
@@ -643,12 +697,14 @@
       width: 40px;
       height: 22px;
       border-radius: 999px;
-      background: #64748B;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
       position: relative;
-      transition: background 0.2s ease;
+      transition: all 0.2s ease;
     }
     .med-switch-track.on {
-      background: #58355E;
+      background: var(--primary);
+      border-color: var(--primary);
     }
     .med-switch-thumb {
       width: 16px;
@@ -656,8 +712,8 @@
       border-radius: 50%;
       background: #FFFFFF;
       position: absolute;
-      top: 3px;
-      left: 3px;
+      top: 2px;
+      left: 2px;
       transition: transform 0.2s ease;
     }
     .med-switch-track.on .med-switch-thumb {
@@ -1035,13 +1091,13 @@
         </div>
 
                 <!-- Medicação GLP-1 / GIP (Ozempic / Mounjaro) -->
-        <div class="meal-card" style="margin-top:14px;border-color:#A855F7;background:rgba(168,85,247,0.05);">
+        <div class="meal-card" style="margin-top:14px;border-color:var(--primary);background:var(--primary-soft);">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
             <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-weight:800;font-size:0.93rem;color:var(--text);">
-              <input type="checkbox" id="obMedAtivo" style="width:18px;height:18px;accent-color:#A855F7;" />
+              <input type="checkbox" id="obMedAtivo" style="width:18px;height:18px;accent-color:var(--primary);" />
               <span>💉 Estou tomando medicação (Ozempic / Mounjaro)</span>
             </label>
-            <span class="section-tag" style="background:rgba(168,85,247,0.16);color:#C084FC;">Farmacocinética & Estudos</span>
+            <span class="section-tag">Farmacocinética & Estudos</span>
           </div>
           <div style="font-size:0.76rem;color:var(--text-muted);margin-top:4px;">
             Ativa o acompanhamento de doses, cálculo da próxima aplicação, curva farmacocinética de meia-vida e comparação com os estudos clínicos (STEP UP, SELECT, SURMOUNT-5 e SURMOUNT-1).
@@ -1500,9 +1556,9 @@
           <div class="k-val" id="medKpiUltimaData">--/--/----</div>
           <div class="k-sub" id="medKpiUltimaSub">Nenhuma dose registrada</div>
         </div>
-        <div class="kpi-box" style="border-color:#A855F7;">
+        <div class="kpi-box" style="border-color:var(--primary);">
           <div class="k-lbl">Próxima Dosagem</div>
-          <div class="k-val" style="color:#C084FC;" id="medKpiProximaData">--/--/----</div>
+          <div class="k-val" style="color:var(--primary);" id="medKpiProximaData">--/--/----</div>
           <div class="k-sub" id="medKpiProximaStatus">Aguardando 1º registro</div>
         </div>
       </div>
@@ -1523,7 +1579,7 @@
             <button type="button" id="medPkToggleFutureBtn" class="med-pill-btn" title="Simular próximas doses agendadas ou apenas decaimento de eliminação">
               Simular próximas doses
             </button>
-            <button type="button" id="medPkInfoBtn" class="med-info-circle" title="Sobre o modelo farmacocinético e meia-vida">ⓘ</button>
+            <button type="button" id="medPkInfoBtn" class="med-info-circle" title="Sobre o modelo farmacocinético e meia-vida" aria-label="Informações de farmacocinética">i</button>
           </div>
         </div>
 
@@ -1540,7 +1596,21 @@
           </span>
         </div>
 
-        <div id="chartMedPkBox" class="chart-box" style="padding:10px 8px 6px;"></div>
+        <div id="medPkInteractiveCompareBar" class="med-compare-bar">
+          <div class="med-compare-col">
+            <span class="med-compare-lbl">📍 Hoje (Referência Atual)</span>
+            <span class="med-compare-val" id="medPkBarTodayVal">Nível atual: 0,00 mg (0%) · Média 7d: 0,00 mg</span>
+          </div>
+          <div class="med-compare-col">
+            <span class="med-compare-lbl" id="medPkBarHoverLbl">👆 Toque / Passe o mouse no gráfico</span>
+            <span class="med-compare-val" id="medPkBarHoverVal" style="color:var(--text-muted);">Aponte qualquer dia no gráfico para ver a dose estimada no corpo</span>
+          </div>
+          <div class="med-compare-col">
+            <span class="med-compare-lbl">⚖️ Comparação (Ponto Apontado vs. Hoje)</span>
+            <span class="med-compare-val" id="medPkBarDiffVal" style="color:var(--text-muted);">--</span>
+          </div>
+        </div>
+        <div id="chartMedPkBox" class="chart-box" style="padding:10px 8px 6px;touch-action:pan-y;cursor:crosshair;user-select:none;"></div>
 
         <!-- Barra Mini-Sparkline de Período + Botões de Janela Temporal -->
         <div id="chartMedPkMiniBar" style="margin-top:6px;height:26px;border-radius:6px;overflow:hidden;background:var(--bg-elev);border:1px solid var(--border);"></div>
@@ -1571,7 +1641,7 @@
             <button type="button" id="medStudyToggleAppsBtn" class="med-pill-btn active" title="Mostrar ou ocultar os dias de aplicação e as doses separadas por cores">
               Ocultar aplicações
             </button>
-            <button type="button" id="medStudyInfoBtn" class="med-info-circle" title="Referências científicas dos 4 estudos clínicos">ⓘ</button>
+            <button type="button" id="medStudyInfoBtn" class="med-info-circle" title="Referências científicas dos 4 estudos clínicos" aria-label="Informações dos estudos clínicos">i</button>
           </div>
         </div>
 
@@ -1609,7 +1679,21 @@
           </div>
         </div>
 
-        <div id="chartMedWeightVsStudyBox" class="chart-box" style="padding:10px 8px 6px;"></div>
+        <div id="medStudyInteractiveCompareBar" class="med-compare-bar">
+          <div class="med-compare-col">
+            <span class="med-compare-lbl">📍 Hoje (Seu Peso Atual)</span>
+            <span class="med-compare-val" id="medStudyBarTodayVal">--</span>
+          </div>
+          <div class="med-compare-col">
+            <span class="med-compare-lbl" id="medStudyBarHoverLbl">👆 Toque / Passe o mouse no gráfico</span>
+            <span class="med-compare-val" id="medStudyBarHoverVal" style="color:var(--text-muted);">Aponte qualquer dia para comparar seu peso, dose e estudo</span>
+          </div>
+          <div class="med-compare-col">
+            <span class="med-compare-lbl">⚖️ Comparação no Ponto Apontado</span>
+            <span class="med-compare-val" id="medStudyBarDiffVal" style="color:var(--text-muted);">--</span>
+          </div>
+        </div>
+        <div id="chartMedWeightVsStudyBox" class="chart-box" style="padding:10px 8px 6px;touch-action:pan-y;cursor:crosshair;user-select:none;"></div>
         <div id="medDoseLegendPills" class="chart-legend" style="margin-top:8px;"></div>
 
         <div class="med-period-bar" id="medStudyPeriodBtns">
@@ -1791,10 +1875,10 @@
       </div>
 
       <!-- Barra Global de Comparação com Estudos Clínicos & Aplicações por Dose na Aba Evolução -->
-      <div class="card" style="border-color:#A855F7;">
+      <div class="card" style="border-color:var(--primary);">
         <div class="card-title">
           <span>🧪 Controles dos Gráficos de Evolução: Estudos Clínicos & Aplicações por Dose</span>
-          <span class="section-tag" style="background:rgba(168,85,247,0.16);color:#C084FC;">Interativo</span>
+          <span class="section-tag">Interativo</span>
         </div>
         <div class="evol-study-toolbar" style="margin-bottom:0;">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;">
@@ -2090,13 +2174,16 @@
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div>
-        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.3.0</code> (SemVer)
+        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.3.3</code> (SemVer)
       </div>
       <button type="button" id="toggleChangelogBtn" class="btn btn-soft btn-sm">📜 Log de Mudanças (SemVer)</button>
     </div>
     <div id="changelogBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
       <strong>Histórico de Versões — Versionamento Semântico (MAJOR.MINOR.PATCH):</strong>
       <ul style="margin:6px 0 0;padding-left:18px;">
+        <li style="margin-bottom:6px;"><strong>v1.3.3 (18/11/2026):</strong> (1) Correção do erro <code>ReferenceError: formatQtdClean is not defined</code> e <code>formatTimeHHMM is not defined</code> ao criar perfil e renderizar as abas Cardápio e Plano; (2) Correção do motor de geração de dieta por IA (<code>callGeminiAPI</code>) com suporte multi-endpoint para a chave pré-configurada (<code>aiplatform.googleapis.com</code> e <code>generativelanguage.googleapis.com</code>), payload camelCase (<code>inlineData</code>) e fallback automático entre <strong>Gemini 3.8 Flash</strong> e <strong>Gemini 3.1 Pro</strong>.</li>
+        <li style="margin-bottom:6px;"><strong>v1.3.2 (18/11/2026):</strong> (1) Correção da função <code>extractJsonFromText</code> na geração e recalibração de cardápios/planos via API do Gemini; (2) correção automática do formato de horário vindo do Google Sheets (eliminando timestamps <code>1899-12-30T...</code>) e limpeza de parênteses duplos (<code>))</code>) nas quantidades dos alimentos; (3) adição de inspeção interativa por toque (dedo no celular) ou mouse (PC) nos gráficos de Nível Estimado do Medicamento e Peso vs Estudos/Aplicações, com barra comparativa superior em tempo real entre o nível de hoje e o dia/hora apontado.</li>
+        <li style="margin-bottom:6px;"><strong>v1.3.1 (18/11/2026):</strong> (1) Correção da leitura de dosagens decimais com vírgula ou ponto (<code>2,5 mg</code>, <code>7,5 mg</code>, <code>12,5 mg</code>, <code>0,25 mg</code>, <code>0,5 mg</code>, <code>1,7 mg</code>, <code>2,4 mg</code>, <code>7,2 mg</code>) tanto para Tirzepatida quanto para Semaglutida, incluindo reparo automático de registros salvos anteriormente; (2) atualização da chave nativa da API do Gemini; (3) correção do ícone de informação (<code>i</code>) nos cabeçalhos dos gráficos; (4) padronização de todos os botões, seletores de período e switches dos gráficos com a paleta de cores oficial do aplicativo (<code>--primary</code> / verde esmeralda).</li>
         <li style="margin-bottom:6px;"><strong>v1.3.0 (18/11/2026):</strong> (1) Atualização do motor de IA para <strong>Gemini 3.8 Flash</strong> (<code>gemini-3.8-flash</code>) e <strong>Gemini 3.1 Pro</strong> (<code>gemini-3.1-pro-preview</code>) com chave de API nativa pré-configurada no código e remoção de todas as janelas/botões de configuração manual de chaves (assim como do Apps Script); (2) adição da opção <strong>"Estou tomando medicação"</strong> na Anamnese com suporte a <strong>Ozempic (Semaglutida)</strong> e <strong>Mounjaro (Tirzepatida)</strong>, seleção de dosagem e intervalo de aplicação em dias; (3) criação da nova aba <strong>"Medicação"</strong> (<code>💉 Medicação</code>) para controle de doses aplicadas, cálculo automático da próxima dosagem e gerador de histórico retroativo; (4) gráfico interativo de <strong>Nível Estimado do Medicamento no Corpo</strong> baseado nos parâmetros farmacocinéticos e meia-vida oficial da Semaglutida (t½ ≈ 7 dias / 168 h) e Tirzepatida (t½ ≈ 5 dias / 120 h), com opção de exibir a <strong>Média dos últimos 7 dias</strong> e projeção de eliminação/doses futuras; (5) gráfico de <strong>Peso vs Estudos Clínicos</strong> na aba Medicação e integração direta nos gráficos existentes da aba <strong>Evolução</strong> comparando a perda de peso (% ou kg) com os 4 estudos enviados: <strong>Semaglutida 72 semanas (STEP UP)</strong>, <strong>Semaglutida 208 semanas (SELECT)</strong>, <strong>Tirzepatida 72 semanas (SURMOUNT-5)</strong> e <strong>Tirzepatida 176 semanas (SURMOUNT-1)</strong>; (6) opção de exibir/ocultar os <strong>dias de aplicação e doses separadas por cores</strong> nas curvas de peso.</li>
         <li style="margin-bottom:6px;"><strong>v1.2.1 (17/11/2026):</strong> Correção de inicialização (proteção de seletores de botões manuais substituídos pela API direta do Gemini) garantindo o funcionamento integral de todas as telas e botões.</li>
         <li style="margin-bottom:6px;"><strong>v1.2.0 (17/11/2026):</strong> (1) Conexão nativa pré-configurada com o endpoint do Google Apps Script em nuvem e remoção de todos os links externos para a planilha e instruções de implantação; (2) módulo completo de <strong>Bioimpedância & Composição Corporal</strong> (Taxa de Gordura %, Massa Livre de Gordura/Massa Magra, Massa Muscular Esquelética, Gordura Visceral, Água Corporal Total, TMB da Bioimpedância, Idade Metabólica e Massa Óssea) no cadastro inicial e no Diário; (3) cálculo metabólico avançado integrando as equações de <strong>Katch-McArdle</strong>, <strong>Cunningham</strong> e <strong>Mifflin-St Jeor</strong> ajustadas pela massa magra; (4) matriz interativa de <strong>Avaliação do Tipo de Corpo</strong> (10 zonas: <em>Atletas, Gordura muscular, Obesidade, Músculo, Ajuste, Excesso, Muscular Magro, Slim, Marasmo, Fino e Gordura invisível</em>) com plotagem exata do pino atual, pino de meta, FFMI e diagnóstico clínico; (5) consolidação da <strong>API do Gemini (IA)</strong> como método único e exclusivo de inteligência artificial em todo o aplicativo, com acesso rápido para configurar a chave em todas as telas e atualização automática do Service Worker (Network-First).</li>
@@ -2173,7 +2260,7 @@
   'use strict';
 
   const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5-2vvg04kQTUSJ5AJBPK3gsPZcq3K6cvmYKc5Xpl28efEhM-J-9YAQ8kwmYUhUBkf/exec';
-  const DEFAULT_GEMINI_API_KEY = 'AQ.Ab8RN6IzswCJWWmNMpbdlA109iHPhoUhnu8c3215_sDLQ2pMuQ';
+  const DEFAULT_GEMINI_API_KEY = 'AQ.Ab8RN6IMaEckm-G_YTozsI5lOeVlltBaTGAHZFyi0y-_16lGjg';
   const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
   const STORAGE_KEY = 'marcusnator_pro_athlete_v2_db';
 
@@ -2183,9 +2270,88 @@
   const parseBrNum = (v) => {
     if (typeof v === 'number') return isNaN(v) ? 0 : v;
     if (!v) return 0;
-    const clean = String(v).trim().replace(/\./g, '').replace(',', '.');
+    const s = String(v).trim();
+    const clean = s.includes(',') ? s.replace(/\./g, '').replace(',', '.') : s;
     const num = parseFloat(clean);
     return isNaN(num) ? 0 : num;
+  };
+
+  // Formata qualquer horário (incluindo datas base 1899-12-30T... do Google Sheets) para HH:MM
+  function formatTimeHHMM(raw, fallback = '12:00') {
+    if (raw === null || raw === undefined || raw === '') return fallback;
+    const str = String(raw).trim();
+    if (/^\d{1,2}:\d{2}$/.test(str)) {
+      const [h, m] = str.split(':');
+      return `${h.padStart(2, '0')}:${m}`;
+    }
+    if (/^\d{1,2}:\d{2}:\d{2}$/.test(str)) {
+      const [h, m] = str.split(':');
+      return `${h.padStart(2, '0')}:${m}`;
+    }
+    if (str.includes('T') || str.includes('1899') || !isNaN(Date.parse(str))) {
+      const dt = new Date(str);
+      if (!isNaN(dt.getTime())) {
+        const hh = String(dt.getHours()).padStart(2, '0');
+        const mm = String(dt.getMinutes()).padStart(2, '0');
+        return `${hh}:${mm}`;
+      }
+    }
+    const match = str.match(/(\d{1,2}):(\d{2})/);
+    if (match) return `${match[1].padStart(2, '0')}:${match[2]}`;
+    return fallback;
+  }
+
+  // Remove parênteses externos redundantes ou duplos no final — ex.: "(1 concha (100g))" -> "1 concha (100g)"
+  function formatQtdClean(raw) {
+    if (raw === null || raw === undefined) return '';
+    let s = String(raw).trim();
+    if (!s) return '';
+    while (s.startsWith('(') && s.endsWith(')')) {
+      let depth = 0;
+      let wrapsAll = true;
+      for (let i = 0; i < s.length - 1; i++) {
+        if (s[i] === '(') depth++;
+        else if (s[i] === ')') depth--;
+        if (depth === 0) {
+          wrapsAll = false;
+          break;
+        }
+      }
+      if (wrapsAll) {
+        s = s.slice(1, -1).trim();
+      } else {
+        break;
+      }
+    }
+    const openCount = (s.match(/\(/g) || []).length;
+    const closeCount = (s.match(/\)/g) || []).length;
+    if (closeCount > openCount && s.endsWith('))')) {
+      s = s.replace(/\)+$/, ')');
+    }
+    return s;
+  }
+
+  // Auto-repair any dose that was previously multiplied by 10 or 100 (e.g. 25 -> 2.5, 75 -> 7.5, 125 -> 12.5, 24 -> 2.4)
+  const normalizeDoseMg = (rawDose, principio = 'tirzepatida') => {
+    let d = parseBrNum(rawDose);
+    if (d <= 0) return 0;
+    const isSema = String(principio || '').toLowerCase().includes('sema') || String(principio || '').toLowerCase().includes('ozempic');
+    if (isSema) {
+      if (d === 25) return 0.25;
+      if (d === 5 && rawDose === '0.5') return 0.5;
+      if (d === 17) return 1.7;
+      if (d === 24) return 2.4;
+      if (d === 72) return 7.2;
+      if (d > 10 && d <= 100) return Number((d / 10).toFixed(2));
+      if (d > 100) return Number((d / 100).toFixed(2));
+    } else {
+      if (d === 25) return 2.5;
+      if (d === 75) return 7.5;
+      if (d === 125) return 12.5;
+      if (d > 20 && d <= 200) return Number((d / 10).toFixed(2));
+      if (d > 200) return Number((d / 100).toFixed(2));
+    }
+    return d;
   };
   const todayISO = () => {
     const d = new Date();
@@ -2240,6 +2406,50 @@
           parsed.geminiModel = DEFAULT_GEMINI_MODEL;
         }
         if (!parsed.bodyMatrixScale) parsed.bodyMatrixScale = 'classic';
+        if (parsed.profiles && typeof parsed.profiles === 'object') {
+          Object.values(parsed.profiles).forEach(prof => {
+            if (prof && prof.anamnese && prof.anamnese.medicacao && prof.anamnese.medicacao.doseMg) {
+              prof.anamnese.medicacao.doseMg = normalizeDoseMg(prof.anamnese.medicacao.doseMg, prof.anamnese.medicacao.principio || prof.anamnese.medicacao.tipo);
+            }
+            if (prof && Array.isArray(prof.medicacaoLogs)) {
+              prof.medicacaoLogs.forEach(item => {
+                if (item && item.doseMg) {
+                  item.doseMg = normalizeDoseMg(item.doseMg, item.principio || item.medTipo);
+                }
+                if (item && item.time) item.time = formatTimeHHMM(item.time, '08:00');
+              });
+            }
+            if (prof && prof.anamnese) {
+              if (prof.anamnese.acordar) prof.anamnese.acordar = formatTimeHHMM(prof.anamnese.acordar, '06:30');
+              if (prof.anamnese.dormir) prof.anamnese.dormir = formatTimeHHMM(prof.anamnese.dormir, '23:00');
+            }
+            if (prof && Array.isArray(prof.cardapio)) {
+              prof.cardapio.forEach(c => {
+                if (c) {
+                  c.horario = formatTimeHHMM(c.horario, '12:00');
+                  if (Array.isArray(c.itens)) {
+                    c.itens.forEach(it => { if (it && it.qtd) it.qtd = formatQtdClean(it.qtd); });
+                  }
+                }
+              });
+            }
+            if (prof && Array.isArray(prof.diario)) {
+              prof.diario.forEach(d => {
+                if (d && d.horario) d.horario = formatTimeHHMM(d.horario, '12:00');
+              });
+            }
+            if (prof && prof.plano && Array.isArray(prof.plano.cardapioBase)) {
+              prof.plano.cardapioBase.forEach(m => {
+                if (m) {
+                  m.horario = formatTimeHHMM(m.horario, '12:00');
+                  if (Array.isArray(m.itens)) {
+                    m.itens.forEach(it => { if (it && it.qtd) it.qtd = formatQtdClean(it.qtd); });
+                  }
+                }
+              });
+            }
+          });
+        }
         return parsed;
       }
     } catch (e) {}
@@ -2496,8 +2706,8 @@
           metaKcal: Number(a.Meta_Kcal) || 2000,
           metaProt: parseBrNum(a.Meta_Proteina_g) || 150,
           dataInicio: String(a.Data_Inicio || todayISO()).slice(0, 10),
-          acordar: a.Horario_Acordar || '06:30',
-          dormir: a.Horario_Dormir || '23:00',
+          acordar: formatTimeHHMM(a.Horario_Acordar, '06:30'),
+          dormir: formatTimeHHMM(a.Horario_Dormir, '23:00'),
           treinosSemana: a.Treinos_Semana || '',
           horarioTrabalho: a.Horario_Trabalho || '',
           modalidadeTrabalho: a.Modalidade_Trabalho || 'Presencial',
@@ -2518,7 +2728,7 @@
           id: c.ID_Registro,
           date: String(c.Data_ISO).slice(0, 10),
           nome: c.Refeicao_Nome,
-          horario: c.Horario,
+          horario: formatTimeHHMM(c.Horario, '12:00'),
           itens: safeParseJSON(c.Itens_JSON, []),
           kcal: Number(c.Kcal_Total) || 0,
           prot: parseBrNum(c.Proteina_Total),
@@ -2529,7 +2739,7 @@
         u.diario = json.diario.map(d => ({
           id: d.ID_Registro,
           date: String(d.Data_ISO).slice(0, 10),
-          horario: d.Horario,
+          horario: formatTimeHHMM(d.Horario, '12:00'),
           refeicao: d.Refeicao,
           descricao: d.Descricao,
           kcal: Number(d.Kcal) || 0,
@@ -2997,7 +3207,7 @@
         itens: [
           { item: 'Peito de frango grelhado / patinho', qtd: '160g pronto', kcal: 265, prot: 49 },
           { item: 'Arroz branco ou integral cozido', qtd: '150g', kcal: 192, prot: 4 },
-          { item: 'Feijão carioca cozido', qtd: '1 concha (100g)', kcal: 76, prot: 5 },
+          { item: 'Feijão carioca cozido', qtd: '1 concha • 100g', kcal: 76, prot: 5 },
           { item: 'Salada verde + legumes + 1 col. azeite', qtd: 'À vontade + 8ml', kcal: 95, prot: 2 }
         ]
       },
@@ -3005,7 +3215,7 @@
         horario: '16:30',
         nome: 'Lanche da tarde / Pré-treino',
         itens: [
-          { item: 'Iogurte natural desnatado ou Whey Protein', qtd: '170g ou 1 scoop (30g)', kcal: 120, prot: 24 },
+          { item: 'Iogurte natural desnatado ou Whey Protein', qtd: '170g ou 1 scoop • 30g', kcal: 120, prot: 24 },
           { item: 'Aveia em flocos + fruta', qtd: '20g + 100g', kcal: 155, prot: 4 }
         ]
       },
@@ -3114,7 +3324,7 @@
     const medDoseSelVal = document.getElementById('obMedDoseSelect')?.value || '2.5';
     const medDoseMg = medDoseSelVal === 'custom'
       ? (parseBrNum(document.getElementById('obMedDoseCustom')?.value) || (medPrincipio === 'tirzepatida' ? 2.5 : 0.25))
-      : parseBrNum(medDoseSelVal);
+      : normalizeDoseMg(medDoseSelVal, medPrincipio);
     const medIntSelVal = document.getElementById('obMedIntervaloSelect')?.value || '7';
     const medIntervaloDias = medIntSelVal === 'custom'
       ? Math.max(1, parseInt(document.getElementById('obMedIntervaloCustom')?.value, 10) || 7)
@@ -3461,7 +3671,7 @@
       card.className = 'meal-card';
       const itemsHtml = (meal.itens || []).map(it => `
         <li>
-          <span><strong>${escapeHtml(it.item)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(it.qtd || '')})</span></span>
+          <span><strong>${escapeHtml(it.item)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(formatQtdClean(it.qtd || ''))})</span></span>
           <span style="white-space:nowrap;font-weight:700;">${fmtInt(it.kcal)} kcal • ${fmtDec(it.prot, 1)}g P</span>
         </li>
       `).join('');
@@ -3469,7 +3679,7 @@
       card.innerHTML = `
         <div class="meal-head">
           <div>
-            <span class="section-tag">${escapeHtml(meal.horario || '--:--')}</span>
+            <span class="section-tag">${escapeHtml(formatTimeHHMM(meal.horario, '--:--'))}</span>
             <strong style="margin-left:6px;font-size:0.95rem;">${escapeHtml(meal.nome)}</strong>
           </div>
           <div style="font-size:0.82rem;font-weight:800;">
@@ -3598,6 +3808,62 @@
     document.execCommand('copy');
     ta.remove();
     showToast(toastMsg);
+  }
+
+  document.getElementById('addCustomPlannedMealBtn').addEventListener('click', () => {
+    openGenericModal('Adicionar Refeição Planejada', `
+      <div class="form-grid">
+        <div class="form-grid two-col">
+          <div class="field"><label>Horário</label><input type="time" id="newPmTime" value="15:30" /></div>
+          <div class="field"><label>Nome da refeição</label><input type="text" id="newPmName" placeholder="Ex.: Lanche da tarde" /></div>
+        </div>
+        <div class="field"><label>Item principal</label><input type="text" id="newPmItem" placeholder="Ex.: Whey Protein + Banana" /></div>
+        <div class="form-grid three-col">
+          <div class="field"><label>Quantidade</label><input type="text" id="newPmQtd" placeholder="1 scoop + 1 un" /></div>
+          <div class="field"><label>Kcal</label><input type="number" id="newPmKcal" placeholder="210" /></div>
+          <div class="field"><label>Proteína (g)</label><input type="text" id="newPmProt" placeholder="25" /></div>
+        </div>
+        <button type="button" id="saveNewPmBtn" class="btn btn-primary btn-block">Adicionar ao Cardápio</button>
+      </div>
+    `);
+    document.getElementById('saveNewPmBtn').addEventListener('click', () => {
+      const u = getActiveUser();
+      const kcal = Number(document.getElementById('newPmKcal').value) || 0;
+      const prot = parseBrNum(document.getElementById('newPmProt').value);
+      u.cardapio.push({
+        id: 'CRD_' + Date.now(),
+        date: selectedMenuDate,
+        nome: document.getElementById('newPmName').value.trim() || 'Refeição Extra',
+        horario: document.getElementById('newPmTime').value || '15:30',
+        itens: [{
+          item: document.getElementById('newPmItem').value.trim() || 'Alimento',
+          qtd: document.getElementById('newPmQtd').value.trim(),
+          kcal,
+          prot
+        }],
+        kcal,
+        prot,
+        status: 'a comer'
+      });
+      saveDB(true);
+      closeGenericModal();
+      renderCardapioTab();
+      showToast('✅ Refeição adicionada!');
+    });
+  });
+
+  function extractJsonFromText(text) {
+    if (!text) return null;
+    const fenced = text.match(/```json\s*([\s\S]*?)```/i) || text.match(/```\s*([\s\S]*?)```/i);
+    const candidate = fenced ? fenced[1] : text;
+    const firstBrace = candidate.indexOf('{');
+    const lastBrace = candidate.lastIndexOf('}');
+    if (firstBrace === -1 || lastBrace === -1) return null;
+    try {
+      return JSON.parse(candidate.slice(firstBrace, lastBrace + 1));
+    } catch (e) {
+      return null;
+    }
   }
 
   // =========================================================
@@ -4513,6 +4779,7 @@
   function getUserMedLogs(u) {
     if (!u) return [];
     const list = Array.isArray(u.medicacaoLogs) ? u.medicacaoLogs : [];
+    list.forEach(item => { if (item && item.doseMg) item.doseMg = normalizeDoseMg(item.doseMg, item.principio || item.medTipo); });
     return [...list].sort((a, b) => {
       const da = `${a.date || ''}T${a.time || '08:00'}`;
       const db = `${b.date || ''}T${b.time || '08:00'}`;
@@ -5147,10 +5414,128 @@
         ${pastLine ? `<path d="${pastLine}" fill="none" stroke="#15803D" stroke-width="2.4" stroke-linejoin="round" />` : ''}
         ${avg7Line ? `<path d="${avg7Line}" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" opacity="0.85" />
                       <path d="${avg7Line}" fill="none" stroke="#14532D" stroke-width="2.3" stroke-linecap="round" />` : ''}
+        <line x1="${nowX}" y1="${padT}" x2="${nowX}" y2="${baseY}" stroke="rgba(22,163,74,0.35)" stroke-width="1.2" stroke-dasharray="3,3" />
         <circle cx="${nowX}" cy="${nowY}" r="4.5" fill="#15803D" stroke="#FFFFFF" stroke-width="1.5" />
         ${medPkShowAvg7 ? `<circle cx="${nowX}" cy="${nowAvgY}" r="4.5" fill="#FFFFFF" stroke="#14532D" stroke-width="2.2" />` : ''}
+        <!-- Interactive Scrub Crosshair & Tooltip -->
+        <g id="pkScrubOverlay" style="display:none;pointer-events:none;">
+          <line id="pkScrubLine" x1="${nowX}" y1="${padT}" x2="${nowX}" y2="${baseY}" stroke="var(--primary)" stroke-width="1.6" stroke-dasharray="4,3" />
+          <circle id="pkScrubDotMg" cx="${nowX}" cy="${nowY}" r="6" fill="var(--primary)" stroke="#FFFFFF" stroke-width="2" />
+          <circle id="pkScrubDotAvg" cx="${nowX}" cy="${nowAvgY}" r="5" fill="#FFFFFF" stroke="#14532D" stroke-width="2.2" style="display:${medPkShowAvg7 ? 'block' : 'none'};" />
+          <rect id="pkScrubTipBg" x="60" y="18" width="168" height="44" rx="8" fill="#0F1722" stroke="var(--primary)" stroke-width="1.2" opacity="0.94" />
+          <text id="pkScrubTipDate" x="144" y="34" text-anchor="middle" fill="#94A3B8" font-size="9.5" font-weight="700"></text>
+          <text id="pkScrubTipVal" x="144" y="51" text-anchor="middle" fill="#F0F6FC" font-size="10.5" font-weight="800"></text>
+        </g>
       </svg>
     `;
+
+    // Initialize Top Comparison Bar with Today's Baseline
+    const barTodayEl = document.getElementById('medPkBarTodayVal');
+    const barHoverLbl = document.getElementById('medPkBarHoverLbl');
+    const barHoverVal = document.getElementById('medPkBarHoverVal');
+    const barDiffVal = document.getElementById('medPkBarDiffVal');
+    const compareBar = document.getElementById('medPkInteractiveCompareBar');
+    if (barTodayEl) {
+      barTodayEl.innerHTML = `<span style="color:var(--primary);">${fmtDec(currentMg, 2)} mg</span> (${currentPct}%) · Média 7d: <strong>${fmtDec(avg7Mg, 2)} mg</strong>`;
+    }
+
+    // Bind Mouse & Touch Scrubbing on PK SVG
+    const svgEl = box.querySelector('svg');
+    if (svgEl) {
+      const overlay = svgEl.querySelector('#pkScrubOverlay');
+      const sLine = svgEl.querySelector('#pkScrubLine');
+      const sDotMg = svgEl.querySelector('#pkScrubDotMg');
+      const sDotAvg = svgEl.querySelector('#pkScrubDotAvg');
+      const sTipBg = svgEl.querySelector('#pkScrubTipBg');
+      const sTipDate = svgEl.querySelector('#pkScrubTipDate');
+      const sTipVal = svgEl.querySelector('#pkScrubTipVal');
+
+      const updateScrubFromClientX = (clientX) => {
+        const rect = svgEl.getBoundingClientRect();
+        if (!rect.width) return;
+        const relX = ((clientX - rect.left) / rect.width) * W;
+        const clampedX = Math.max(padL, Math.min(W - padR, relX));
+        const ratio = (clampedX - padL) / Math.max(1, W - padL - padR);
+        const targetMs = minMs + ratio * spanMs;
+
+        // Interpolate exact point in visible series
+        let pt = visible[0];
+        for (let i = 1; i < visible.length; i++) {
+          if (visible[i].ms >= targetMs) {
+            const p0 = visible[i - 1];
+            const p1 = visible[i];
+            const f = (targetMs - p0.ms) / Math.max(1, p1.ms - p0.ms);
+            pt = {
+              ms: targetMs,
+              mg: p0.mg + (p1.mg - p0.mg) * f,
+              avg7: p0.avg7 + (p1.avg7 - p0.avg7) * f
+            };
+            break;
+          }
+          pt = visible[i];
+        }
+
+        const cx = xOf(pt.ms);
+        const cyMg = yOf(pt.mg);
+        const cyAvg = yOf(pt.avg7);
+
+        overlay.style.display = 'block';
+        sLine.setAttribute('x1', cx.toFixed(1));
+        sLine.setAttribute('x2', cx.toFixed(1));
+        sDotMg.setAttribute('cx', cx.toFixed(1));
+        sDotMg.setAttribute('cy', cyMg.toFixed(1));
+        if (sDotAvg) {
+          sDotAvg.setAttribute('cx', cx.toFixed(1));
+          sDotAvg.setAttribute('cy', cyAvg.toFixed(1));
+        }
+
+        const dtObj = new Date(pt.ms);
+        const isoDate = dtObj.toISOString().slice(0, 10);
+        const hh = String(dtObj.getHours()).padStart(2, '0');
+        const isFuture = pt.ms > nowMs + 1800000;
+        const dateLabel = `${formatDateBR(isoDate)} às ${hh}:00${isFuture ? ' (Projeção)' : ''}`;
+
+        const diffMg = pt.mg - currentMg;
+        const diffPct = currentMg > 0.01 ? Math.round((diffMg / currentMg) * 100) : 0;
+        const diffSign = diffMg > 0.005 ? '+' : '';
+
+        // Position tooltip box inside chart bounds
+        const tipW = 178;
+        const tipX = Math.max(padL + 4, Math.min(W - padR - tipW - 4, cx - tipW / 2));
+        const tipY = Math.max(padT + 2, Math.min(H - padB - 54, cyMg - 54));
+        sTipBg.setAttribute('x', tipX.toFixed(1));
+        sTipBg.setAttribute('y', tipY.toFixed(1));
+        sTipBg.setAttribute('width', tipW);
+        sTipDate.setAttribute('x', (tipX + tipW / 2).toFixed(1));
+        sTipDate.setAttribute('y', (tipY + 15).toFixed(1));
+        sTipDate.textContent = dateLabel;
+        sTipVal.setAttribute('x', (tipX + tipW / 2).toFixed(1));
+        sTipVal.setAttribute('y', (tipY + 33).toFixed(1));
+        sTipVal.textContent = `${fmtDec(pt.mg, 2)} mg (${diffSign}${fmtDec(diffMg, 2)} mg vs hoje)`;
+
+        // Update Top Comparison Bar
+        if (compareBar) compareBar.classList.add('active-scrub');
+        if (barHoverLbl) barHoverLbl.textContent = `🎯 Ponto Apontado: ${dateLabel}`;
+        if (barHoverVal) {
+          barHoverVal.style.color = 'var(--text)';
+          barHoverVal.innerHTML = `Nível: <span style="color:var(--primary);">${fmtDec(pt.mg, 2)} mg</span> · Média 7d: <strong>${fmtDec(pt.avg7, 2)} mg</strong>`;
+        }
+        if (barDiffVal) {
+          const diffAvg = pt.avg7 - avg7Mg;
+          const col = Math.abs(diffMg) < 0.02 ? 'var(--text-muted)' : diffMg > 0 ? 'var(--primary)' : 'var(--accent)';
+          const arrow = Math.abs(diffMg) < 0.02 ? '●' : diffMg > 0 ? '▲' : '▼';
+          barDiffVal.innerHTML = `<span style="color:${col};">${arrow} ${diffSign}${fmtDec(diffMg, 2)} mg (${diffSign}${diffPct}%) vs. Hoje</span> <span style="font-size:0.75rem;color:var(--text-muted);">• Δ Média 7d: ${diffAvg >= 0 ? '+' : ''}${fmtDec(diffAvg, 2)} mg</span>`;
+        }
+      };
+
+      svgEl.addEventListener('mousemove', (e) => updateScrubFromClientX(e.clientX));
+      svgEl.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches[0]) updateScrubFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+      svgEl.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) updateScrubFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+    }
 
     if (miniBar) {
       const mW = 700, mH = 26;
@@ -5164,7 +5549,7 @@
       miniBar.innerHTML = `
         <svg viewBox="0 0 ${mW} ${mH}" style="width:100%;height:100%;display:block;">
           <path d="${miniArea}" fill="rgba(148,163,184,0.35)" />
-          <rect x="${selX1}" y="0" width="${selW}" height="${mH}" fill="rgba(88,53,94,0.32)" stroke="#9333EA" stroke-width="1" />
+          <rect x="${selX1}" y="0" width="${selW}" height="${mH}" fill="rgba(16,185,129,0.22)" stroke="var(--primary)" stroke-width="1" />
         </svg>
       `;
     }
@@ -5301,8 +5686,103 @@
         ${userLineSvg}
         ${userDotsSvg}
         ${appTagsSvg}
+        <g id="studyScrubOverlay" style="display:none;pointer-events:none;">
+          <line id="studyScrubLine" x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" stroke="var(--primary)" stroke-width="1.6" stroke-dasharray="4,3" />
+          <circle id="studyScrubDotUser" cx="${padL}" cy="${padT}" r="5.5" fill="var(--primary)" stroke="#FFFFFF" stroke-width="2" />
+          <circle id="studyScrubDotRef" cx="${padL}" cy="${padT}" r="5" fill="#C026D3" stroke="#FFFFFF" stroke-width="1.8" />
+        </g>
       </svg>
     `;
+
+    // Initialize Top Comparison Bar for Weight vs Study Chart
+    const sBarToday = document.getElementById('medStudyBarTodayVal');
+    const sBarHoverLbl = document.getElementById('medStudyBarHoverLbl');
+    const sBarHoverVal = document.getElementById('medStudyBarHoverVal');
+    const sBarDiffVal = document.getElementById('medStudyBarDiffVal');
+    const sCompareBar = document.getElementById('medStudyInteractiveCompareBar');
+
+    const latestW = wStats.latestWeight || startW;
+    const latestPct = ((latestW - startW) / startW) * 100;
+    const pkNow = computePharmacokineticSeries(u);
+    if (sBarToday) {
+      sBarToday.innerHTML = `<span style="color:var(--primary);">${fmtDec(latestW, 1)} kg</span> (${fmtDec(latestPct, 1)}%) · Nível hoje: <strong>${fmtDec(pkNow.currentMg, 2)} mg</strong>`;
+    }
+
+    const studySvg = box.querySelector('svg');
+    if (studySvg) {
+      const sOverlay = studySvg.querySelector('#studyScrubOverlay');
+      const sLine = studySvg.querySelector('#studyScrubLine');
+      const sDotU = studySvg.querySelector('#studyScrubDotUser');
+      const sDotR = studySvg.querySelector('#studyScrubDotRef');
+
+      const updateStudyScrub = (clientX) => {
+        const rect = studySvg.getBoundingClientRect();
+        if (!rect.width) return;
+        const relX = ((clientX - rect.left) / rect.width) * W;
+        const clampedX = Math.max(padL, Math.min(W - padR, relX));
+        const ratio = (clampedX - padL) / Math.max(1, W - padL - padR);
+        const dayPoint = Math.round(ratio * maxDays);
+        const datePointIso = addDaysISO(startIso, dayPoint);
+
+        const primarySt = selectedStudies[0];
+        const studyPctAtDay = interpolateStudyPctAtDay(primarySt, dayPoint, estimand);
+        const studyKgAtDay = startW * (1 + studyPctAtDay / 100);
+        const studyDispVal = toDisp(studyPctAtDay);
+
+        // Interpolate user weight at dayPoint
+        let userKgAtDay = latestW;
+        if (userPts.length > 0) {
+          userKgAtDay = userPts[0].kg;
+          for (let i = 0; i < userPts.length; i++) {
+            if (userPts[i].d <= dayPoint) userKgAtDay = userPts[i].kg;
+          }
+        }
+        const userPctAtDay = ((userKgAtDay - startW) / startW) * 100;
+        const userDispVal = kgToDisp(userKgAtDay);
+        const activeDose = getActiveDoseOnDate(medLogs, datePointIso, a.medicacao);
+
+        // Estimate medication level in body on datePointIso at 12:00
+        let estMgAtDay = 0;
+        const targetMs = new Date(`${datePointIso}T12:00:00`).getTime();
+        if (pkNow.doseEvents && pkNow.doseEvents.length) {
+          pkNow.doseEvents.forEach(ev => {
+            if (!ev.isFutureSim && ev.ms <= targetMs) {
+              estMgAtDay += computeSingleDoseAmountMg(ev.doseMg, (targetMs - ev.ms) / 3600000, pkNow.pk);
+            }
+          });
+        }
+
+        const cx = xOf(dayPoint);
+        sOverlay.style.display = 'block';
+        sLine.setAttribute('x1', cx.toFixed(1));
+        sLine.setAttribute('x2', cx.toFixed(1));
+        sDotU.setAttribute('cx', cx.toFixed(1));
+        sDotU.setAttribute('cy', yOf(userDispVal).toFixed(1));
+        sDotR.setAttribute('cx', cx.toFixed(1));
+        sDotR.setAttribute('cy', yOf(studyDispVal).toFixed(1));
+
+        if (sCompareBar) sCompareBar.classList.add('active-scrub');
+        if (sBarHoverLbl) sBarHoverLbl.textContent = `🎯 Dia ${dayPoint} (${formatDateBR(datePointIso)})`;
+        if (sBarHoverVal) {
+          sBarHoverVal.style.color = 'var(--text)';
+          const doseBadge = activeDose ? `<span class="dose-badge" style="background:${activeDose.color};padding:1px 6px;font-size:0.7rem;">${formatDoseLabel(activeDose.doseMg)}</span>` : '';
+          sBarHoverVal.innerHTML = `Peso: <strong>${fmtDec(userKgAtDay, 1)} kg</strong> (${fmtDec(userPctAtDay, 1)}%) ${doseBadge} · No corpo: <span style="color:var(--primary);">${fmtDec(estMgAtDay, 2)} mg</span>`;
+        }
+        if (sBarDiffVal) {
+          const diffVsStudyPct = userPctAtDay - studyPctAtDay;
+          const diffVsTodayKg = userKgAtDay - latestW;
+          sBarDiffVal.innerHTML = `Estudo: <strong style="color:#C026D3;">${fmtDec(studyPctAtDay, 1)}% (${fmtDec(studyKgAtDay, 1)} kg)</strong> • Vs. Hoje: <strong>${diffVsTodayKg >= 0 ? '+' : ''}${fmtDec(diffVsTodayKg, 1)} kg</strong>`;
+        }
+      };
+
+      studySvg.addEventListener('mousemove', (e) => updateStudyScrub(e.clientX));
+      studySvg.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches[0]) updateStudyScrub(e.touches[0].clientX);
+      }, { passive: true });
+      studySvg.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) updateStudyScrub(e.touches[0].clientX);
+      }, { passive: true });
+    }
   }
 
   function renderMedicacaoTab() {
@@ -5594,11 +6074,11 @@
       return `
         <div class="meal-card">
           <div class="meal-head">
-            <strong>${escapeHtml(m.horario)} • ${escapeHtml(m.nome)}</strong>
+            <strong>${escapeHtml(formatTimeHHMM(m.horario, '12:00'))} • ${escapeHtml(m.nome)}</strong>
             <span><strong>${fmtInt(mk)} kcal</strong> • ${fmtDec(mp, 1)}g P</span>
           </div>
           <ul class="meal-items-list" style="margin-bottom:0;">
-            ${m.itens.map(it => `<li><span>${escapeHtml(it.item)} (${escapeHtml(it.qtd)})</span><span>${fmtInt(it.kcal)} kcal | ${fmtDec(it.prot, 1)}g P</span></li>`).join('')}
+            ${m.itens.map(it => `<li><span>${escapeHtml(it.item)} (${escapeHtml(formatQtdClean(it.qtd))})</span><span>${fmtInt(it.kcal)} kcal | ${fmtDec(it.prot, 1)}g P</span></li>`).join('')}
           </ul>
         </div>
       `;
@@ -6352,78 +6832,88 @@
   });
 
   async function callGeminiAPI({ prompt, systemInstruction = '', imageBase64 = null, imageMimeType = 'image/jpeg', expectJson = true }) {
-    const apiKey = DEFAULT_GEMINI_API_KEY;
-    const preferred = DB.geminiModel || DEFAULT_GEMINI_MODEL;
-    // Strictly use 3.8 Flash & 3.1 Pro (never 2.5 Flash or 2.5 Pro)
+    const apiKey = (DB && DB.geminiApiKey) ? DB.geminiApiKey : DEFAULT_GEMINI_API_KEY;
+    const preferred = (DB && DB.geminiModel) ? DB.geminiModel : DEFAULT_GEMINI_MODEL;
+
+    // Prioriza 3.8 Flash ou 3.1 Pro conforme selecionado, com fallback automático para modelos 3.x ativos
     const modelOrder = preferred.includes('3.1')
       ? ['gemini-3.1-pro-preview', 'gemini-3.1-pro', 'gemini-3.8-flash', 'gemini-3-flash-preview']
-      : ['gemini-3.8-flash', 'gemini-3.1-pro-preview', 'gemini-3.1-pro', 'gemini-3-flash-preview'];
+      : ['gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-3.1-pro-preview', 'gemini-3.1-pro'];
 
     const parts = [];
     if (prompt) parts.push({ text: prompt });
     if (imageBase64) {
       parts.push({
-        inline_data: {
-          mime_type: imageMimeType || 'image/jpeg',
+        inlineData: {
+          mimeType: imageMimeType || 'image/jpeg',
           data: imageBase64
         }
       });
     }
 
-    const body = {
-      contents: [{ role: 'user', parts }],
-      generationConfig: {
-        temperature: 0.35
-      }
-    };
-
-    if (expectJson) {
-      body.generationConfig.responseMimeType = 'application/json';
-    }
-
-    if (systemInstruction) {
-      body.systemInstruction = {
-        parts: [{ text: systemInstruction }]
-      };
-    }
-
     let lastError = null;
+
     for (const model of modelOrder) {
       const endpoints = [
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
-        `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`
+        `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`
       ];
+
       for (const endpoint of endpoints) {
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            const errMsg = (data && data.error && data.error.message) || `Erro HTTP ${response.status}`;
-            lastError = new Error(errMsg);
-            continue;
-          }
-          const textOut = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n') || '';
-          if (!textOut) {
-            lastError = new Error('A API do Gemini retornou uma resposta vazia.');
-            continue;
-          }
-          if (expectJson) {
-            const parsed = extractJsonFromText(textOut);
-            if (!parsed) {
-              try { return JSON.parse(textOut); } catch (e) {
-                lastError = new Error('Não foi possível interpretar o JSON retornado pelo Gemini.');
+        for (const useJsonMime of (expectJson ? [true, false] : [false])) {
+          try {
+            const body = {
+              contents: [{ role: 'user', parts }],
+              generationConfig: {
+                temperature: 0.35
+              }
+            };
+            if (useJsonMime) {
+              body.generationConfig.responseMimeType = 'application/json';
+            }
+            if (systemInstruction) {
+              body.systemInstruction = {
+                role: 'system',
+                parts: [{ text: systemInstruction }]
+              };
+            }
+
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              const errMsg = (data && data.error && data.error.message) || `Erro HTTP ${response.status} (${model})`;
+              lastError = new Error(errMsg);
+              continue;
+            }
+
+            const textOut = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('
+') || '';
+            if (!textOut) {
+              lastError = new Error(`Resposta vazia do modelo ${model}.`);
+              continue;
+            }
+
+            if (expectJson) {
+              const parsed = extractJsonFromText(textOut);
+              if (parsed) return parsed;
+              try {
+                return JSON.parse(textOut);
+              } catch (e) {
+                lastError = new Error('Não foi possível interpretar o JSON retornado pela IA.');
                 continue;
               }
             }
-            return parsed;
+            return textOut;
+          } catch (err) {
+            lastError = err;
           }
-          return textOut;
-        } catch (err) {
-          lastError = err;
         }
       }
     }
@@ -6508,7 +6998,7 @@ REGRAS OBRIGATÓRIAS:
       result.refeicoes.forEach((r, idx) => {
         const itens = (r.itens || []).map(it => ({
           item: it.item || 'Alimento',
-          qtd: it.qtd || '',
+          qtd: formatQtdClean(it.qtd || ''),
           kcal: Math.round(Number(it.kcal) || 0),
           prot: parseBrNum(it.prot) || 0
         }));
@@ -6518,7 +7008,7 @@ REGRAS OBRIGATÓRIAS:
           id: 'CRD_' + Date.now() + '_' + idx,
           date: selectedMenuDate,
           nome: r.nome || `Refeição ${idx + 1}`,
-          horario: r.horario || '12:00',
+          horario: formatTimeHHMM(r.horario, '12:00'),
           itens,
           kcal,
           prot,
@@ -6602,7 +7092,7 @@ Retorne EXCLUSIVAMENTE um JSON válido contendo apenas as refeições "a comer" 
       list.forEach((r, idx) => {
         const itens = (r.itens || []).map(it => ({
           item: it.item || 'Alimento',
-          qtd: it.qtd || '',
+          qtd: formatQtdClean(it.qtd || ''),
           kcal: Math.round(Number(it.kcal) || 0),
           prot: parseBrNum(it.prot) || 0
         }));
@@ -7009,7 +7499,7 @@ Retorne EXCLUSIVAMENTE um JSON válido com esta estrutura exata:
     const doseSel = document.getElementById('medLogDoseSelect').value;
     const doseMg = doseSel === 'custom'
       ? (parseBrNum(document.getElementById('medLogDoseCustom').value) || (principio === 'tirzepatida' ? 2.5 : 0.25))
-      : parseBrNum(doseSel);
+      : normalizeDoseMg(doseSel, principio);
     const date = document.getElementById('medLogDate').value || todayISO();
     const time = document.getElementById('medLogTime').value || '08:00';
     const intervaloDias = Math.max(1, parseInt(document.getElementById('medLogIntervaloDias').value, 10) || 7);

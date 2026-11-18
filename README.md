@@ -1,4 +1,4 @@
-# Marcusnator Pro Athlete 2.0 By Dr. Hans (v1.3.0)
+# Marcusnator Pro Athlete 2.0 By Dr. Hans (v1.3.3)
 
 WebApp Progressivo (PWA) de rastreamento clínico e esportivo de emagrecimento, medicação GLP-1/GIP (Ozempic/Semaglutida e Mounjaro/Tirzepatida) com modelagem farmacocinética de meia-vida, comparação com estudos clínicos (STEP UP 72 sem, SELECT 208 sem, SURMOUNT-5 72 sem e SURMOUNT-1 176 sem), bioimpedância, avaliação do tipo de corpo, nutrição, treino e comportamento alimentar (EFCA), pronto para hospedagem no **GitHub Pages** e instalação na tela inicial do **Android** e **iPhone (iOS)**.
 
