@@ -114,14 +114,31 @@
       state.deferredInstallPrompt = e;
       $('pwa-install-native-wrap').classList.remove('hidden');
     });
-    $('btn-trigger-pwa-install').addEventListener('click', async () => {
-      if (!state.deferredInstallPrompt) return;
-      state.deferredInstallPrompt.prompt();
-      await state.deferredInstallPrompt.userChoice;
-      state.deferredInstallPrompt = null;
-      $('pwa-install-native-wrap').classList.add('hidden');
-      $('modal-install').classList.add('hidden');
-    });
+    async function triggerDirectInstall() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (isStandalone) {
+        showToast('O aplicativo já está instalado na sua tela principal!');
+        return;
+      }
+      if (state.deferredInstallPrompt) {
+        try {
+          state.deferredInstallPrompt.prompt();
+          const choice = await state.deferredInstallPrompt.userChoice;
+          if (choice && choice.outcome === 'accepted') {
+            showToast('Instalação iniciada! O ícone aparecerá na sua tela inicial.');
+          }
+          state.deferredInstallPrompt = null;
+          $('pwa-install-native-wrap').classList.add('hidden');
+          $('modal-install').classList.add('hidden');
+          return;
+        } catch {}
+      }
+      // Fallback apenas em navegadores que bloqueiam prompt direto (ex.: iOS Safari)
+      $('modal-install').classList.remove('hidden');
+    }
+    state.triggerDirectInstall = triggerDirectInstall;
+
+    $('btn-trigger-pwa-install').addEventListener('click', triggerDirectInstall);
   }
 
   /* ==================== TELA 1: AUTENTICAÇÃO E RECUPERAÇÃO ==================== */
@@ -222,7 +239,7 @@
       }
     });
 
-    $('btn-auth-install').addEventListener('click', () => $('modal-install').classList.remove('hidden'));
+    $('btn-auth-install').addEventListener('click', () => state.triggerDirectInstall && state.triggerDirectInstall());
     loadProfilesList();
   }
 
@@ -513,7 +530,7 @@
 
   function renderScoreboard() {
     const today = window.todayISO();
-    $('sb-date-label').textContent = window.fmtDateBR(today);
+    $('sb-date-label').textContent = window.fmtDateWithWeekdayBR(today);
     const ob = state.userData.onboarding || {};
     const weighIns = [...(state.userData.weighIns || [])].sort((a, b) => a.data.localeCompare(b.data));
     const cutoff7 = Date.now() - 7 * 86400000;
@@ -598,7 +615,7 @@
   }
 
   function renderCardapioTab() {
-    $('menu-date-display').textContent = window.fmtDateBR(state.menuDate);
+    $('menu-date-display').textContent = '📅 ' + window.fmtDateWithWeekdayBR(state.menuDate);
     if (!state.userData.menus[state.menuDate]) {
       state.userData.menus[state.menuDate] = getDefaultDayMenu();
     }
@@ -754,7 +771,7 @@ Regras:
 
   /* ==================== ABA 2: DIÁRIO + ESTIMADOR IA ==================== */
   function renderDiarioTab() {
-    $('diary-date-sub').textContent = `Registros de ${window.fmtDateBR(state.diaryDate)}`;
+    $('diary-date-sub').textContent = `Registros de ${window.fmtDateWithWeekdayBR(state.diaryDate)}`;
     const meals = (state.userData.meals || []).filter((m) => m.data === state.diaryDate);
     const list = $('diary-meals-list');
     list.innerHTML = '';
@@ -1530,7 +1547,7 @@ REGRAS OBRIGATÓRIAS:
 
     $('menu-install-pwa').addEventListener('click', () => {
       $('drawer-backdrop').classList.add('hidden');
-      $('modal-install').classList.remove('hidden');
+      if (state.triggerDirectInstall) state.triggerDirectInstall();
     });
 
     // Changelog SemVer
@@ -1825,6 +1842,128 @@ REGRAS OBRIGATÓRIAS:
     });
   }
 
+
+  /* ==================== CALENDÁRIO INTERATIVO COM DIA DA SEMANA ==================== */
+  const calState = { year: new Date().getFullYear(), month: new Date().getMonth(), selectedIso: window.todayISO(), onSelect: null };
+
+  function openCalendarModal(initialIso, onSelect) {
+    const base = (initialIso && /^\d{4}-\d{2}-\d{2}/.test(initialIso)) ? initialIso.slice(0, 10) : window.todayISO();
+    const parts = base.split('-').map(Number);
+    calState.year = parts[0];
+    calState.month = parts[1] - 1;
+    calState.selectedIso = base;
+    calState.onSelect = onSelect;
+    renderCalendarGrid();
+    $('modal-calendar').classList.remove('hidden');
+  }
+
+  function renderCalendarGrid() {
+    const monthNames = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    $('cal-month-label').textContent = `${monthNames[calState.month]} de ${calState.year}`;
+    $('cal-selected-preview').textContent = `Selecionado: ${window.fmtDateWithWeekdayBR(calState.selectedIso)}`;
+
+    const grid = $('cal-grid-days');
+    grid.innerHTML = '';
+    const firstDow = new Date(calState.year, calState.month, 1).getDay();
+    const daysInMonth = new Date(calState.year, calState.month + 1, 0).getDate();
+    const todayStr = window.todayISO();
+
+    for (let i = 0; i < firstDow; i++) {
+      const empty = document.createElement('button');
+      empty.type = 'button';
+      empty.className = 'cal-day-btn empty';
+      grid.appendChild(empty);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const iso = `${calState.year}-${String(calState.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cal-day-btn';
+      if (iso === calState.selectedIso) btn.classList.add('selected');
+      if (iso === todayStr) btn.classList.add('today');
+      btn.textContent = String(day);
+      btn.addEventListener('click', () => {
+        calState.selectedIso = iso;
+        $('modal-calendar').classList.add('hidden');
+        if (calState.onSelect) calState.onSelect(iso);
+      });
+      grid.appendChild(btn);
+    }
+  }
+
+  function initCalendarEnhancer() {
+    $('cal-prev-month').addEventListener('click', () => {
+      calState.month--;
+      if (calState.month < 0) { calState.month = 11; calState.year--; }
+      renderCalendarGrid();
+    });
+    $('cal-next-month').addEventListener('click', () => {
+      calState.month++;
+      if (calState.month > 11) { calState.month = 0; calState.year++; }
+      renderCalendarGrid();
+    });
+    $('cal-btn-today').addEventListener('click', () => {
+      const t = window.todayISO();
+      $('modal-calendar').classList.add('hidden');
+      if (calState.onSelect) calState.onSelect(t);
+    });
+
+    // Botão de data do Cardápio abre o calendário com dias da semana
+    $('menu-date-display').addEventListener('click', () => {
+      openCalendarModal(state.menuDate, (iso) => {
+        state.menuDate = iso;
+        renderCardapioTab();
+      });
+    });
+
+    // Aprimora TODOS os inputs de data e data/hora com botão de calendário + dia da semana ao vivo
+    document.querySelectorAll('input[type="date"], input[type="datetime-local"]').forEach((inp) => {
+      if (inp.dataset.calEnhanced) return;
+      inp.dataset.calEnhanced = '1';
+      const parent = inp.parentNode;
+      const wrap = document.createElement('div');
+      wrap.className = 'date-cal-wrap';
+      const row = document.createElement('div');
+      row.className = 'date-cal-row';
+      const calBtn = document.createElement('button');
+      calBtn.type = 'button';
+      calBtn.className = 'date-cal-btn';
+      calBtn.title = 'Escolher no calendário (com dia da semana)';
+      calBtn.textContent = '📅';
+      const hint = document.createElement('span');
+      hint.className = 'weekday-hint';
+
+      function updateHint() {
+        const val = inp.value;
+        hint.textContent = val ? window.fmtDateWithWeekdayBR(val.slice(0, 10)) : '';
+      }
+
+      parent.insertBefore(wrap, inp);
+      row.appendChild(inp);
+      row.appendChild(calBtn);
+      wrap.appendChild(row);
+      wrap.appendChild(hint);
+
+      inp.addEventListener('change', updateHint);
+      inp.addEventListener('input', updateHint);
+      updateHint();
+
+      calBtn.addEventListener('click', () => {
+        openCalendarModal(inp.value, (iso) => {
+          if (inp.type === 'datetime-local') {
+            const timePart = (inp.value && inp.value.includes('T')) ? inp.value.split('T')[1] : '09:00';
+            inp.value = `${iso}T${timePart}`;
+          } else {
+            inp.value = iso;
+          }
+          updateHint();
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      });
+    });
+  }
+
   /* ==================== BOOT ==================== */
   document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
@@ -1832,6 +1971,7 @@ REGRAS OBRIGATÓRIAS:
     initAuthUI();
     initOnboardingUI();
     bindEvents();
+    initCalendarEnhancer();
 
     // Restaura sessão ativa se existir
     try {

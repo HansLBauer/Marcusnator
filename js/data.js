@@ -5,7 +5,7 @@
 
 window.MPA_DATA = {
   APP_NAME: 'Marcusnator Pro Athlete 2.0 By Dr. Hans',
-  APP_VERSION: '2.0.0',
+  APP_VERSION: '2.1.0',
   SPREADSHEET_URL: 'https://docs.google.com/spreadsheets/d/1lM9dHsrdv59n_HkY5Oa75UBzbabNDUfdCvgOMgCWxxc/edit?usp=drivesdk',
   DEFAULT_APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw5-2vvg04kQTUSJ5AJBPK3gsPZcq3K6cvmYKc5Xpl28efEhM-J-9YAQ8kwmYUhUBkf/exec',
   DEFAULT_GEMINI_KEY: 'AQ.Ab8RN6IMaEckm-G_YTozsI5lOeVlltBaTGAHZFyi0y-_16lGjg',
@@ -357,6 +357,15 @@ window.MPA_DATA = {
 
   CHANGELOG: [
     {
+      version: '2.1.0',
+      date: '2026-11-18',
+      type: 'MINOR',
+      items: [
+        'Botão "Instalar na Tela Principal" agora dispara diretamente o prompt nativo de instalação do sistema (Android, Windows, Mac) quando suportado.',
+        'Adicionado calendário visual interativo em todos os campos de data e no Cardápio, exibindo claramente os dias da semana (Dom a Sáb) e o dia da semana selecionado.'
+      ]
+    },
+    {
       version: '2.0.0',
       date: '2026-11-18',
       type: 'MAJOR',
@@ -421,4 +430,22 @@ window.todayISO = function () {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
+};
+
+window.fmtWeekdayBR = function (isoDate) {
+  if (!isoDate) return '';
+  const dStr = String(isoDate).slice(0, 10);
+  const parts = dStr.split('-');
+  if (parts.length !== 3) return '';
+  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  if (isNaN(d.getTime())) return '';
+  const names = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  return names[d.getDay()];
+};
+
+window.fmtDateWithWeekdayBR = function (isoDate) {
+  if (!isoDate) return '—';
+  const wd = window.fmtWeekdayBR(isoDate);
+  const dt = window.fmtDateBR(isoDate);
+  return wd ? `${wd}, ${dt}` : dt;
 };
