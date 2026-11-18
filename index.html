@@ -1576,13 +1576,14 @@
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div>
-        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.2.0</code> (SemVer)
+        <strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> • Versão <code>v1.2.1</code> (SemVer)
       </div>
       <button type="button" id="toggleChangelogBtn" class="btn btn-soft btn-sm">📜 Log de Mudanças (SemVer)</button>
     </div>
     <div id="changelogBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
       <strong>Histórico de Versões — Versionamento Semântico (MAJOR.MINOR.PATCH):</strong>
       <ul style="margin:6px 0 0;padding-left:18px;">
+        <li style="margin-bottom:6px;"><strong>v1.2.1 (17/11/2026):</strong> Correção de inicialização (proteção de seletores de botões manuais substituídos pela API direta do Gemini) garantindo o funcionamento integral de todas as telas e botões.</li>
         <li style="margin-bottom:6px;"><strong>v1.2.0 (17/11/2026):</strong> (1) Conexão nativa pré-configurada com o endpoint do Google Apps Script em nuvem e remoção de todos os links externos para a planilha e instruções de implantação; (2) módulo completo de <strong>Bioimpedância & Composição Corporal</strong> (Taxa de Gordura %, Massa Livre de Gordura/Massa Magra, Massa Muscular Esquelética, Gordura Visceral, Água Corporal Total, TMB da Bioimpedância, Idade Metabólica e Massa Óssea) no cadastro inicial e no Diário; (3) cálculo metabólico avançado integrando as equações de <strong>Katch-McArdle</strong>, <strong>Cunningham</strong> e <strong>Mifflin-St Jeor</strong> ajustadas pela massa magra; (4) matriz interativa de <strong>Avaliação do Tipo de Corpo</strong> (10 zonas: <em>Atletas, Gordura muscular, Obesidade, Músculo, Ajuste, Excesso, Muscular Magro, Slim, Marasmo, Fino e Gordura invisível</em>) com plotagem exata do pino atual, pino de meta, FFMI e diagnóstico clínico; (5) consolidação da <strong>API do Gemini (IA)</strong> como método único e exclusivo de inteligência artificial em todo o aplicativo, com acesso rápido para configurar a chave em todas as telas e atualização automática do Service Worker (Network-First).</li>
         <li style="margin-bottom:6px;"><strong>v1.1.0 (17/11/2026):</strong> Integração direta com a API REST do Google Gemini (<code>generativelanguage.googleapis.com</code>) direto no navegador: (1) geração automática de Cardápio Diário personalizado em 1 clique na aba Cardápio; (2) recalibração inteligente das refeições restantes do dia via Gemini API quando uma refeição é feita, ajustada ou pulada; (3) estimativa multimodal (Visão Computacional + Texto) no Diário permitindo fotografar o prato com o celular para o Gemini estimar calorias e proteínas (considerando alimento pronto/cozido e cenário mais calórico para restaurantes/delivery) e lançar automaticamente; (4) análise clínica semanal de segunda-feira e geração completa da aba Plano via Gemini API.</li>
         <li><strong>v1.0.0 (17/11/2026):</strong> Lançamento inicial do WebApp PWA para GitHub Pages (instalável em Android e iOS com ícone dedicado); autenticação com pergunta de recuperação de senha; anamnese completa; placar superior fixo/ocultável ao rolar; abas Cardápio, Diário, Evolução (gráficos Realidade × Projetado e Projetado Realístico baseado em evidências), Semana e Plano; integração bidirecional com Google Sheets via Apps Script; Escala EFCA de fenótipos alimentares; exportação de relatório clínico em .PDF para Médico/Nutricionista e sistema de notificações com níveis de incisividade e motivo personalizado.</li>
@@ -3030,7 +3031,7 @@
     showToast(toastMsg);
   }
 
-  document.getElementById('copyGeminiMenuPromptBtn').addEventListener('click', () => {
+  document.getElementById('copyGeminiMenuPromptBtn')?.addEventListener('click', () => {
     const u = getActiveUser();
     if (!u || !u.anamnese) return;
     const a = u.anamnese;
@@ -3064,7 +3065,7 @@ Responda primeiro com o cardápio legível e ao final inclua OBRIGATORIAMENTE um
     copyTextToClipboard(prompt, '📋 Prompt copiado! Cole no chat do Gemini para gerar seu cardápio.');
   });
 
-  document.getElementById('copyGeminiAdjustPromptBtn').addEventListener('click', () => {
+  document.getElementById('copyGeminiAdjustPromptBtn')?.addEventListener('click', () => {
     const u = getActiveUser();
     if (!u || !u.anamnese) return;
     const metaKcal = getDailyCalorieTarget(u, selectedMenuDate);
@@ -3098,7 +3099,7 @@ Mantenha intactas as refeições já marcadas como FEITO/AJUSTADO e recalibre ap
     copyTextToClipboard(prompt, '🔄 Prompt de ajuste copiado! Cole no chat do Gemini.');
   });
 
-  document.getElementById('openImportMenuModalBtn').addEventListener('click', () => {
+  document.getElementById('openImportMenuModalBtn')?.addEventListener('click', () => {
     openGenericModal('Importar Cardápio do Gemini', `
       <div class="form-grid">
         <div class="field">
@@ -3328,7 +3329,7 @@ Mantenha intactas as refeições já marcadas como FEITO/AJUSTADO e recalibre ap
     showToast('✅ Refeição lançada no Diário!');
   });
 
-  document.getElementById('copyEstimateFoodPromptBtn').addEventListener('click', () => {
+  document.getElementById('copyEstimateFoodPromptBtn')?.addEventListener('click', () => {
     const prompt = `Vou te enviar uma foto ou descrição da minha refeição para lançar no app Marcusnator Pro Athlete 2.0 By Dr. Hans.
 Regras obrigatórias de estimativa:
 1. Considere sempre o alimento JÁ PRONTO / COZIDO (peso preparado).
@@ -3348,7 +3349,7 @@ Regras obrigatórias de estimativa:
     copyTextToClipboard(prompt, '📋 Prompt de estimativa copiado! Envie junto com a foto ou descrição no chat.');
   });
 
-  document.getElementById('openImportDiaryModalBtn').addEventListener('click', () => {
+  document.getElementById('openImportDiaryModalBtn')?.addEventListener('click', () => {
     openGenericModal('Importar Estimativa de Refeição (JSON)', `
       <div class="form-grid">
         <div class="field">
@@ -3957,7 +3958,7 @@ Regras obrigatórias de estimativa:
     showToast(`⚡ Meta diária ajustada para ${fmtInt(next)} kcal/dia!`);
   });
 
-  document.getElementById('copyMondayReviewPromptBtn').addEventListener('click', () => {
+  document.getElementById('copyMondayReviewPromptBtn')?.addEventListener('click', () => {
     const u = getActiveUser();
     const wStats = getWeightStats(u);
     const prompt = `Hoje é dia de Revisão Semanal de Segunda-feira no Marcusnator Pro Athlete 2.0 By Dr. Hans:
