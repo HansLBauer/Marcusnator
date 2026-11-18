@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Marcusnator Pro Athlete 2.0 By Dr. Hans</title>
+  <meta name="description" content="Rastreador clínico e esportivo de emagrecimento com IA Gemini, farmacocinética GLP-1/GIP, bioimpedância e Escala EFCA." />
+  <meta name="theme-color" content="#0F172A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Marcusnator 2.0" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- ==================== TELA 1: AUTENTICAÇÃO / PERFIL ==================== -->
+    <section id="view-auth" class="auth-container">
+      <div class="card" style="text-align:center; margin-bottom:14px;">
+        <img src="./icons/icon-192.png" alt="Ícone Marcusnator Pro Athlete 2.0" style="width:72px;height:72px;border-radius:16px;margin:0 auto 10px;display:block;box-shadow:0 4px 12px rgba(0,0,0,0.2);" />
+        <h1 style="font-size:1.2rem;font-weight:800;letter-spacing:-0.02em;">Marcusnator Pro Athlete 2.0</h1>
+        <p style="font-size:0.84rem;color:var(--primary);font-weight:700;">By Dr. Hans</p>
+        <p style="font-size:0.8rem;color:var(--text-soft);margin-top:4px;">Rastreador Clínico &amp; Esportivo de Emagrecimento</p>
+      </div>
+
+      <div class="card">
+        <div class="tabs-nav" style="border:none;padding:0 0 12px;margin-bottom:8px;border-bottom:1px solid var(--border);">
+          <button type="button" class="tab-btn active" data-auth-tab="login">Entrar</button>
+          <button type="button" class="tab-btn" data-auth-tab="register">Criar Perfil</button>
+          <button type="button" class="tab-btn" data-auth-tab="recover">Recuperar Senha</button>
+        </div>
+
+        <!-- Login -->
+        <form id="form-login">
+          <div id="saved-profiles-wrap" class="form-group hidden">
+            <label>Perfis cadastrados (toque para preencher)</label>
+            <div id="saved-profiles-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+          <div class="form-group">
+            <label for="login-nome">Nome completo</label>
+            <input type="text" id="login-nome" required placeholder="Ex.: Marcus Vinícius Silva" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="login-senha">Senha</label>
+            <input type="password" id="login-senha" required placeholder="Digite sua senha" autocomplete="current-password" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Entrar no Rastreador</button>
+        </form>
+
+        <!-- Criar Perfil -->
+        <form id="form-register" class="hidden">
+          <div class="form-group">
+            <label for="reg-nome">Nome completo</label>
+            <input type="text" id="reg-nome" required placeholder="Seu nome completo" />
+          </div>
+          <div class="form-group">
+            <label for="reg-senha">Senha</label>
+            <input type="password" id="reg-senha" required minlength="4" placeholder="Mínimo 4 caracteres" />
+          </div>
+          <div class="form-group">
+            <label for="reg-pergunta-select">Pergunta de recuperação de senha</label>
+            <select id="reg-pergunta-select"></select>
+          </div>
+          <div class="form-group hidden" id="reg-pergunta-custom-wrap">
+            <label for="reg-pergunta-custom">Digite sua pergunta personalizada</label>
+            <input type="text" id="reg-pergunta-custom" placeholder="Ex.: Qual o nome da minha primeira academia?" />
+          </div>
+          <div class="form-group">
+            <label for="reg-resposta">Resposta da pergunta de recuperação</label>
+            <input type="text" id="reg-resposta" required placeholder="Sua resposta secreta (salva na planilha)" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Criar Perfil e Continuar</button>
+        </form>
+
+        <!-- Recuperar Senha -->
+        <div id="form-recover" class="hidden">
+          <div class="form-group">
+            <label for="rec-nome">Nome completo do perfil</label>
+            <div class="input-row">
+              <input type="text" id="rec-nome" placeholder="Digite seu nome completo" />
+              <button type="button" id="btn-buscar-pergunta" class="btn btn-secondary">Buscar</button>
+            </div>
+          </div>
+          <div id="rec-step-2" class="hidden">
+            <div class="alert-box info" style="margin-bottom:10px;">
+              <strong>Sua pergunta:</strong> <span id="rec-pergunta-texto"></span>
+            </div>
+            <div class="form-group">
+              <label for="rec-resposta">Sua resposta</label>
+              <input type="text" id="rec-resposta" placeholder="Digite a resposta exata" />
+            </div>
+            <div class="form-group">
+              <label for="rec-modo">O que deseja fazer ao acertar?</label>
+              <select id="rec-modo">
+                <option value="reveal">Receber / Visualizar minha senha atual</option>
+                <option value="reset">Redefinir uma nova senha</option>
+              </select>
+            </div>
+            <div class="form-group hidden" id="rec-nova-senha-wrap">
+              <label for="rec-nova-senha">Nova senha</label>
+              <input type="password" id="rec-nova-senha" minlength="4" placeholder="Digite a nova senha" />
+            </div>
+            <button type="button" id="btn-confirmar-recuperacao" class="btn btn-primary btn-block">Confirmar Recuperação</button>
+            <div id="rec-resultado" class="alert-box info hidden" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:14px;">
+        <button type="button" id="btn-auth-install" class="btn btn-secondary btn-sm">Instalar na Tela Principal (Android / iPhone / Mac / Windows)</button>
+      </div>
+    </section>
+
+    <!-- ==================== TELA 2: ONBOARDING (PRIMEIRA VISITA) ==================== -->
+    <section id="view-onboarding" class="onboarding-container hidden">
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Configuração Inicial do Perfil</h2>
+            <p class="card-subtitle">Seus registros serão salvos automaticamente na planilha Google Sheets.</p>
+          </div>
+          <button type="button" id="btn-cancel-onboarding" class="btn btn-secondary btn-sm hidden">Voltar ao App</button>
+        </div>
+
+        <form id="form-onboarding">
+          <h3 style="font-size:0.95rem;font-weight:700;color:var(--primary);margin:10px 0 8px;">MEUS DADOS E METAS</h3>
+          <div class="grid-3">
+            <div class="form-group">
+              <label for="ob-altura">Altura (m) — vírgula automática</label>
+              <input type="text" id="ob-altura" inputmode="numeric" required placeholder="Ex.: 1,75" maxlength="4" />
+            </div>
+            <div class="form-group">
+              <label for="ob-idade">Idade (anos)</label>
+              <input type="number" id="ob-idade" required min="12" max="110" placeholder="Ex.: 34" />
+            </div>
+            <div class="form-group">
+              <label for="ob-sexo">Sexo</label>
+              <select id="ob-sexo" required>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="form-group">
+              <label for="ob-peso-atual">Peso atual (kg)</label>
+              <input type="number" step="0.1" id="ob-peso-atual" required placeholder="Ex.: 92.5" />
+            </div>
+            <div class="form-group">
+              <label for="ob-peso-meta">Peso meta (kg)</label>
+              <input type="number" step="0.1" id="ob-peso-meta" required placeholder="Ex.: 78.0" />
+            </div>
+            <div class="form-group">
+              <label for="ob-data-alvo">Data-alvo para a meta</label>
+              <input type="date" id="ob-data-alvo" required />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="ob-data-inicio">Data de início</label>
+              <input type="date" id="ob-data-inicio" required />
+            </div>
+            <div class="form-group">
+              <label>Medidas corporais iniciais (opcional)</label>
+              <div class="input-row">
+                <select id="ob-medida-tipo"></select>
+                <input type="number" step="0.1" id="ob-medida-valor" placeholder="cm" style="max-width:95px;" />
+                <button type="button" id="btn-add-ob-medida" class="btn btn-secondary btn-sm">+ Adicionar</button>
+              </div>
+              <div id="ob-medidas-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="ob-meta-kcal">Meta diária de calorias (kcal)</label>
+              <div class="input-row">
+                <input type="number" id="ob-meta-kcal" required placeholder="Ex.: 1900" />
+                <button type="button" id="btn-calc-kcal" class="btn btn-secondary btn-sm" style="white-space:nowrap;">Calcular para mim</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="ob-meta-prot">Meta diária de proteína (g)</label>
+              <div class="input-row">
+                <input type="number" id="ob-meta-prot" required placeholder="Ex.: 145" />
+                <button type="button" id="btn-calc-prot" class="btn btn-secondary btn-sm" style="white-space:nowrap;">Calcular para mim</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:8px;">
+            <label for="ob-usa-med">Uso de medicamento para emagrecer?</label>
+            <select id="ob-usa-med">
+              <option value="nao">Não</option>
+              <option value="sim">Sim</option>
+            </select>
+          </div>
+
+          <div id="ob-med-fields" class="hidden" style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;">
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="ob-medicacao">Medicação</label>
+                <select id="ob-medicacao">
+                  <option value="semaglutida">Semaglutida (Ozempic / Wegovy)</option>
+                  <option value="tirzepatida">Tirzepatida (Mounjaro)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ob-dose">Qual a dose?</label>
+                <select id="ob-dose"></select>
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label for="ob-intervalo">De quantos em quantos dias?</label>
+                <input type="number" id="ob-intervalo" value="7" min="1" max="30" />
+              </div>
+              <div class="form-group">
+                <label for="ob-ultima-dose">Última dose aplicada</label>
+                <input type="datetime-local" id="ob-ultima-dose" />
+              </div>
+              <div class="form-group">
+                <label for="ob-local-aplicacao">Local da última aplicação</label>
+                <select id="ob-local-aplicacao"></select>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="font-size:0.95rem;font-weight:700;color:var(--primary);margin:16px 0 8px;">MINHA ROTINA</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="ob-acordo">Horário que acordo</label>
+              <input type="time" id="ob-acordo" value="06:30" />
+            </div>
+            <div class="form-group">
+              <label for="ob-durmo">Horário que durmo</label>
+              <input type="time" id="ob-durmo" value="23:00" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ob-treinos">Treinos da semana (tipo, dias, horário, duração)</label>
+            <input type="text" id="ob-treinos" placeholder="Ex.: Musculação Seg/Qua/Sex 18h (60 min) + Corrida Sáb 8h (40 min)" />
+          </div>
+          <div class="form-group">
+            <label for="ob-trabalho">Horário de trabalho / home office ou presencial</label>
+            <input type="text" id="ob-trabalho" placeholder="Ex.: 08h às 18h, híbrido (3× home office, 2× presencial)" />
+          </div>
+          <div class="form-group">
+            <label for="ob-come-hoje">O que costumo comer hoje</label>
+            <textarea id="ob-come-hoje" placeholder="Ex.: Café com leite e pão de manhã, arroz/feijão/carne no almoço, lanche rápido à tarde..."></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="ob-gosta">Comidas que gosto e não quero cortar</label>
+              <textarea id="ob-gosta" placeholder="Ex.: Pizza no sábado, chocolate amargo, churrasco..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="ob-nao-come">Comidas que não como</label>
+              <textarea id="ob-nao-come" placeholder="Ex.: Fígado, jiló, frutos do mar..."></textarea>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div class="form-group">
+              <label for="ob-tempo-cozinhar">Tempo disponível para cozinhar</label>
+              <input type="text" id="ob-tempo-cozinhar" placeholder="Ex.: 2h no domingo" />
+            </div>
+            <div class="form-group">
+              <label for="ob-delivery">Peço delivery com frequência?</label>
+              <input type="text" id="ob-delivery" placeholder="Ex.: 2 a 3× por semana" />
+            </div>
+            <div class="form-group">
+              <label for="ob-suplementos">Suplementos que tomo</label>
+              <input type="text" id="ob-suplementos" placeholder="Ex.: Whey, creatina, vitamina D" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">Salvar Perfil na Planilha e Iniciar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== TELA 3: APLICATIVO PRINCIPAL ==================== -->
+    <div id="view-app" class="hidden" style="display:flex;flex-direction:column;min-height:100vh;">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" id="btn-open-drawer" class="two-bars-btn" aria-label="Abrir menu do perfil" title="Menu">
+            <span></span>
+            <span></span>
+          </button>
+          <div class="brand-wrap">
+            <img src="./icons/icon-192.png" alt="Logo" class="brand-icon" />
+            <div style="min-width:0;">
+              <div class="brand-title">Marcusnator Pro Athlete 2.0</div>
+              <span class="brand-sub">By Dr. Hans · <span id="header-user-name"></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" id="btn-toggle-scoreboard" class="icon-btn" title="Mostrar ou esconder placar">Placar</button>
+          <button type="button" id="btn-toggle-theme" class="icon-btn" aria-label="Alternar tema">Tema</button>
+        </div>
+      </header>
+
+      <!-- Placar Superior Sempre Visível (com opção de esconder) -->
+      <section id="scoreboard-wrap" class="scoreboard-wrap">
+        <div class="scoreboard-bar">
+          <span class="scoreboard-bar-title">Placar do Dia · <span id="sb-date-label"></span></span>
+          <span id="sync-status-badge" class="badge badge-teal">Sincronizado</span>
+        </div>
+        <div class="scoreboard-grid">
+          <div class="score-card">
+            <div class="score-label"><span>Peso (média 7 dias)</span><span id="sb-peso-last">Última: —</span></div>
+            <div class="score-val" id="sb-peso-avg">— kg</div>
+            <div class="score-sub" id="sb-peso-meta-diff">Meta: — kg</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label"><span>Kcal do dia</span><span id="sb-kcal-meta">Meta: —</span></div>
+            <div class="score-val" id="sb-kcal-val">0 kcal</div>
+            <div class="progress-track"><div id="sb-kcal-bar" class="progress-fill" style="width:0%"></div></div>
+            <div class="score-sub" id="sb-kcal-rem">Restam — kcal</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label"><span>Proteína do dia</span><span id="sb-prot-meta">Meta: —</span></div>
+            <div class="score-val" id="sb-prot-val">0 g</div>
+            <div class="progress-track"><div id="sb-prot-bar" class="progress-fill protein" style="width:0%"></div></div>
+            <div class="score-sub" id="sb-prot-rem">Faltam — g</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navegação por Abas -->
+      <nav class="tabs-nav" aria-label="Abas principais">
+        <button type="button" class="tab-btn active" data-tab="cardapio">Cardápio</button>
+        <button type="button" class="tab-btn" data-tab="diario">Diário</button>
+        <button type="button" class="tab-btn" data-tab="evolucao">Evolução</button>
+        <button type="button" class="tab-btn" data-tab="semana">Semana</button>
+        <button type="button" class="tab-btn" data-tab="plano">Plano</button>
+        <button type="button" class="tab-btn" data-tab="medicacao">Medicação</button>
+      </nav>
+
+      <!-- Conteúdo das Abas -->
+      <main class="main-content">
+        <!-- ==================== ABA CARDÁPIO ==================== -->
+        <section id="tab-cardapio" class="tab-panel">
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Cardápio Planejado</h2>
+                <p class="card-subtitle">Navegue entre os dias e atualize o status de cada refeição.</p>
+              </div>
+              <div class="input-row">
+                <button type="button" id="btn-menu-prev" class="btn btn-secondary btn-sm">←</button>
+                <span id="menu-date-display" style="font-weight:700;font-size:0.88rem;min-width:96px;text-align:center;"></span>
+                <button type="button" id="btn-menu-next" class="btn btn-secondary btn-sm">→</button>
+              </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom:14px;">
+              <div class="kpi-box"><div class="kpi-label">Kcal planejadas</div><div class="kpi-val" id="menu-sum-kcal">0</div></div>
+              <div class="kpi-box"><div class="kpi-label">Meta do dia</div><div class="kpi-val" id="menu-sum-meta">0</div></div>
+              <div class="kpi-box"><div class="kpi-label">Já consumido</div><div class="kpi-val" id="menu-sum-eaten">0</div></div>
+              <div class="kpi-box"><div class="kpi-label">Proteína planejada</div><div class="kpi-val" id="menu-sum-prot">0 g</div></div>
+            </div>
+
+            <div id="menu-meals-list"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Assistente Nutricional Gemini (Cardápio &amp; Ajustes)</h3>
+                <p class="card-subtitle">A IA lê seu perfil, rotina, preferências e o cardápio do dia para montar ou rebalancear refeições.</p>
+              </div>
+              <select id="gemini-model-select" style="width:auto;min-width:190px;">
+                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
+                <option value="gemini-2.5-flash" selected>Gemini Flash (Rápido)</option>
+                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+              </select>
+            </div>
+            <div class="ai-chat-box">
+              <div id="menu-ai-messages" class="ai-messages">
+                <div class="ai-msg bot">Olá! Peça "Monte meu cardápio de hoje" ou avise se mudou alguma refeição (ex.: "Comi pizza no almoço, ajuste o jantar") que eu recalculo o restante do dia automaticamente.</div>
+              </div>
+              <div class="input-row">
+                <input type="text" id="menu-ai-input" placeholder="Ex.: Monte o cardápio de hoje ou ajuste o jantar..." />
+                <button type="button" id="btn-menu-ai-send" class="btn btn-primary">Enviar</button>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary btn-sm quick-ai-btn" data-prompt="Monte o cardápio completo e personalizado de hoje respeitando minhas calorias, proteínas e comidas favoritas.">Montar cardápio de hoje</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-ai-btn" data-prompt="Alterei uma refeição anterior hoje. Rebalanceie apenas as refeições que ainda estão como 'a comer' para eu fechar dentro da meta.">Rebalancear refeições restantes</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ABA DIÁRIO ==================== -->
+        <section id="tab-diario" class="tab-panel hidden">
+          <!-- Estimador IA por Foto ou Descrição -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Estimar Refeição com IA (Foto ou Descrição)</h2>
+                <p class="card-subtitle">Considera alimento pronto/cozido e, na dúvida, o cenário mais calórico (especialmente restaurantes).</p>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="ai-food-desc">Descreva o que comeu</label>
+                <textarea id="ai-food-desc" placeholder="Ex.: 1 prato de PF de restaurante com arroz, feijão, bife acebolado, batata frita e farofa"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="ai-food-photo">Ou envie/tire uma foto do prato</label>
+                <input type="file" id="ai-food-photo" accept="image/*" capture="environment" />
+                <div id="ai-food-preview" style="margin-top:8px;"></div>
+              </div>
+            </div>
+            <div class="input-row" style="flex-wrap:wrap;">
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;cursor:pointer;">
+                <input type="checkbox" id="ai-food-delivery" /> Foi delivery / restaurante
+              </label>
+              <button type="button" id="btn-ai-estimate" class="btn btn-primary" style="margin-left:auto;">Estimar e Lançar no Diário</button>
+            </div>
+            <div id="ai-estimate-feedback" class="alert-box info hidden" style="margin-top:10px;"></div>
+          </div>
+
+          <!-- Lista de Refeições do Dia + Lançamento Manual -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Refeições Lançadas Hoje</h2>
+                <p class="card-subtitle" id="diary-date-sub"></p>
+              </div>
+              <input type="date" id="diary-date-picker" style="width:auto;" />
+            </div>
+            <div id="diary-meals-list"></div>
+
+            <details style="margin-top:12px;">
+              <summary style="cursor:pointer;font-weight:700;color:var(--primary);font-size:0.9rem;">+ Lançar refeição manualmente</summary>
+              <form id="form-manual-meal" style="margin-top:10px;">
+                <div class="grid-3">
+                  <div class="form-group">
+                    <label for="mm-hora">Horário</label>
+                    <input type="time" id="mm-hora" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="mm-tipo">Refeição</label>
+                    <select id="mm-tipo">
+                      <option>Café da manhã</option>
+                      <option>Lanche da manhã</option>
+                      <option>Almoço</option>
+                      <option>Lanche da tarde</option>
+                      <option>Jantar</option>
+                      <option>Ceia / Extra</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="mm-desc">Descrição</label>
+                    <input type="text" id="mm-desc" required placeholder="Ex.: Frango grelhado + arroz + salada" />
+                  </div>
+                </div>
+                <div class="grid-3">
+                  <div class="form-group">
+                    <label for="mm-kcal">Calorias (kcal)</label>
+                    <input type="number" id="mm-kcal" required min="0" />
+                  </div>
+                  <div class="form-group">
+                    <label for="mm-prot">Proteína (g)</label>
+                    <input type="number" id="mm-prot" required min="0" />
+                  </div>
+                  <div class="form-group" style="justify-content:flex-end;">
+                    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                      <input type="checkbox" id="mm-delivery" /> Delivery
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar ao Diário</button>
+              </form>
+            </details>
+          </div>
+
+          <!-- Registro de Peso, Cintura, Bioimpedância e Treino -->
+          <div class="grid-2">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Peso, Cintura &amp; Bioimpedância</h3>
+              <form id="form-weighin">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="wi-peso">Peso em jejum (kg)</label>
+                    <input type="number" step="0.1" id="wi-peso" placeholder="Ex.: 88.4" />
+                  </div>
+                  <div class="form-group">
+                    <label for="wi-cintura">Cintura no umbigo (cm)</label>
+                    <input type="number" step="0.1" id="wi-cintura" placeholder="Ex.: 94.0" />
+                  </div>
+                </div>
+                <details style="margin-bottom:10px;">
+                  <summary style="cursor:pointer;font-size:0.84rem;font-weight:600;color:var(--primary);">+ Dados de Bioimpedância (opcional)</summary>
+                  <div class="grid-2" style="margin-top:8px;">
+                    <div class="form-group">
+                      <label for="bio-gordura">Gordura corporal (%)</label>
+                      <input type="number" step="0.1" id="bio-gordura" placeholder="Ex.: 24.5" />
+                    </div>
+                    <div class="form-group">
+                      <label for="bio-musculo">Massa muscular (kg)</label>
+                      <input type="number" step="0.1" id="bio-musculo" placeholder="Ex.: 36.2" />
+                    </div>
+                    <div class="form-group">
+                      <label for="bio-agua">Água corporal (%)</label>
+                      <input type="number" step="0.1" id="bio-agua" placeholder="Ex.: 54.0" />
+                    </div>
+                    <div class="form-group">
+                      <label for="bio-visceral">Gordura visceral (nível)</label>
+                      <input type="number" step="1" id="bio-visceral" placeholder="Ex.: 9" />
+                    </div>
+                  </div>
+                </details>
+                <button type="submit" class="btn btn-primary btn-block">Registrar Medição</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Treino do Dia</h3>
+              <form id="form-workout">
+                <div class="form-group">
+                  <label for="wk-atividade">Atividade</label>
+                  <input type="text" id="wk-atividade" required placeholder="Ex.: Musculação (Superiores) + Esteira" />
+                </div>
+                <div class="form-group">
+                  <label for="wk-minutos">Duração (minutos)</label>
+                  <input type="number" id="wk-minutos" required min="5" max="360" placeholder="Ex.: 60" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Registrar Treino</button>
+              </form>
+              <div id="diary-workouts-list" style="margin-top:10px;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ABA EVOLUÇÃO ==================== -->
+        <section id="tab-evolucao" class="tab-panel hidden">
+          <div class="alert-box info" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div>
+              <strong>Rotina recomendada:</strong> Peso em jejum 3×/semana; cintura a cada 15 dias, na altura do umbigo. Toda segunda-feira, revise a média semanal e ajuste o plano se estagnado.
+            </div>
+            <button type="button" id="btn-monday-review" class="btn btn-secondary btn-sm">Revisão de Segunda-feira</button>
+          </div>
+
+          <div class="grid-4" style="margin-bottom:14px;">
+            <div class="kpi-box"><div class="kpi-label">Última pesagem</div><div class="kpi-val" id="evo-last-weight">— kg</div><div class="kpi-sub" id="evo-last-date"></div></div>
+            <div class="kpi-box"><div class="kpi-label">Perdido desde o início</div><div class="kpi-val" id="evo-total-lost">— kg</div><div class="kpi-sub" id="evo-pct-lost"></div></div>
+            <div class="kpi-box"><div class="kpi-label">Ritmo semanal</div><div class="kpi-val" id="evo-weekly-rate">— kg/sem</div><div class="kpi-sub" id="evo-remaining"></div></div>
+            <div class="kpi-box"><div class="kpi-label">Previsão da meta</div><div class="kpi-val" id="evo-eta">—</div><div class="kpi-sub" id="evo-target-date"></div></div>
+          </div>
+
+          <!-- Gráfico Realidade x Projetado -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Realidade × Projetado</h2>
+                <p class="card-subtitle">Recalcula o ritmo a cada pesagem e simula oscilações de fim de semana, feriados do Brasil e retenção pós-eventos.</p>
+              </div>
+              <div class="input-row" style="flex-wrap:wrap;">
+                <button type="button" id="toggle-evo1-study" class="chart-pill-btn">Comparar Estudo</button>
+                <button type="button" id="toggle-evo1-doses" class="chart-pill-btn">Mostrar Aplicações</button>
+              </div>
+            </div>
+            <div class="chart-box"><canvas id="chart-reality-projected"></canvas></div>
+          </div>
+
+          <!-- Gráfico Projetado Realístico -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Projetado Realístico (Evidências Científicas)</h2>
+                <p class="card-subtitle">Inclui platôs, oscilações de fim de semana (Orsama et al., 2014) e impacto de feriados nacionais do Brasil (Helander et al., NEJM 2016).</p>
+              </div>
+              <div class="input-row" style="flex-wrap:wrap;">
+                <button type="button" id="toggle-evo2-study" class="chart-pill-btn">Comparar Estudo</button>
+                <button type="button" id="toggle-evo2-doses" class="chart-pill-btn">Mostrar Aplicações</button>
+              </div>
+            </div>
+            <div class="chart-box"><canvas id="chart-realistic-projected"></canvas></div>
+          </div>
+
+          <!-- Avaliação do Tipo de Corpo (IMC x Bioimpedância) + Histórico de Cintura -->
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Avaliação do Tipo de Corpo</h3>
+                  <p class="card-subtitle" id="bt-summary-text">IMC × Taxa de gordura corporal (%)</p>
+                </div>
+              </div>
+              <div class="body-type-wrapper">
+                <div class="body-type-yaxis">
+                  <span>IMC<br/>(kg/m²)</span>
+                  <span>25,0</span>
+                  <span>18,5</span>
+                </div>
+                <div class="body-type-grid" id="body-type-grid">
+                  <!-- Linha 1: IMC >= 25.0 -->
+                  <div class="bt-cell" data-bt="atletas" style="grid-column:1 / 3;grid-row:1;">Atletas</div>
+                  <div class="bt-cell" data-bt="gordura_muscular" style="grid-column:3;grid-row:1;">Gordura muscular</div>
+                  <div class="bt-cell" data-bt="obesidade" style="grid-column:4;grid-row:1;">Obesidade</div>
+                  <!-- Linha 2: IMC 21.7 - 25.0 -->
+                  <div class="bt-cell" data-bt="musculo" style="grid-column:1 / 3;grid-row:2;">Músculo</div>
+                  <div class="bt-cell bt-vertical" data-bt="ajuste" style="grid-column:3;grid-row:2 / 4;">Ajuste</div>
+                  <div class="bt-cell" data-bt="excesso" style="grid-column:4;grid-row:2;">Excesso</div>
+                  <!-- Linha 3: IMC 18.5 - 21.7 -->
+                  <div class="bt-cell" data-bt="muscular_magro" style="grid-column:1;grid-row:3;">Muscular Magro</div>
+                  <div class="bt-cell" data-bt="slim" style="grid-column:2;grid-row:3;">Slim</div>
+                  <div class="bt-cell bt-vertical" data-bt="gordura_invisivel" style="grid-column:4;grid-row:3 / 5;">Gordura invisível</div>
+                  <!-- Linha 4: IMC < 18.5 -->
+                  <div class="bt-cell" data-bt="marasmo" style="grid-column:1;grid-row:4;">Marasmo</div>
+                  <div class="bt-cell" data-bt="fino" style="grid-column:2 / 4;grid-row:4;">Fino</div>
+                </div>
+                <div class="body-type-xaxis">
+                  <span></span>
+                  <span>18,0%</span>
+                  <span>28,0%</span>
+                  <span>Gordura corporal (%)</span>
+                </div>
+              </div>
+              <div id="bio-latest-badges" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Histórico de Cintura &amp; Medidas</h3>
+                  <p class="card-subtitle">Variação entre medições quinzenais (umbigo).</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Data</th><th>Cintura (cm)</th><th>Variação</th><th>Peso (kg)</th></tr></thead>
+                  <tbody id="waist-history-tbody"></tbody>
+                </table>
+              </div>
+              <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+                <button type="button" id="btn-open-efca-inline" class="btn btn-secondary btn-block">Descubra a causa da minha compulsão alimentar (EFCA)</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ABA SEMANA ==================== -->
+        <section id="tab-semana" class="tab-panel hidden">
+          <div class="card" style="margin-bottom:14px;">
+            <h2 class="card-title" style="margin-bottom:10px;">Resumo dos Últimos 7 Dias</h2>
+            <div class="grid-4">
+              <div class="kpi-box"><div class="kpi-label">Média de Kcal</div><div class="kpi-val" id="wk-avg-kcal">0</div></div>
+              <div class="kpi-box"><div class="kpi-label">Média de Proteína</div><div class="kpi-val" id="wk-avg-prot">0 g</div></div>
+              <div class="kpi-box"><div class="kpi-label">Deliveries</div><div class="kpi-val" id="wk-deliveries">0</div></div>
+              <div class="kpi-box"><div class="kpi-label">Treinos</div><div class="kpi-val" id="wk-trainings">0</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom:10px;">Tabela Dia a Dia (Últimos 7 Dias)</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Data</th><th>Kcal</th><th>Proteína</th><th>Deliveries</th><th>Treino</th><th>Peso</th></tr>
+                </thead>
+                <tbody id="week-table-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ABA PLANO ==================== -->
+        <section id="tab-plano" class="tab-panel hidden">
+          <!-- Calculadora de Hidratação -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Ingesta Diária de Água</h2>
+                <p class="card-subtitle">Cálculo automático por faixa etária (ajustável entre 15 e 60 ml/kg).</p>
+              </div>
+              <span class="badge badge-teal" id="water-age-rule"></span>
+            </div>
+            <div class="grid-2" style="align-items:center;">
+              <div>
+                <label for="water-slider" style="font-size:0.84rem;font-weight:600;">Taxa selecionada: <strong id="water-ml-kg-label">35 ml/kg</strong></label>
+                <input type="range" id="water-slider" min="15" max="60" step="1" value="35" style="width:100%;margin:8px 0;" />
+                <div style="display:flex;justify-content:space-between;font-size:0.74rem;color:var(--text-soft);">
+                  <span>15 ml/kg</span><span>≤17a: 40 | 18–55a: 35 | 55–65a: 30 | ≥66a: 25</span><span>60 ml/kg</span>
+                </div>
+              </div>
+              <div class="kpi-box" style="text-align:center;">
+                <div class="kpi-label">Meta diária calculada</div>
+                <div class="kpi-val" id="water-total-target" style="font-size:1.5rem;color:var(--primary);">— L</div>
+                <div class="input-row" style="justify-content:center;margin-top:8px;">
+                  <button type="button" id="btn-water-add" class="btn btn-primary btn-sm">+ 250 ml</button>
+                  <span id="water-consumed-label" style="font-size:0.84rem;font-weight:700;">0 ml hoje</span>
+                </div>
+              </div>
+            </div>
+            <div class="alert-box" style="margin-top:12px;">
+              <strong>Atenção:</strong> Pessoas com Doença Renal podem precisar de uma quantidade diferente de consumo de proteína, água e outros nutrientes, consulte o seu médico!
+            </div>
+          </div>
+
+          <!-- Semana de Treinos e Metas Calóricas -->
+          <div class="card" style="margin-bottom:14px;">
+            <h3 class="card-title" style="margin-bottom:8px;">Semana de Treinos &amp; Meta Calórica por Dia</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Dia</th><th>Foco</th><th>Meta Kcal</th><th>Dica do Dia</th></tr></thead>
+                <tbody id="plan-training-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Próximos Eventos -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Próximos Eventos (Festas, Viagens, Jantares &amp; Feriados)</h3>
+                <p class="card-subtitle">Estratégia prática para antes, no dia e depois.</p>
+              </div>
+            </div>
+            <form id="form-add-event" class="grid-3" style="margin-bottom:10px;">
+              <input type="text" id="ev-title" required placeholder="Ex.: Aniversário / Viagem" />
+              <input type="date" id="ev-date" required />
+              <button type="submit" class="btn btn-primary">Adicionar Evento</button>
+            </form>
+            <div id="plan-events-list"></div>
+          </div>
+
+          <!-- Cardápio Base + Trocas Equivalentes -->
+          <div class="grid-2" style="margin-bottom:14px;">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Cardápio Base (Dia Típico)</h3>
+              <div id="plan-base-menu"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Trocas Equivalentes</h3>
+              <div id="plan-swaps-list"></div>
+            </div>
+          </div>
+
+          <!-- Regras Fim de Semana, Dia a Dia, Marmitas e Guia Delivery -->
+          <div class="grid-2">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Regras do Dia a Dia &amp; Fim de Semana</h3>
+              <div id="plan-rules-box" style="font-size:0.86rem;"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Marmitas &amp; Guia do Delivery</h3>
+              <div id="plan-prep-delivery-box" style="font-size:0.86rem;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ABA MEDICAÇÃO ==================== -->
+        <section id="tab-medicacao" class="tab-panel hidden">
+          <!-- Gráfico 1: Nível Estimado do Medicamento (PK) -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Nível estimado do medicamento</h2>
+                <p class="card-subtitle" id="pk-header-summary">Nível atual: — · Média 7 dias: —</p>
+              </div>
+              <div class="input-row">
+                <select id="pk-med-select" style="width:auto;">
+                  <option value="tirzepatida">Tirzepatida</option>
+                  <option value="semaglutida">Semaglutida</option>
+                </select>
+                <button type="button" id="btn-pk-avg7" class="chart-pill-btn active">Média 7 dias</button>
+              </div>
+            </div>
+
+            <!-- Barra superior comparativa (hoje vs dedo/mouse no gráfico) -->
+            <div class="pk-compare-bar" id="pk-compare-bar">
+              <span>Passe o mouse ou arraste o dedo sobre o gráfico para comparar o nível estimado no corpo com hoje.</span>
+            </div>
+
+            <div class="chart-box"><canvas id="chart-pk"></canvas></div>
+
+            <div class="chart-period-bar" id="pk-period-bar">
+              <button type="button" class="chart-pill-btn" data-pk-days="14">2 semanas</button>
+              <button type="button" class="chart-pill-btn" data-pk-days="30">1 mês</button>
+              <button type="button" class="chart-pill-btn active" data-pk-days="90">3 meses</button>
+              <button type="button" class="chart-pill-btn" data-pk-days="0">Todo o período</button>
+            </div>
+            <p id="pk-citation" style="font-size:0.74rem;color:var(--text-soft);margin-top:8px;"></p>
+          </div>
+
+          <!-- Gráfico 2: Peso vs Estudos Clínicos -->
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Peso vs Estudos Clínicos</h2>
+                <p class="card-subtitle">Curva média das dosagens do estudo selecionado (sem seleção individual de dose).</p>
+              </div>
+              <div class="input-row" style="flex-wrap:wrap;">
+                <button type="button" id="btn-study-unit" class="chart-pill-btn active">%</button>
+                <button type="button" id="btn-study-doses" class="chart-pill-btn active">Aplicações</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <select id="study-select">
+                <option value="tirzepatida_72">Tirzepatida · SURMOUNT-5 · 72 semanas</option>
+                <option value="tirzepatida_176">Tirzepatida · SURMOUNT-1 · 176 semanas</option>
+                <option value="semaglutida_72">Semaglutida · STEP UP · 72 semanas</option>
+                <option value="semaglutida_208">Semaglutida · SELECT · 208 semanas</option>
+              </select>
+            </div>
+            <div class="chart-box"><canvas id="chart-study-compare"></canvas></div>
+            <p id="study-citation" style="font-size:0.74rem;color:var(--text-soft);margin-top:8px;"></p>
+          </div>
+
+          <!-- Registro de Aplicação + Rodízio Inteligente de Locais -->
+          <div class="grid-2">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:8px;">Registrar Nova Aplicação</h3>
+              <form id="form-add-dose">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="dose-med">Medicação</label>
+                    <select id="dose-med">
+                      <option value="tirzepatida">Tirzepatida (Mounjaro)</option>
+                      <option value="semaglutida">Semaglutida (Ozempic / Wegovy)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="dose-mg">Dose</label>
+                    <select id="dose-mg"></select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="dose-datetime">Data e Hora da aplicação</label>
+                  <input type="datetime-local" id="dose-datetime" required />
+                </div>
+                <div class="form-group">
+                  <label for="dose-site">Local de aplicação</label>
+                  <select id="dose-site"></select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Salvar Aplicação</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom:6px;">Rodízio de Locais de Aplicação</h3>
+              <p class="card-subtitle" style="margin-bottom:10px;">Sugestão automática para evitar lipodistrofia e irritação local.</p>
+              <div id="site-rotation-box" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+              <h4 style="font-size:0.84rem;font-weight:700;margin-bottom:6px;">Histórico recente</h4>
+              <div id="doses-history-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Rodapé com Aviso Clínico Obrigatório + SemVer Changelog -->
+      <footer class="app-footer">
+        <div class="disclaimer-banner">
+          <strong>Aviso Importante:</strong> Este aplicativo é apenas uma ferramenta e não substitui profissionais como Nutricionista, Médico, Profissional de Educação Física, Fisioterapeuta e Psicólogos. Faça questão de sempre estar acompanhando de ajuda profissional!
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <span><strong>Marcusnator Pro Athlete 2.0 By Dr. Hans</strong> · Versão <code id="app-semver-badge">v2.0.0</code> (SemVer)</span>
+          <button type="button" id="btn-open-changelog" class="btn btn-secondary btn-sm">Log de Mudanças</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ==================== DRAWER MENU (2 RISCOS CANTO SUPERIOR ESQUERDO) ==================== -->
+  <div id="drawer-backdrop" class="drawer-backdrop hidden">
+    <div class="drawer-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:6px;">
+        <div>
+          <div style="font-weight:800;font-size:0.95rem;" id="drawer-user-name">Perfil</div>
+          <div style="font-size:0.75rem;color:var(--text-soft);">Marcusnator Pro Athlete 2.0</div>
+        </div>
+        <button type="button" id="btn-close-drawer" class="btn btn-secondary btn-sm">✕</button>
+      </div>
+      <button type="button" class="drawer-item" id="menu-switch-profile">Trocar perfil</button>
+      <button type="button" class="drawer-item" id="menu-edit-onboarding">Editar Meus Dados e Rotina</button>
+      <button type="button" class="drawer-item" id="menu-open-efca">Descubra a causa da minha compulsão alimentar (EFCA)</button>
+      <button type="button" class="drawer-item" id="menu-open-pdf">Gerar Relatório em .PDF (Médico/Nutri)</button>
+      <button type="button" class="drawer-item" id="menu-open-notifications">Notificações Personalizadas</button>
+      <button type="button" class="drawer-item" id="menu-open-settings">Configurações (IA Gemini &amp; Planilha)</button>
+      <button type="button" class="drawer-item" id="menu-install-pwa">Instalar na Tela Principal</button>
+      <button type="button" class="drawer-item danger" id="menu-logout" style="margin-top:auto;">Logout</button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAIS ==================== -->
+  <!-- Modal EFCA -->
+  <div id="modal-efca" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Escala de Fenótipos de Comportamento Alimentar (EFCA)</h2>
+          <p class="card-subtitle">Descubra a causa da sua compulsão / padrão alimentar (16 itens — validada no Brasil, Arch Endocrinol Metab 2025).</p>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-efca">✕</button>
+      </div>
+      <div id="efca-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal Relatório PDF -->
+  <div id="modal-pdf" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <h2 class="card-title">Relatório Clínico em .PDF</h2>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-pdf">✕</button>
+      </div>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:12px;">
+        Gera um documento completo com seus dados antropométricos, metas, evolução de peso e cintura, bioimpedância, resumo dos últimos 7 dias e farmacocinética para levar ao seu Médico e/ou Nutricionista.
+      </p>
+      <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;cursor:pointer;font-weight:600;font-size:0.88rem;">
+        <input type="checkbox" id="pdf-include-efca" checked />
+        Incluir resultado do questionário EFCA (Compulsão / Fenótipos Alimentares)
+      </label>
+      <button type="button" id="btn-generate-pdf-now" class="btn btn-primary btn-block">Baixar Relatório .PDF</button>
+    </div>
+  </div>
+
+  <!-- Modal Notificações -->
+  <div id="modal-notifications" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <h2 class="card-title">Notificações Personalizadas</h2>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-notifications">✕</button>
+      </div>
+      <div class="form-group">
+        <label for="notif-tone">Nível de incisividade das notificações</label>
+        <select id="notif-tone">
+          <option value="suave">Suave (gentil)</option>
+          <option value="moderada" selected>Moderada (direta)</option>
+          <option value="incisiva">Incisiva (modo Coach)</option>
+        </select>
+      </div>
+      <div class="input-row" style="margin-bottom:12px;">
+        <button type="button" id="btn-request-notif-perm" class="btn btn-primary btn-sm">Ativar Notificações no Dispositivo</button>
+        <button type="button" id="btn-test-notif" class="btn btn-secondary btn-sm">Testar Agora</button>
+      </div>
+      <div id="notif-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+      <button type="button" id="btn-save-notifs" class="btn btn-primary btn-block">Salvar Preferências de Notificação</button>
+    </div>
+  </div>
+
+  <!-- Modal Configurações -->
+  <div id="modal-settings" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <h2 class="card-title">Configurações (Planilha &amp; Gemini IA)</h2>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-settings">✕</button>
+      </div>
+      <div class="form-group">
+        <label for="cfg-script-url">URL do Google Apps Script (/exec)</label>
+        <input type="text" id="cfg-script-url" />
+      </div>
+      <div class="form-group">
+        <label for="cfg-gemini-key">Chave API Gemini</label>
+        <input type="text" id="cfg-gemini-key" />
+      </div>
+      <div class="form-group">
+        <label for="cfg-gemini-model">Modelo Gemini padrão (ex.: gemini-3.1-pro-preview, gemini-2.5-flash, gemini-3.8-flash)</label>
+        <input type="text" id="cfg-gemini-model" />
+      </div>
+      <button type="button" id="btn-save-settings" class="btn btn-primary btn-block">Salvar Configurações</button>
+    </div>
+  </div>
+
+  <!-- Modal Changelog SemVer -->
+  <div id="modal-changelog" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <h2 class="card-title">Log de Mudanças — Versionamento Semântico (SemVer)</h2>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-changelog">✕</button>
+      </div>
+      <div id="changelog-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal Instalar PWA -->
+  <div id="modal-install" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="card-header">
+        <h2 class="card-title">Instalar na Tela Principal</h2>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="modal-install">✕</button>
+      </div>
+      <div id="pwa-install-native-wrap" class="hidden" style="margin-bottom:12px;">
+        <button type="button" id="btn-trigger-pwa-install" class="btn btn-primary btn-block">Instalar Aplicativo Agora</button>
+      </div>
+      <div style="font-size:0.86rem;display:flex;flex-direction:column;gap:8px;color:var(--text-muted);">
+        <p><strong>Android (Chrome/Edge):</strong> Toque no menu (⋮) → <em>Adicionar à tela inicial</em> ou <em>Instalar aplicativo</em>.</p>
+        <p><strong>iPhone / iPad (Safari):</strong> Toque no ícone de Compartilhar (↑) na barra inferior → <em>Adicionar à Tela de Início</em>.</p>
+        <p><strong>Mac / Windows (Chrome/Edge):</strong> Clique no ícone de instalação na barra de endereços do navegador.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação (substitui window.confirm) -->
+  <div id="modal-confirm" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:400px;">
+      <h3 class="card-title" style="margin-bottom:8px;">Confirmar ação</h3>
+      <p id="confirm-message" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;"></p>
+      <div class="input-row" style="justify-content:flex-end;">
+        <button type="button" id="btn-confirm-cancel" class="btn btn-secondary btn-sm">Cancelar</button>
+        <button type="button" id="btn-confirm-ok" class="btn btn-danger btn-sm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="./js/data.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/charts.js"></script>
+  <script src="./js/pdf.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
